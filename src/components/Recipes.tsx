@@ -54,7 +54,7 @@ export default function Recipes() {
     <div className="w-full bg-white py-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-700 mb-4">DELICIOUS SUGAR-FREE RECIPES {'\u{1F60B}'}\</h2>
+          <h2 className="text-3xl font-bold text-gray-700 mb-4">DELICIOUS SUGAR-FREE RECIPES {'\u{1F60B}'}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">Discover tasty recipes made with KislayNaturals sweetener that are both healthy and satisfying.</p>
         </div>
         
