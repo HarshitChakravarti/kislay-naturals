@@ -56,7 +56,7 @@ const Testimonials = () => (
               <div className="relative">
                 <div className="before:content-['\201C'] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:-top-4 before:text-6xl before:text-green-100 before:opacity-50 before:font-serif before:leading-none" />
                 <div className="after:content-['\201D'] after:absolute after:bottom-0 after:right-1/2 after:translate-x-1/2 after:-bottom-4 after:text-6xl after:text-green-100 after:opacity-50 after:font-serif after:leading-none" />
-                <p className="text-green-800 mb-6 text-lg leading-relaxed">"{t.review}"</p>
+                <p className="text-green-800 mb-6 text-lg leading-relaxed">&quot;{t.review}&quot;</p>
               </div>
               
               <div className="w-16 h-1 bg-green-200 mx-auto my-4 rounded-full group-hover:bg-green-400 transition-colors duration-300"></div>
