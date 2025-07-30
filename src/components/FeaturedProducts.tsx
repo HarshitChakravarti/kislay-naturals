@@ -12,7 +12,7 @@ export default function FeaturedProducts() {
       reviews: 124,
       image: "/placeholder.svg?height=300&width=300",
       badge: "Best Seller",
-      description: "Natural zero-calorie sweetener",
+      description: "Natural zero-calorie sweetener perfect for daily use",
     },
     {
       id: 2,
@@ -39,12 +39,12 @@ export default function FeaturedProducts() {
   ]
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-green-50 via-white to-emerald-50">
+    <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Featured Products</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-black-700 mb-4"> CHECK OUT OUR SWEET FAVORITES! 🥰</h2>
+          <p className="text-lg font-semibold text-black-900 max-w-2xl mx-auto">
             Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
             individuals
           </p>
@@ -120,11 +120,11 @@ export default function FeaturedProducts() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <button className="flex-1 inline-flex items-center justify-center rounded-lg bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-300">
+                    <button className="flex-1 inline-flex items-center justify-center rounded-none bg-green-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-300">
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add to Cart
                     </button>
-                    <button className="px-6 py-3 rounded-lg border-2 border-green-600 text-green-600 font-semibold hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-300 bg-transparent">
+                    <button className="px-6 py-3 rounded-none border-2 border-green-600 text-green-600 font-semibold hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-300 bg-transparent">
                       View More
                     </button>
                   </div>
@@ -136,7 +136,7 @@ export default function FeaturedProducts() {
 
         {/* View All Products Button */}
         <div className="text-center mt-12">
-          <button className="inline-flex items-center justify-center px-8 py-3 border-2 border-green-600 text-green-600 font-semibold rounded-lg hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 bg-transparent">
+          <button className="inline-flex items-center justify-center px-8 py-3 border-2 border-green-600 text-green-600 font-semibold rounded-none hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 bg-transparent">
             View All Products
           </button>
         </div>

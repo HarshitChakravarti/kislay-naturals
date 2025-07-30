@@ -1,10 +1,39 @@
-import Image from "next/image";
 import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import BlogPreview from "../components/BlogPreview";
 import Testimonials from "../components/Testimonials";
+import FeaturesBanner from "../components/FeaturesBanner";
+import Recipes from "../components/Recipes";
+import { Leaf, Award, ShoppingBag, Shield, Users } from "lucide-react";
 
 export default function Home() {
+  const features = [
+    {
+      icon: <Leaf className="w-12 h-12 text-green-600" />,
+      title: "100% NATURAL",
+      description: "Plant based",
+    },
+    {
+      icon: <Award className="w-12 h-12 text-green-600" />,
+      title: "0 CALORIES",
+      description: "100% Healthy",
+    },
+    {
+      icon: <ShoppingBag className="w-12 h-12 text-green-600" />,
+      title: "TASTY",
+      description: "No bitter aftertaste",
+    },
+    {
+      icon: <Shield className="w-12 h-12 text-green-600" />,
+      title: "NO SIDE EFFECTS",
+      description: "Scientifically backed",
+    },
+    {
+      icon: <Users className="w-12 h-12 text-green-600" />,
+      title: "FOR ALL AGE GROUP",
+      description: "Universal Age Appeal",
+    },
+  ]
   return (
     <>
       <Hero />
@@ -12,24 +41,9 @@ export default function Home() {
       <BlogPreview />
       <Testimonials />
       {/* Main content below hero and sections */}
-      <main className="flex flex-col items-center justify-center min-h-[40vh] px-4 sm:px-0">
-        <section className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
-          <div className="bg-white rounded shadow-md p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🌱</span>
-            <h2 className="font-semibold text-green-800 mb-1">100% Natural</h2>
-            <p className="text-green-900 text-sm">No artificial additives, just pure monk fruit goodness.</p>
-          </div>
-          <div className="bg-white rounded shadow-md p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">💚</span>
-            <h2 className="font-semibold text-green-800 mb-1">Healthy & Low-Calorie</h2>
-            <p className="text-green-900 text-sm">Enjoy sweetness without the calories or blood sugar spikes.</p>
-          </div>
-          <div className="bg-white rounded shadow-md p-6 flex flex-col items-center">
-            <span className="text-3xl mb-2">🌏</span>
-            <h2 className="font-semibold text-green-800 mb-1">Sustainably Sourced</h2>
-            <p className="text-green-900 text-sm">Our products are made with care for you and the planet.</p>
-          </div>
-        </section>
+      <main className="min-h-screen">
+        <Recipes />
+        <FeaturesBanner features={features} />
       </main>
     </>
   );
