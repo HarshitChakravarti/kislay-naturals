@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 const Hero = () => {
   const [visible, setVisible] = useState(false);
@@ -39,25 +40,33 @@ const Hero = () => {
     <section className="relative w-full aspect-[2.15/1] min-h-[500px] max-h-[90vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
-        <img
-          src="/cover333.jpg"
-          alt="Monk Fruit Sweeteners"
-          className="hidden md:block w-full h-full object-cover object-center"
-          style={{ 
-            filter: 'brightness(0.9) contrast(1.1)',
-            objectPosition: 'center center'
-          }}
-        />
+        <div className="hidden md:block w-full h-full relative">
+          <Image
+            src="/cover333.jpg"
+            alt="Monk Fruit Sweeteners"
+            fill
+            priority
+            className="object-cover object-center"
+            style={{ 
+              filter: 'brightness(0.9) contrast(1.1)',
+              objectPosition: 'center center'
+            }}
+          />
+        </div>
         {/* Mobile Image - shown only on mobile */}
-        <img
-          src="/mobile-cover.jpg" // Replace with your mobile image path
-          alt="Monk Fruit Sweeteners"
-          className="md:hidden w-full h-full object-cover object-center"
-          style={{ 
-            filter: 'brightness(0.9) contrast(1.1)',
-            objectPosition: 'center center'
-          }}
-        />
+        <div className="md:hidden w-full h-full relative">
+          <Image
+            src="/mobile-cover.jpg"
+            alt="Monk Fruit Sweeteners"
+            fill
+            priority
+            className="object-cover object-center"
+            style={{ 
+              filter: 'brightness(0.9) contrast(1.1)',
+              objectPosition: 'center center'
+            }}
+          />
+        </div>
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-green-800/30 to-green-900/50 z-10" />
       <div

@@ -43,7 +43,7 @@ export default function FeaturedProducts() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-black-700 mb-4"> CHECK OUT OUR SWEET FAVORITES! 🥰</h2>
+          <h2 className="text-3xl font-bold text-black-700 mb-4"> CHECK OUT OUR SWEET FAVORITES! {'\u{1F970}'} </h2>
           <p className="text-lg font-semibold text-black-900 max-w-2xl mx-auto">
             Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
             individuals

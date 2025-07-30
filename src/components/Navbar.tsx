@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { Search, User, ShoppingCart, ChevronDown, Menu, X } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,7 +24,14 @@ export default function Header() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/">
-              <img src="/logo-transparent.png" alt="Kislay" className="h-16 md:h-18 w-auto" />
+              <Image 
+                src="/logo-transparent.png" 
+                alt="Kislay" 
+                width={200} 
+                height={72} 
+                className="h-16 md:h-18 w-auto" 
+                priority
+              />
             </Link>
           </div>
 
