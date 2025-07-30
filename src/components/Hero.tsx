@@ -37,7 +37,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full aspect-[2.15/1] min-h-[500px] max-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full md:aspect-[2.15/1] aspect-[9/16] min-h-[80vh] md:min-h-[500px] max-h-[90vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
@@ -56,14 +56,21 @@ const Hero = () => {
         {/* Mobile Image - shown only on mobile */}
         <div className="md:hidden w-full h-full relative">
           <Image
-            src="/mobile-cover.jpg"
+            src="/mobilecover.jpg"
             alt="Monk Fruit Sweeteners"
             fill
             priority
+            sizes="100vw"
+            quality={90}
             className="object-cover object-center"
             style={{ 
               filter: 'brightness(0.9) contrast(1.1)',
-              objectPosition: 'center center'
+              objectPosition: 'center 30%',
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              top: 0,
+              left: 0,
             }}
           />
         </div>
