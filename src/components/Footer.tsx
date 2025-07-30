@@ -12,7 +12,7 @@ export default function Footer() {
               <Image src="/logo-transparent.png" alt="Kislay Logo" width={150} height={80} className="h-16 w-auto" />
             </div>
             <p className="text-gray-600 font-semibold text-sm leading-relaxed">
-              No to Sugar,<br/> Yes to KislayNaturals.
+              Naturally trusted | Deeply connected | Truly Healthy
             </p>
           </div>
 

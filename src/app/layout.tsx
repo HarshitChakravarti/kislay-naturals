@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Montserrat, Open_Sans } from "next/font/google";
+import { Montserrat, Open_Sans, Dancing_Script } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "../components/Footer";
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dancing-script",
+  display: 'swap',
+});
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -37,9 +44,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#3fa46a" />
       </head>
-      <body
-        className={`${montserrat.variable} ${openSans.variable} font-sans antialiased scroll-smooth`}
-      >
+      <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans antialiased scroll-smooth`}>
         <Navbar />
         <div>
           {children}

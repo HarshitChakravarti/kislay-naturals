@@ -66,8 +66,8 @@ const Hero = () => {
       >
         <div className="min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] flex items-center">
           <h1 
-            className={`text-2xl sm:text-4xl lg:text-6xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
-            style={{ fontFamily: 'var(--font-playfair), serif' }}
+            className={`text-3xl sm:text-5xl lg:text-8xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
+            style={{ fontFamily: 'var(--font-dancing-script), cursive' }}
             aria-live="polite"
           >
             {quotes[currentQuote]}

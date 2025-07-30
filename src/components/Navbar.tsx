@@ -17,8 +17,8 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`bg-white border-b border-gray-200 sticky top-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
-      <div className="container mx-auto px-4">
+    <header className={`bg-gray-50 border-b border-gray-200 sticky top-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+      <div className="container mx-auto px-0">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center">
@@ -28,39 +28,35 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-10">
-            <div className="flex items-center space-x-1 cursor-pointer hover:text-green-600 transition-colors">
-              <span className="font-semibold text-gray-700 text-[15px]">SHOP</span>
-              <ChevronDown className="w-4 h-4 text-gray-500" />
-            </div>
-            <Link href="#" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+          <nav className="hidden lg:flex items-center space-x-12">
+            <Link href="/shop" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+              SHOP
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link href="/about" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               ABOUT US
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="#" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              
+            <Link href="/products" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               PRODUCTS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="#" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              
+            <Link href="/find-in-store" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               FIND IN STORE
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="#" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              
+            <Link href="/subscribe" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               SUBSCRIBE
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="#" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              
+            <Link href="/free-sample" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               GET A FREE SAMPLE
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
             {/* Search Bar */}
             <div className={`fixed left-0 right-0 top-16 bg-white shadow-lg transition-all duration-300 overflow-hidden z-50 ${isSearchOpen ? 'h-16 opacity-100' : 'h-0 opacity-0'}`}>
               <div className="container mx-auto px-4 h-full flex items-center">

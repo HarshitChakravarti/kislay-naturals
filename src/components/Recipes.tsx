@@ -7,12 +7,12 @@ const recipes = [
     title: "Sugar-Free Lemonade",
     prepTime: "5 mins",
     servings: 2,
-    image: "/recipes/lemonade.jpg",
+    image: "/recipe1.jpg",
     description: "Refreshing lemonade sweetened naturally with KislayNaturals",
     ingredients: [
       "2 cups water",
       "4 tbsp lemon juice",
-      "1 tsp KislayNaturals sweetener",
+      "2 drops KislayNaturals sweetener",
       "Ice cubes",
       "Mint leaves for garnish"
     ]
@@ -22,12 +22,12 @@ const recipes = [
     title: "Healthy Oatmeal",
     prepTime: "10 mins",
     servings: 1,
-    image: "/recipes/oatmeal.jpg",
+    image: "/oatmeal.jpg",
     description: "Warm and comforting oatmeal with natural sweetness",
     ingredients: [
       "1/2 cup rolled oats",
       "1 cup almond milk",
-      "1 tsp KislayNaturals sweetener",
+      "2 drops KislayNaturals sweetener",
       "1/2 tsp cinnamon",
       "Handful of berries"
     ]
@@ -37,13 +37,13 @@ const recipes = [
     title: "Fruit Smoothie",
     prepTime: "7 mins",
     servings: 2,
-    image: "/recipes/smoothie.jpg",
+    image: "/recipe3.jpg",
     description: "Creamy fruit smoothie with zero added sugar",
     ingredients: [
       "1 banana",
       "1/2 cup Greek yogurt",
       "1/2 cup mixed berries",
-      "1 tsp KislayNaturals sweetener",
+      "2 drops KislayNaturals sweetener",
       "1/2 cup almond milk"
     ]
   }
