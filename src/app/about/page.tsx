@@ -1,6 +1,5 @@
 import Image from "next/image"
-import { Globe, Shield, Target, Users, Leaf, Clock, Phone, Mail, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Globe, Shield, Target, Users, Leaf, Clock } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function AboutPage() {
@@ -15,7 +14,7 @@ export default function AboutPage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Back in 2020, as the world was thrown into a global pandemic and supply chain crisis, with everything
                 becoming the norm, businesses faced production halts, delayed shipments, and broken links across every
-                stage of the supply chain. In the midst of this chaos, we saw an opportunity to make a difference.
+                stage of the supply chain. What if there was a better way?
               </p>
               <p className="text-gray-600 leading-relaxed">
                 We decided to step up using our expertise to create a reliable, end-to-end service that businesses could
@@ -182,7 +181,7 @@ export default function AboutPage() {
                 Our <span className="text-green-600">Commitment</span>
               </h2>
               <p className="text-gray-600 leading-relaxed mb-8">
-                At Kislay Naturals, sustainability isn't just a buzzword; it's a core principle. We believe that ethical
+                At Kislay Naturals, sustainability isn&apos;t just a buzzword; it&apos;s a core principle. We believe that ethical
                 sourcing and environmentally responsible practices should be a given, not an exception.
               </p>
 
@@ -202,10 +201,10 @@ export default function AboutPage() {
               </div>
 
               <p className="text-gray-600 leading-relaxed mb-6">
-                <strong>We're In This For The Long Run</strong>
+                <strong>We&apos;re In This For The Long Run</strong>
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Before sourcing starts with better values, but we're committed to creating the path and also being part
+                Before sourcing starts with better values, but we&apos;re committed to creating the path and also being part
                 of the way.
               </p>
             </div>
