@@ -118,23 +118,23 @@ export default function Header() {
                 HOME
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/about" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
                 ABOUT US
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/products" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
                 PRODUCTS
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/find-in-store" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
                 FIND IN STORE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/subscribe" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
                 SUBSCRIBE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="#" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/free-sample" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
                 GET A FREE SAMPLE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
