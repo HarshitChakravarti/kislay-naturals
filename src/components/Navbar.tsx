@@ -36,7 +36,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-12">
+          <nav className="hidden lg:flex items-center space-x-20">
             <Link href="/shop" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               SHOP
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
@@ -49,16 +49,8 @@ export default function Header() {
               PRODUCTS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/find-in-store" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              FIND IN STORE
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
             <Link href="/subscribe" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
               SUBSCRIBE
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
-            <Link href="/free-sample" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              GET A FREE SAMPLE
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
