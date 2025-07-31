@@ -56,7 +56,7 @@ const Hero = () => {
         {/* Mobile Image - shown only on mobile */}
         <div className="md:hidden w-full h-full relative">
           <Image
-            src="/mobilecover.jpg"
+            src="/mobilecoverfinal.jpg"
             alt="Monk Fruit Sweeteners"
             fill
             priority

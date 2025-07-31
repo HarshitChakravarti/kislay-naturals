@@ -7,7 +7,7 @@ const posts = [
     id: 1,
     title: "5 Surprising Benefits of Monk Fruit",
     excerpt: "Discover why monk fruit is the healthiest sugar alternative for your daily routine.",
-    image: "/cover2.jpg", // Replace with real blog image
+    image: "/cover2.jpg", 
     category: "Health & Wellness",
     date: "July 28, 2025",
     link: "#",
@@ -16,7 +16,7 @@ const posts = [
     id: 2,
     title: "Diabetes - The Silent Killer",
     excerpt: "How monk fruit sweetener can help manage blood sugar levels and support a healthy lifestyle.",
-    image: "/diabetes.jpg", // Replace with real blog image
+    image: "/diabetes.jpg", 
     category: "Nutrition",
     date: "July 25, 2025",
     link: "#",

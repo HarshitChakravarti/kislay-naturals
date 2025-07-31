@@ -1,5 +1,8 @@
+"use client";
+
+import { useState, useRef } from "react";
 import Image from "next/image";
-import { Clock, Users } from "lucide-react";
+import { Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
 
 const recipes = [
   {
@@ -46,23 +49,102 @@ const recipes = [
       "2 drops KislayNaturals sweetener",
       "1/2 cup almond milk"
     ]
+  },
+  {
+    id: 4,
+    title: "Chia Pudding",
+    prepTime: "5 mins + chilling",
+    servings: 2,
+    image: "/chia-pudding.jpg",
+    description: "Protein-packed chia pudding with natural sweetness",
+    ingredients: [
+      "1/4 cup chia seeds",
+      "1 cup almond milk",
+      "3 drops KislayNaturals sweetener",
+      "1/2 tsp vanilla extract",
+      "Fresh fruits for topping"
+    ]
+  },
+  {
+    id: 5,
+    title: "Sugar-Free Iced Tea",
+    prepTime: "10 mins",
+    servings: 4,
+    image: "/iced-tea.jpg",
+    description: "Refreshing iced tea with a hint of natural sweetness",
+    ingredients: [
+      "4 cups water",
+      "4 tea bags (black or green)",
+      "3 drops KislayNaturals sweetener",
+      "Lemon slices and mint for garnish",
+      "Ice cubes"
+    ]
+  },
+  {
+    id: 6,
+    title: "Protein Pancakes",
+    prepTime: "15 mins",
+    servings: 2,
+    image: "/pancakes.jpg",
+    description: "Fluffy pancakes with no added sugar",
+    ingredients: [
+      "1 banana (mashed)",
+      "2 eggs",
+      "1/2 cup oats",
+      "1 scoop protein powder",
+      "2 drops KislayNaturals sweetener"
+    ]
   }
 ];
 
 export default function Recipes() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollContainer = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainer.current) {
+      scrollContainer.current.scrollBy({
+        left: -300, // Adjust scroll amount as needed
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainer.current) {
+      scrollContainer.current.scrollBy({
+        left: 300, // Adjust scroll amount as needed
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <div className="w-full bg-white py-16 px-4">
+    <div className="w-full bg-white py-16 px-4 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-700 mb-4">DELICIOUS SUGAR-FREE RECIPES {'\u{1F60B}'}</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">Discover tasty recipes made with KislayNaturals sweetener that are both healthy and satisfying.</p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {recipes.map((recipe) => (
+        <div className="relative">
+          <button 
+            onClick={scrollLeft}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-50 transition-colors"
+            aria-label="Previous recipe"
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-700" />
+          </button>
+          
+          <div 
+            ref={scrollContainer}
+            className="flex space-x-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {recipes.map((recipe) => (
             <div 
               key={recipe.id} 
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-50 hover:border-green-50"
+              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-50 hover:border-green-50 flex-shrink-0 w-80 snap-center"
             >
               <div className="relative h-48 bg-gray-100 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
@@ -110,8 +192,27 @@ export default function Recipes() {
               </div>
             </div>
           ))}
+          </div>
+          
+          <button 
+            onClick={scrollRight}
+            className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-50 transition-colors"
+            aria-label="Next recipe"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-700" />
+          </button>
         </div>
       </div>
+      
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 }

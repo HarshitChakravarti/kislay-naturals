@@ -37,8 +37,8 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-20">
-            <Link href="/shop" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
-              SHOP
+            <Link href="/" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+              HOME
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link href="/about" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
@@ -113,11 +113,11 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
-            <nav className="flex flex-col space-y-6">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-gray-700">SHOP</span>
-                <ChevronDown className="w-4 h-4 text-gray-500" />
-              </div>
+            <nav className="flex flex-col space-y-6 px-4">
+              <Link href="/" className="group relative font-medium text-gray-700 block py-2">
+                HOME
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
               <Link href="#" className="group relative font-medium text-gray-700 block py-2">
                 ABOUT US
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>

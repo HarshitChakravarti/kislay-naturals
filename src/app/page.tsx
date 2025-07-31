@@ -15,7 +15,7 @@ export default function Home() {
     },
     {
       icon: <Award className="w-12 h-12 text-green-600" />,
-      title: "0 CALORIES",
+      title: "ZERO CALORIES",
       description: "100% Healthy",
     },
     {
