@@ -36,20 +36,20 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-20">
-            <Link href="/" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+          <nav className="hidden lg:flex items-center space-x-16">
+            <Link href="/" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               HOME
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/about" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+            <Link href="/about" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               ABOUT US
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/products" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+            <Link href="/products" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               PRODUCTS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/subscribe" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[15px]">
+            <Link href="/subscribe" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               SUBSCRIBE
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
@@ -114,27 +114,27 @@ export default function Header() {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-6 px-4">
-              <Link href="/" className="group relative font-medium text-gray-700 block py-2">
+              <Link href="/" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 HOME
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/about" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/about" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 ABOUT US
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/products" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/products" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 PRODUCTS
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/find-in-store" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/find-in-store" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 FIND IN STORE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/subscribe" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/subscribe" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 SUBSCRIBE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/free-sample" className="group relative font-medium text-gray-700 block py-2" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/free-sample" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 GET A FREE SAMPLE
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>

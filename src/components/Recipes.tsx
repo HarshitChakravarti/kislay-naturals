@@ -55,7 +55,7 @@ const recipes = [
     title: "Chia Pudding",
     prepTime: "5 mins + chilling",
     servings: 2,
-    image: "/chia-pudding.jpg",
+    image: "/chiapudding.jpg",
     description: "Protein-packed chia pudding with natural sweetness",
     ingredients: [
       "1/4 cup chia seeds",
@@ -70,7 +70,7 @@ const recipes = [
     title: "Sugar-Free Iced Tea",
     prepTime: "10 mins",
     servings: 4,
-    image: "/iced-tea.jpg",
+    image: "/icedtea.jpg",
     description: "Refreshing iced tea with a hint of natural sweetness",
     ingredients: [
       "4 cups water",

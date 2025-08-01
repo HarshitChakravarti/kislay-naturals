@@ -27,13 +27,15 @@ const BlogPreview = () => (
   <section className="w-full py-16 lg:py-20 bg-white">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-12">
-        <span className="inline-block px-3 py-1 text-sm font-semibold text-green-600 bg-green-50 rounded-full mb-3">
-          Latest Articles
-        </span>
+        
         <h2 className="text-3xl font-bold text-gray-700 mb-4">
           NOURISH YOUR KNOWLEDGE WITH US 😊
         </h2>
-        <div className="w-20 h-1 bg-green-400 mx-auto rounded-full"></div>
+        <p className="text-lg font-semibold text-black-900 max-w-2xl mx-auto">
+            Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
+            individuals
+          </p>
+        
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
