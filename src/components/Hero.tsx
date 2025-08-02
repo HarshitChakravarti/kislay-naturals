@@ -82,19 +82,19 @@ const Hero = () => {
       >
         <div className="min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] flex items-center">
           <h1 
-            className={`text-3xl sm:text-5xl lg:text-8xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
+            className={`text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
             style={{ fontFamily: 'var(--font-dancing-script), cursive' }}
             aria-live="polite"
           >
             {quotes[currentQuote]}
           </h1>
         </div>
-        <p className="text-base sm:text-lg lg:text-xl text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed" style={{ fontFamily: 'var(--font-poppins), sans-serif' }}>
+        <p className="text-xl sm:text-xl md:text-2xl text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif' }}>
         Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the crash, guilt, or chemicals.
         </p>
         <a 
           href="#products" 
-          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-10 py-4 text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
+          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-8 py-3 sm:px-10 sm:py-4 text-base sm:text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
         >
           Shop Now
         </a>
