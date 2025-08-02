@@ -4,6 +4,7 @@ import BlogPreview from "../components/BlogPreview";
 import Testimonials from "../components/Testimonials";
 import FeaturesBanner from "../components/FeaturesBanner";
 import Recipes from "../components/Recipes";
+import SectionDivider from "../components/SectionDivider";
 import { Leaf, Award, ShoppingBag, Shield, Users } from "lucide-react";
 
 export default function Home() {
@@ -35,16 +36,14 @@ export default function Home() {
     },
   ]
   return (
-    <>
+    <main className="min-h-screen">
       <Hero />
+      <SectionDivider />
       <FeaturedProducts />
-      <BlogPreview />
+      <FeaturesBanner features={features} />
+      <Recipes />
       <Testimonials />
-      {/* Main content below hero and sections */}
-      <main className="min-h-screen">
-        <Recipes />
-        <FeaturesBanner features={features} />
-      </main>
-    </>
+      <BlogPreview />
+    </main>
   );
 }

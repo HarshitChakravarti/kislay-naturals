@@ -23,15 +23,32 @@ const testimonials = [
 ];
 
 const Testimonials = () => (
-  <section className="w-full py-16 bg-gray-50">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-700 mb-4">WHAT OUR CUSTOMERS SAY {'\u{1F607}'} </h2>
-        <p className="text-lg font-semibold text-black-900 max-w-2xl mx-auto">
-            Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
-            individuals
-          </p>
+  <section className="w-full bg-white">
+    {/* Header with green background and gradient shadow */}
+    <div className="relative bg-green-700 text-white py-12 w-full overflow-hidden">
+      {/* Gradient shadow at the bottom */}
+      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
+      
+      {/* Content layer */}
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+                WHAT OUR CUSTOMERS SAY
+              </span>
+              {' \u{1F607}'}
+            </h2>
+            <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+              Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
+              individuals
+            </p>
+          </div>
+        </div>
       </div>
+    </div>
+    
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {testimonials.map((t) => (

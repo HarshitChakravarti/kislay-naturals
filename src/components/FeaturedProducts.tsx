@@ -15,22 +15,101 @@ export default function FeaturedProducts() {
   }
 
   return (
-    <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-black-700 mb-4"> CHECK OUT OUR SWEET FAVOURITE! {'\u{1F970}'} </h2>
-          <p className="text-lg font-semibold text-black-900 max-w-2xl mx-auto">
-            Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
-            individuals
-          </p>
+    <section className="py-0">
+      {/* Header with green background and gradient shadow */}
+      <div className="relative bg-green-700 text-white py-12 w-full overflow-hidden">
+        {/* Gradient shadow at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
+        
+        {/* Content layer */}
+        <div className="relative z-10">
+          <div className="max-w-6xl mx-auto px-4">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold mb-4">
+                <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+                  CHECK OUT OUR SWEET FAVOURITE!
+                </span>
+                {' \u{1F970}'}
+              </h2>
+              <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+                Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
+                individuals
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+      
+      <div className="w-full max-w-6xl mx-auto px-4 mb-16 md:mb-24">
+        {/* Product Card - Responsive Layout */}
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
+          {/* Mobile & Tablet: Vertical Layout */}
+          <div className="md:hidden">
+            {/* Product Image */}
+            <div className="relative bg-white pt-4 px-4">
+              <div className="absolute top-6 left-6 z-10">
+                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                  {product.badge}
+                </span>
+              </div>
+              <div className="relative h-64 w-full flex items-center justify-center">
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={400}
+                  height={400}
+                  className="object-contain h-full w-auto"
+                  priority
+                />
+              </div>
+            </div>
 
-        {/* Single Product Card - Horizontal Layout */}
-        <div className="flex justify-center">
-          <div className="group relative overflow-hidden rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 bg-white w-full max-w-5xl flex">
+            {/* Product Details */}
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-500">({product.reviews} reviews)</span>
+              </div>
+
+              <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
+              
+              <div className="mb-4">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-green-700">₹{product.price}</span>
+                  <span className="text-base text-gray-400 line-through">₹{product.originalPrice}</span>
+                  <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes</p>
+              </div>
+
+              <div className="flex flex-col gap-3 mt-6">
+                <button className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300">
+                  <ShoppingCart className="h-4 w-4" />
+                  Add to Cart
+                </button>
+                <button className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg font-medium transition-colors duration-300">
+                  View Details
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Desktop: Horizontal Layout */}
+          <div className="hidden md:flex">
             {/* Left Section - Product Image */}
-            <div className="w-[55%] relative bg-white flex items-center justify-center p-4">
+            <div className="w-1/2 relative bg-white flex items-center justify-center p-6">
               <div className="absolute top-4 left-4 z-10">
                 <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
                   {product.badge}
@@ -50,11 +129,8 @@ export default function FeaturedProducts() {
             </div>
 
             {/* Right Section - Product Details */}
-            <div className="w-1/2 p-8 flex flex-col">
-
-              {/* Product Info */}
+            <div className="w-1/2 p-6 flex flex-col">
               <div className="flex-1">
-                {/* Rating */}
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
@@ -69,13 +145,10 @@ export default function FeaturedProducts() {
                   <span className="text-sm text-gray-500">({product.reviews} reviews)</span>
                 </div>
 
-                {/* Product Name */}
                 <h2 className="text-2xl font-bold text-gray-900 mb-3">{product.name}</h2>
                 
-                {/* Description */}
                 <p className="text-gray-600 mb-6 text-justify">{product.description}</p>
 
-                {/* Price */}
                 <div className="mb-8">
                   <div className="flex items-baseline gap-3 mb-1">
                     <span className="text-3xl font-bold text-green-700">₹{product.price}</span>
@@ -87,7 +160,6 @@ export default function FeaturedProducts() {
                   <p className="text-sm text-gray-500">Inclusive of all taxes</p>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-4">
                   <button className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-300">
                     <ShoppingCart className="h-5 w-5" />
@@ -99,7 +171,6 @@ export default function FeaturedProducts() {
                   </button>
                 </div>
 
-                {/* Additional Info */}
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
