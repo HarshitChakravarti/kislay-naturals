@@ -12,8 +12,10 @@ const FeaturesBanner = dynamic(() => import('@/components/FeaturesBanner'));
 const Recipes = dynamic(() => import('@/components/Recipes'));
 const SectionDivider = dynamic(() => import('@/components/SectionDivider'));
 
+import { Product } from '@/types';
+
 interface HomeContentProps {
-  products: any[]; // Replace 'any' with your Product type
+  products: Product[];
 }
 
 export default function HomeContent({ products }: HomeContentProps) {

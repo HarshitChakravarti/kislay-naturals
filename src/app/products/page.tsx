@@ -1,7 +1,8 @@
-"use client";
 import { Suspense } from 'react';
-import ProductsList from "./ProductsList";
 import Loading from '../loading';
+import ProductsList from "./ProductsList";
+
+export const dynamic = 'force-dynamic';
 
 export default function ProductsPage() {
   return (

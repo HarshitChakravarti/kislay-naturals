@@ -8,7 +8,7 @@ import {
   Users 
 } from 'lucide-react';
 import { ReactNode } from 'react';
-import { Feature, FeaturesBannerProps, IconName } from './FeaturesBanner.types';
+import { FeaturesBannerProps, IconName } from './FeaturesBanner.types';
 
 const iconComponents: Record<IconName, ReactNode> = {
   'Leaf': <Leaf className="w-12 h-12 text-green-600" />,
