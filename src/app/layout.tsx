@@ -3,6 +3,7 @@ import "./globals.css";
 import { Montserrat, Open_Sans, Dancing_Script } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "../components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const dancingScript = Dancing_Script({
   subsets: ["latin"],
@@ -44,10 +45,12 @@ export default function RootLayout({
         <meta name="theme-color" content="#3fa46a" />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans antialiased scroll-smooth`}>
-        <Navbar />
-        <div>
-          {children}
-        </div>
+        <AuthProvider>
+          <Navbar />
+          <div>
+            {children}
+          </div>
+        </AuthProvider>
         <Footer />
       </body>
     </html>

@@ -1,15 +1,210 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Search, User, ShoppingCart, ChevronDown, Menu, X } from "lucide-react"
+import { useState, useEffect, useRef, useMemo, useCallback } from "react"
+import { Search, User, ShoppingCart, ChevronDown, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/AuthContext"
+
+interface UserData {
+  _id: string;
+  username: string;
+  
+  email: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const { user, logout, isLoading: authLoading, isVerifying } = useAuth();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  // Callback to close dropdown
+  const closeDropdown = useCallback(() => {
+    setIsUserDropdownOpen(false);
+  }, []);
+
+  // Callback to handle logout
+  const handleLogout = useCallback(async () => {
+    try {
+      closeDropdown();
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }, [logout, router, closeDropdown]);
+
+  // Debounced dropdown toggle to prevent rapid state changes
+  const toggleDropdown = useCallback(() => {
+    setIsUserDropdownOpen(prev => !prev);
+  }, []);
+
+  // Memoize the dropdown content to prevent unnecessary re-renders
+  const dropdownContent = useMemo(() => {
+    if (authLoading) {
+      return (
+        <div className="px-4 py-3 text-center">
+          <div className="w-4 h-4 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mx-auto"></div>
+          <p className="text-sm text-gray-500 mt-2">Loading...</p>
+        </div>
+      );
+    }
+
+    if (user) {
+      return (
+        <>
+          <div className="px-4 py-3 border-b border-gray-100">
+            <p className="text-sm text-gray-900 font-medium">{user.username || 'Welcome'}</p>
+            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+          </div>
+          <Link 
+            href="/account" 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            onClick={closeDropdown}
+            role="menuitem"
+          >
+            <UserIcon className="w-4 h-4 mr-3" />
+            My Account
+          </Link>
+          <Link 
+            href="/account/orders" 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            onClick={closeDropdown}
+            role="menuitem"
+          >
+            <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            My Orders
+          </Link>
+          <Link 
+            href="/account/settings" 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            onClick={closeDropdown}
+            role="menuitem"
+          >
+            <Settings className="w-4 h-4 mr-3" />
+            Settings
+          </Link>
+          <div className="border-t border-gray-100 my-1"></div>
+          <button 
+            onClick={handleLogout}
+            className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            role="menuitem"
+          >
+            <LogOut className="w-4 h-4 mr-3" />
+            Sign out
+          </button>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Link 
+          href="/login" 
+          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          onClick={closeDropdown}
+          role="menuitem"
+        >
+          <LogIn className="w-4 h-4 mr-3" />
+          Sign in
+        </Link>
+        <Link 
+          href="/register" 
+          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          onClick={closeDropdown}
+          role="menuitem"
+        >
+          <UserPlus className="w-4 h-4 mr-3" />
+          Create account
+        </Link>
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            <div className="border-t border-gray-100 my-1"></div>
+            <Link 
+              href="/test-auth" 
+              className="flex items-center px-4 py-2 text-sm text-gray-500 hover:bg-gray-100"
+              onClick={closeDropdown}
+              role="menuitem"
+            >
+              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Test Auth
+            </Link>
+            <Link 
+              href="/reset-auth" 
+              className="flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50"
+              onClick={closeDropdown}
+              role="menuitem"
+            >
+              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Reset Auth
+            </Link>
+          </>
+        )}
+      </>
+    );
+  }, [user, authLoading, closeDropdown, handleLogout]);
+
+  // Memoize the user icon to prevent flickering
+  const userIcon = useMemo(() => {
+    if (authLoading) {
+      return (
+        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="w-4 h-4 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin"></div>
+        </div>
+      );
+    }
+
+    if (user) {
+      return (
+        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium relative">
+          {user.username ? user.username.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+          {isVerifying && (
+            <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-green-500 rounded-full">
+              <CheckCircle2 className="w-3 h-3 text-white" />
+            </span>
+          )}
+        </div>
+      );
+    }
+
+    return <User className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />;
+  }, [user?.username, user?.email, authLoading, isVerifying]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false);
+      }
+    }
+
+    // Handle scroll
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    
+    // Add event listeners
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+    
+    // Cleanup
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -88,11 +283,33 @@ export default function Header() {
               <Search className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
             </button>
 
-            {/* User Account */}
-            <Link href="/account" className="p-2 hover:bg-gray-100 rounded-full transition-colors group relative">
-              <User className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
-              <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">2</span>
-            </Link>
+            {/* User Account Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button 
+                onClick={toggleDropdown}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors group relative"
+                aria-expanded={isUserDropdownOpen}
+                aria-haspopup="true"
+                aria-label={user ? 'User menu' : 'Account menu'}
+                title={`Auth State: ${authLoading ? 'Loading' : user ? 'Logged In' : 'Not Logged In'}`}
+              >
+                <div className="relative">
+                  {userIcon}
+                </div>
+              </button>
+              
+              {/* Dropdown Menu */}
+              {isUserDropdownOpen && (
+                <div 
+                  className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu"
+                >
+                  {dropdownContent}
+                </div>
+              )}
+            </div>
 
             {/* Shopping Cart */}
             <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors group relative">

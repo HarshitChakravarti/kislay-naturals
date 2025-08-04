@@ -9,8 +9,8 @@ const asyncHandler = require('../middleware/async');
 exports.createOrder = asyncHandler(async (req, res, next) => {
   const {
     orderItems,
-    shippingAddress,
-    paymentMethod,
+    shippingInfo,  // Changed from shippingAddress to match schema
+    paymentInfo,   // Added to match schema
     itemsPrice,
     taxPrice,
     shippingPrice,
@@ -25,9 +25,12 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
   const itemsFromDB = await Promise.all(
     orderItems.map(async (item) => {
       const dbProduct = await Product.findById(item.product);
+      if (!dbProduct) {
+        throw new ErrorResponse(`Product not found with id ${item.product}`, 404);
+      }
       return {
         name: dbProduct.name,
-        qty: item.qty,
+        quantity: item.quantity,  // Changed from qty to match schema
         image: dbProduct.images[0],
         price: dbProduct.price,
         product: item.product,
@@ -35,25 +38,17 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
     })
   );
 
-  // Calculate prices
-  const calculatedPrices = {
-    itemsPrice: itemsFromDB.reduce((acc, item) => acc + item.price * item.qty, 0),
-    taxPrice: 0.15, // 15% tax
-    shippingPrice: itemsPrice > 100 ? 0 : 10, // Free shipping over $100
-  };
-  
-  calculatedPrices.totalPrice = (
-    calculatedPrices.itemsPrice +
-    calculatedPrices.taxPrice +
-    calculatedPrices.shippingPrice
-  );
-
   const order = new Order({
     orderItems: itemsFromDB,
     user: req.user._id,
-    shippingAddress,
-    paymentMethod,
-    ...calculatedPrices,
+    shippingInfo,  // Changed to match schema
+    paymentInfo,   // Added to match schema
+    itemsPrice: itemsFromDB.reduce((acc, item) => acc + (item.price * item.quantity), 0),
+    taxPrice: taxPrice || 0.15 * itemsPrice,
+    shippingPrice: shippingPrice || (itemsPrice > 100 ? 0 : 10),
+    totalPrice: totalPrice || (itemsPrice + (itemsPrice * 0.15) + (itemsPrice > 100 ? 0 : 10)),
+    paidAt: new Date(),  // Automatically set paidAt
+    orderStatus: 'Processing'  // Set default status
   });
 
   const createdOrder = await order.save();

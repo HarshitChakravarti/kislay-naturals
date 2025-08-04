@@ -61,16 +61,19 @@ const orderSchema = new mongoose.Schema({
   paymentInfo: {
     id: {
       type: String,
-      required: true
+      required: true,
+      default: 'cash_on_delivery'  // Added default
     },
     status: {
       type: String,
-      required: true
+      required: true,
+      default: 'pending'  // Added default
     }
   },
   paidAt: {
     type: Date,
-    required: true
+    required: true,
+    default: Date.now  // Added default
   },
   itemsPrice: {
     type: Number,
@@ -99,11 +102,7 @@ const orderSchema = new mongoose.Schema({
   },
   deliveredAt: {
     type: Date
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });  // Added timestamps instead of manual createdAt
 
 module.exports = mongoose.model('Order', orderSchema);
