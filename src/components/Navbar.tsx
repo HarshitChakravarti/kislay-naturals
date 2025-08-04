@@ -1,20 +1,19 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { Search, User, ShoppingCart, ChevronDown, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings, CheckCircle2 } from "lucide-react"
+import { Search, User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 
-interface UserData {
-  _id: string;
-  username: string;
-  
-  email: string;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
+// interface UserData {
+//   _id: string;
+//   username: string;
+//   email: string;
+//   createdAt?: string | Date;
+//   updatedAt?: string | Date;
+// }
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,7 +21,7 @@ export default function Header() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
-  const { user, logout, isLoading: authLoading, isVerifying } = useAuth();
+  const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -49,15 +48,6 @@ export default function Header() {
 
   // Memoize the dropdown content to prevent unnecessary re-renders
   const dropdownContent = useMemo(() => {
-    if (authLoading) {
-      return (
-        <div className="px-4 py-3 text-center">
-          <div className="w-4 h-4 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin mx-auto"></div>
-          <p className="text-sm text-gray-500 mt-2">Loading...</p>
-        </div>
-      );
-    }
-
     if (user) {
       return (
         <>
@@ -156,33 +146,20 @@ export default function Header() {
         )}
       </>
     );
-  }, [user, authLoading, closeDropdown, handleLogout]);
+  }, [user, closeDropdown, handleLogout]);
 
   // Memoize the user icon to prevent flickering
   const userIcon = useMemo(() => {
-    if (authLoading) {
-      return (
-        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-          <div className="w-4 h-4 border-2 border-gray-300 border-t-green-600 rounded-full animate-spin"></div>
-        </div>
-      );
-    }
-
     if (user) {
       return (
-        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium relative">
+        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium">
           {user.username ? user.username.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-          {isVerifying && (
-            <span className="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-green-500 rounded-full">
-              <CheckCircle2 className="w-3 h-3 text-white" />
-            </span>
-          )}
         </div>
       );
     }
 
     return <User className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />;
-  }, [user?.username, user?.email, authLoading, isVerifying]);
+  }, [user]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -291,7 +268,7 @@ export default function Header() {
                 aria-expanded={isUserDropdownOpen}
                 aria-haspopup="true"
                 aria-label={user ? 'User menu' : 'Account menu'}
-                title={`Auth State: ${authLoading ? 'Loading' : user ? 'Logged In' : 'Not Logged In'}`}
+                title={user ? 'Logged In' : 'Not Logged In'}
               >
                 <div className="relative">
                   {userIcon}

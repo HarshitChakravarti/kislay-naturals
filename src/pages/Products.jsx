@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+// import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../store/slices/productSlice';
 import { toast } from 'react-toastify';
 
 const Products = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
     search: searchParams.get('search') || '',

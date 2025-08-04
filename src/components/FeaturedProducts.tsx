@@ -1,18 +1,21 @@
+"use client";
+
 import Image from "next/image"
 import { ShoppingCart, Star, ArrowRight } from "lucide-react"
+import { Product } from "@/types"
 
-export default function FeaturedProducts() {
-  const product = {
-    id: 1,
-    name: "Monk Fruit Sweetener Drop",
-    price: 229,
-    originalPrice: 349,
-    rating: 4.5,
-    reviews: 100,
-    image: "/productimage-removebg-preview.png",
-    badge: "Best Seller",
-    description: "Kislay Monk Fruit Sweetener Drops - 100% Natural & Zero Calorie Sugar Substitute Fuel your lifestyle with natural, low-carb goodness - packed with clean energy, rich nutrients, and zero guilt. Say goodbye to sugar and artificial sweeteners! Kislay Monk Fruit Sweetener Drops are made from pure monk fruit extract, offering a zero-calorie, zero-glycemic index, and 100% natural sugar substitute that's perfect for your healthy lifestyle.",
+interface FeaturedProductsProps {
+  products: Product[];
+}
+
+export default function FeaturedProducts({ products }: FeaturedProductsProps) {
+  // If no products, don't render anything (handled by parent)
+  if (!products || products.length === 0) {
+    return null;
   }
+  
+  // For now, just use the first product as featured
+  const product = products[0];
 
   return (
     <section className="py-0">
@@ -68,27 +71,40 @@ export default function FeaturedProducts() {
             <div className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
-                      }`}
-                    />
-                  ))}
+                  {[...Array(5)].map((_, i) => {
+                    const rating = product.rating || 0;
+                    return (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 ${
+                          i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                        }`}
+                      />
+                    );
+                  })}
                 </div>
-                <span className="text-xs text-gray-500">({product.reviews} reviews)</span>
+                <span className="text-xs text-gray-500">
+                  ({product.reviews || 0} reviews)
+                </span>
               </div>
 
               <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
               
               <div className="mb-4">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-green-700">₹{product.price}</span>
-                  <span className="text-base text-gray-400 line-through">₹{product.originalPrice}</span>
-                  <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                  </span>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ₹{product.price?.toFixed(2) || '0.00'}
+                  </div>
+                  {product.originalPrice && product.originalPrice > (product.price || 0) && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500 line-through">
+                        ₹{product.originalPrice.toFixed(2)}
+                      </span>
+                      <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
+                        {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes</p>
               </div>
@@ -133,29 +149,48 @@ export default function FeaturedProducts() {
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 ${
-                          i < Math.floor(product.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
-                        }`}
-                      />
-                    ))}
+                    {[...Array(5)].map((_, i) => {
+                      const rating = product.rating || 0;
+                      return (
+                        <Star
+                          key={i}
+                          className={`h-5 w-5 ${
+                            i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                          }`}
+                        />
+                      );
+                    })}
                   </div>
-                  <span className="text-sm text-gray-500">({product.reviews} reviews)</span>
+                  <span className="text-sm text-gray-500">
+                    ({product.reviews || 0} reviews)
+                  </span>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mb-3">{product.name}</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                  {product.name}
+                </h2>
                 
-                <p className="text-gray-600 mb-6 text-justify">{product.description}</p>
+                <p className="text-gray-600 mb-6 text-justify">
+                  {product.description || 'No description available.'}
+                </p>
 
                 <div className="mb-8">
                   <div className="flex items-baseline gap-3 mb-1">
-                    <span className="text-3xl font-bold text-green-700">₹{product.price}</span>
-                    <span className="text-lg text-gray-400 line-through">₹{product.originalPrice}</span>
-                    <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                    <span className="text-3xl font-bold text-green-700">
+                      ₹{product.price?.toFixed(2) || '0.00'}
                     </span>
+                    {product.originalPrice && (
+                      <>
+                        <span className="text-lg text-gray-400 line-through">
+                          ₹{product.originalPrice.toFixed(2)}
+                        </span>
+                        {product.price && product.originalPrice > product.price && (
+                          <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                            {Math.round((((product.originalPrice - product.price) / product.originalPrice) * 100))}% OFF
+                          </span>
+                        )}
+                      </>
+                    )}
                   </div>
                   <p className="text-sm text-gray-500">Inclusive of all taxes</p>
                 </div>

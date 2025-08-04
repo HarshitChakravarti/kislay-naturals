@@ -37,15 +37,16 @@ const userSchema = new Schema<IUser>({
   timestamps: true, // This automatically adds createdAt and updatedAt
   toJSON: {
     transform: function(doc, ret) {
-      const { password, ...userWithoutPassword } = ret;
-      return userWithoutPassword;
+      // Remove password from returned user object
+      const retObj = ret as Record<string, unknown>;
+      if (typeof retObj.password !== 'undefined') {
+        delete retObj.password;
+      }
+      return retObj;
     }
   }
 });
 
-// Create indexes for better query performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
@@ -57,8 +58,8 @@ userSchema.pre('save', async function(next) {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
     next();
-  } catch (error) {
-    next(error as Error);
+  } catch (error: unknown) {
+    next(error instanceof Error ? error : new Error('Failed to hash password'));
   }
 });
 
@@ -66,8 +67,9 @@ userSchema.pre('save', async function(next) {
 userSchema.methods.comparePassword = async function(candidatePassword: string): Promise<boolean> {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
-  } catch (error) {
-    throw new Error('Password comparison failed');
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Password comparison failed';
+    throw new Error(`Password comparison failed: ${errorMessage}`);
   }
 };
 

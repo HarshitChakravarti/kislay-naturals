@@ -31,7 +31,7 @@ export const registerUser = createAsyncThunk(
 
 export const loadUser = createAsyncThunk('auth/loadUser', async (_, { rejectWithValue }) => {
   try {
-    const token = localStorage.getItem('token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) return rejectWithValue('No token found');
     
     setAuthToken(token);
@@ -46,14 +46,16 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    token: localStorage.getItem('token'),
+    token: typeof window !== 'undefined' ? localStorage.getItem('token') : null,
     isAuthenticated: false,
     loading: false,
     error: null,
   },
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('token');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+      }
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
@@ -109,7 +111,9 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = payload;
         state.token = null;
-        localStorage.removeItem('token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+        }
       });
   },
 });

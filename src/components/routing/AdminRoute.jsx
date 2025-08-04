@@ -1,10 +1,10 @@
-import { Navigate, useLocation } from 'react-router-dom';
+// import { Navigate } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const AdminRoute = ({ children }) => {
   const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
-  const location = useLocation();
+  // const location = useLocation();
 
   if (!isAuthenticated && !loading) {
     return <Navigate to="/login" state={{ from: location }} replace />;

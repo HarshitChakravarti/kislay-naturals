@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -98,7 +98,6 @@ const recipes = [
 ];
 
 export default function Recipes() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollContainer = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {

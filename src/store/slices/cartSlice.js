@@ -1,14 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const cartItemsFromStorage = localStorage.getItem('cartItems')
+
+const cartItemsFromStorage = typeof window !== 'undefined' && localStorage.getItem('cartItems')
   ? JSON.parse(localStorage.getItem('cartItems'))
   : [];
 
-const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
+
+const shippingAddressFromStorage = typeof window !== 'undefined' && localStorage.getItem('shippingAddress')
   ? JSON.parse(localStorage.getItem('shippingAddress'))
   : {};
 
-const paymentMethodFromStorage = localStorage.getItem('paymentMethod')
+
+const paymentMethodFromStorage = typeof window !== 'undefined' && localStorage.getItem('paymentMethod')
   ? localStorage.getItem('paymentMethod')
   : '';
 
@@ -31,23 +34,33 @@ const cartSlice = createSlice({
       } else {
         state.cartItems = [...state.cartItems, item];
       }
-      localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+      }
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter((x) => x.product !== action.payload);
-      localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+      }
     },
     saveShippingAddress: (state, action) => {
       state.shippingAddress = action.payload;
-      localStorage.setItem('shippingAddress', JSON.stringify(action.payload));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('shippingAddress', JSON.stringify(action.payload));
+      }
     },
     savePaymentMethod: (state, action) => {
       state.paymentMethod = action.payload;
-      localStorage.setItem('paymentMethod', action.payload);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('paymentMethod', action.payload);
+      }
     },
     clearCart: (state) => {
       state.cartItems = [];
-      localStorage.removeItem('cartItems');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('cartItems');
+      }
     },
   },
 });

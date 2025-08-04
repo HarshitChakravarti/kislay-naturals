@@ -389,7 +389,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const clearVerification = () => setIsVerifying(false);
 
   const showToast = useCallback((message: string, type: 'success' | 'error') => {
     const id = Math.random().toString(36).substr(2, 9);

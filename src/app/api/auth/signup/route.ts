@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     let body;
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json(
         { success: false, message: 'Invalid JSON in request body' },
         { status: 400 }
@@ -157,8 +157,8 @@ export async function POST(request: NextRequest) {
 
     // Handle duplicate key errors
     if (error instanceof Error && error.name === 'MongoServerError') {
-      const mongoError = error as any;
-      if (mongoError.code === 11000) {
+      const mongoError = error as { code?: number; keyPattern?: Record<string, unknown> };
+      if (mongoError.code === 11000 && mongoError.keyPattern) {
         const field = Object.keys(mongoError.keyPattern)[0];
         return NextResponse.json(
           { success: false, message: `${field} is already taken` },

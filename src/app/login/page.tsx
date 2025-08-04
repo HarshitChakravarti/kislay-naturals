@@ -4,12 +4,11 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/AuthContext';
+// import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
-  const { isVerifying } = useAuth();
   
   // Check for success message from registration
   useEffect(() => {

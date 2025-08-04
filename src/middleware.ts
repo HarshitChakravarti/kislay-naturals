@@ -5,10 +5,11 @@ import { getToken } from 'next-auth/jwt';
 // Define the routes that require authentication
 const protectedRoutes = ['/account', '/checkout'];
 const authRoutes = ['/login', '/register'];
-const publicRoutes = ['/', '/products', '/about', '/contact'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  // The 'as any' is required due to next-auth's getToken type signature in middleware
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const token = await getToken({ req: request as any });
 
   // Redirect to login if trying to access protected route without authentication

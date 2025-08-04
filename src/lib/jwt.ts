@@ -21,8 +21,9 @@ export function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string 
       issuer: 'kislay-naturals',
       audience: 'kislay-naturals-users',
     });
-  } catch (error) {
-    throw new Error('Failed to generate JWT token');
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to generate JWT token';
+    throw new Error(`JWT generation failed: ${errorMessage}`);
   }
 }
 
@@ -34,21 +35,17 @@ export function verifyToken(token: string): JWTPayload {
     }) as JWTPayload;
     
     return decoded;
-  } catch (error) {
-    if (error instanceof jwt.TokenExpiredError) {
-      throw new Error('Token has expired');
-    } else if (error instanceof jwt.JsonWebTokenError) {
-      throw new Error('Invalid token');
-    } else {
-      throw new Error('Token verification failed');
-    }
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Invalid or expired token';
+    console.error('Token verification failed:', errorMessage);
+    throw new Error(`Token verification failed: ${errorMessage}`);
   }
 }
 
 export function decodeToken(token: string): JWTPayload | null {
   try {
     return jwt.decode(token) as JWTPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 } 
