@@ -25,13 +25,26 @@ export interface RegisterData extends LoginCredentials {
   confirmPassword: string;
 }
 
+export interface Review {
+  id: string | number;
+  user: {
+    id: string;
+    name?: string;
+    username: string;
+  };
+  rating: number;
+  comment?: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+}
+
 export interface Product {
   id: string | number;
   name: string;
   price: number;
   originalPrice?: number;
   rating?: number;
-  reviews?: any[];  // This will be replaced with review objects
+  reviews?: Review[];
   numReviews?: number; // Total number of reviews
   avgRating?: number; // Average rating
   image: string;

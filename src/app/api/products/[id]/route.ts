@@ -28,28 +28,18 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  // Ensure params is available before destructuring
-  const { id } = await params;
+  const { id } = params;
 
   try {
     const product = await getProduct(id);
     
     if (!product) {
-      return new NextResponse(JSON.stringify({ error: 'Product not found' }), {
-        status: 404,
-      });
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    return new NextResponse(JSON.stringify(product), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
-    return new NextResponse(JSON.stringify({ error: 'Internal server error' }), {
-      status: 500,
-    });
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
