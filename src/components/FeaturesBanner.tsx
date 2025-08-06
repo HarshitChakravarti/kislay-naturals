@@ -8,7 +8,17 @@ import {
   Users 
 } from 'lucide-react';
 import { ReactNode } from 'react';
-import { FeaturesBannerProps, IconName } from './FeaturesBanner.types';
+export type IconName = 'Leaf' | 'Award' | 'ShoppingBag' | 'Shield' | 'Users';
+
+export interface Feature {
+  title: string;
+  description: string;
+  icon: IconName;
+}
+
+export interface FeaturesBannerProps {
+  features: Feature[];
+}
 
 const iconComponents: Record<IconName, ReactNode> = {
   'Leaf': <Leaf className="w-12 h-12 text-green-600" />,

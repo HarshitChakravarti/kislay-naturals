@@ -8,7 +8,13 @@ const getProduct = async (id: string): Promise<Product | null> => {
   return {
     id,
     name: 'KislayNaturals Monk Fruit Sweetener',
-    description: 'Pure monk fruit extract sweetener. Zero calories, diabetic-friendly, and perfect for keto diet. Natural alternative to sugar with no artificial ingredients.',
+    description: `Kislay Monk Fruit Sweetener Drops – 100% Natural & Zero Calorie Sugar Substitute
+
+Fuel your lifestyle with natural, low-carb goodness – packed with clean energy, rich nutrients, and zero guilt.
+
+Say goodbye to sugar and artificial sweeteners! Kislay Monk Fruit Sweetener Drops are made from pure monk fruit extract, offering a zero-calorie, zero-glycemic index, and 100% natural sugar substitute that's perfect for your healthy lifestyle.
+
+Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply want a clean alternative to sugar, Kislay drops deliver the same sweet taste without the crash.`,
     price: 299.99,
     image: '/p1.png',
     originalPrice: 329.99,

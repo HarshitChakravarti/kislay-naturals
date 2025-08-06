@@ -1,7 +1,17 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { Feature } from './FeaturesBanner.types';
+export type IconName = 'Leaf' | 'Award' | 'ShoppingBag' | 'Shield' | 'Users';
+
+export interface Feature {
+  title: string;
+  description: string;
+  icon: IconName;
+}
+
+export interface FeaturesBannerProps {
+  features: Feature[];
+}
 import { Product } from '@/types';
 
 // Dynamically import client components
@@ -50,7 +60,7 @@ export default function HomeClient({ products }: HomeClientProps) {
     <main className="min-h-screen">
       <Hero />
       <SectionDivider />
-      {products.length > 0 && <FeaturedProducts products={products} />}
+      {<FeaturedProducts products={products} />}
       <FeaturesBanner features={features} />
       <Recipes />
       <Testimonials />

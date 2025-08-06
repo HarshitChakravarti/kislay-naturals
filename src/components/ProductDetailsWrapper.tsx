@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import type { Product } from '@/types';
 
 const ProductDetails = dynamic(
-  () => import('./ProductDetails'),
+  () => import('./ProductDetails1'),
   { ssr: false }
 );
 
