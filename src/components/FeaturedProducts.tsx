@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { ShoppingCart, Star, ArrowRight } from "lucide-react"
 import { Product } from "@/types"
+import Link from "next/link"
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -28,7 +29,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className="text-3xl font-bold mb-4">
+              <h2 className="text-4xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   CHECK OUT OUR SWEET FAVOURITE!
                 </span>
@@ -84,7 +85,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                   })}
                 </div>
                 <span className="text-xs text-gray-500">
-                  ({product.reviews || 0} reviews)
+                  ({product.numReviews || 0} reviews)
                 </span>
               </div>
 
@@ -110,14 +111,20 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               </div>
 
               <div className="flex flex-col gap-3 mt-6">
-                <button className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300">
+                <Link 
+                  href={`/products/${product.id}`}
+                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 text-center"
+                >
                   <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
-                </button>
-                <button className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg font-medium transition-colors duration-300">
+                  Buy Now
+                </Link>
+                <Link 
+                  href={`/products/${product.id}`}
+                  className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg font-medium transition-colors duration-300"
+                >
                   View Details
                   <ArrowRight className="h-4 w-4" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -162,7 +169,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                     })}
                   </div>
                   <span className="text-sm text-gray-500">
-                    ({product.reviews || 0} reviews)
+                    ({product.numReviews || 0} reviews)
                   </span>
                 </div>
 
@@ -196,14 +203,20 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 </div>
 
                 <div className="flex gap-4">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-300">
+                  <Link 
+                    href={`/products/${product.id}`}
+                    className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-medium transition-colors duration-300"
+                  >
                     <ShoppingCart className="h-5 w-5" />
-                    Add to Cart
-                  </button>
-                  <button className="flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300">
+                    Buy Now
+                  </Link>
+                  <Link 
+                    href={`/products/${product.id}`}
+                    className="flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300"
+                  >
                     View Details
                     <ArrowRight className="h-4 w-4" />
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-gray-100">

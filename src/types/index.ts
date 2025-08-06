@@ -31,7 +31,9 @@ export interface Product {
   price: number;
   originalPrice?: number;
   rating?: number;
-  reviews?: number;
+  reviews?: any[];  // This will be replaced with review objects
+  numReviews?: number; // Total number of reviews
+  avgRating?: number; // Average rating
   image: string;
   badge?: string;
   description?: string;
