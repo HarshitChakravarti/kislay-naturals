@@ -33,7 +33,7 @@ const Testimonials = () => (
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 WHAT OUR CUSTOMERS SAY
               </span>

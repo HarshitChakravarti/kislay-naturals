@@ -56,3 +56,32 @@ export interface Product {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface Order {
+  _id?: string;
+  user: {
+    name: string;
+    mobile: string;
+  };
+  product: {
+    id: string | number;
+    name: string;
+    price: number;
+  };
+  quantity: number;
+  totalAmount: number;
+  shippingAddress: {
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  paymentDetails: {
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+  };
+  orderStatus: 'paid' | 'shipped' | 'delivered' | 'cancelled';
+  createdAt?: Date;
+  updatedAt?: Date;
+}

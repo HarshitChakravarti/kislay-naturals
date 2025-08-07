@@ -1,16 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Product } from '@/types';
-import { 
-  Star, 
+import CheckoutModal from './CheckoutModal';
+import {
+  Star,
   ShoppingCart,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Zap,
+  Plus,
+  Minus,
+  CheckCircle2,
+  XCircle,
+  Droplet,
+  Coffee,
+  Ban,
+  Leaf
 } from 'lucide-react';
+
+const FeatureCard = ({ icon: Icon, title, description, iconBg, iconColor }: { icon: React.ElementType, title: string, description: string, iconBg: string, iconColor: string }) => (
+  <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex items-center space-x-3 hover:shadow-md transition-shadow">
+    <div className={`p-2 rounded-full ${iconBg}`}>
+      <Icon className={`h-5 w-5 ${iconColor}`} />
+    </div>
+    <div>
+      <h4 className="font-semibold text-gray-800">{title}</h4>
+      <p className="text-sm text-gray-500">{description}</p>
+    </div>
+  </div>
+);
 
 interface ProductDetailsProps {
   product: Product;
@@ -18,6 +40,8 @@ interface ProductDetailsProps {
 
 export default function ProductDetails({ product }: ProductDetailsProps) {
   const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const productImages = [
     product.image,
@@ -153,7 +177,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>            {/* Stock Status */}
             <div className="flex items-center text-sm text-green-600">
               <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-              {product.inStock ? 'In Stock' : 'Out of Stock'}
+              'In Stock'
             </div>
           </div>
 
@@ -174,74 +198,56 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Key Features Grid */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-gray-900">Key Features</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Natural Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-green-50 p-2 rounded-full">✅</span>
-                  <h4 className="font-semibold text-lg text-gray-900">100% Natural</h4>
-                </div>
-                <p className="text-gray-600 ml-12">Monk Fruit Extract</p>
-              </div>
-
-              {/* Zero Calories Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-red-50 p-2 rounded-full">❌</span>
-                  <h4 className="font-semibold text-lg text-gray-900">Zero Calories</h4>
-                </div>
-                <p className="text-gray-600 ml-12">Zero Glycemic Index</p>
-              </div>
-
-              {/* Diet Friendly Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-green-50 p-2 rounded-full">✅</span>
-                  <h4 className="font-semibold text-lg text-gray-900">Diet Friendly</h4>
-                </div>
-                <p className="text-gray-600 ml-12">Keto-Friendly & Diabetic-Safe</p>
-              </div>
-
-              {/* Easy Use Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-blue-50 p-2 rounded-full">💧</span>
-                  <h4 className="font-semibold text-lg text-gray-900">Easy Use</h4>
-                </div>
-                <p className="text-gray-600 ml-12">Convenient Drop Format – Easy to Mix</p>
-              </div>
-
-              {/* Versatile Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-amber-50 p-2 rounded-full">☕</span>
-                  <h4 className="font-semibold text-lg text-gray-900">Versatile</h4>
-                </div>
-                <p className="text-gray-600 ml-12">Perfect for Tea, Coffee, Smoothies & More</p>
-              </div>
-
-              {/* Pure & Clean Feature */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl bg-red-50 p-2 rounded-full">🚫</span>
-                  <h4 className="font-semibold text-lg text-gray-900">Pure & Clean</h4>
-                </div>
-                <p className="text-gray-600 ml-12">No Artificial Flavors, Colors or Preservatives</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <FeatureCard icon={Leaf} title="100% Natural" description="Monk Fruit Extract" iconBg="bg-green-100" iconColor="text-green-600" />
+              <FeatureCard icon={XCircle} title="Zero Calories" description="Zero Glycemic Index" iconBg="bg-red-100" iconColor="text-red-600" />
+              <FeatureCard icon={CheckCircle2} title="Diabetic Safe" description="Keto-Friendly & Diabetic-Safe" iconBg="bg-green-100" iconColor="text-green-600" />
+              <FeatureCard icon={Droplet} title="Easy Use" description="Convenient Drop Format – Easy to Mix" iconBg="bg-blue-100" iconColor="text-blue-600" />
+              <FeatureCard icon={Coffee} title="Versatile" description="Perfect for Tea, Coffee, Smoothies & More" iconBg="bg-yellow-100" iconColor="text-yellow-600" />
+              <FeatureCard icon={Ban} title="Pure & Clean" description="No Artificial Flavors, Colors or Preservatives" iconBg="bg-red-100" iconColor="text-red-600" />
             </div>
           </div>
 
-          {/* Add to Cart Button */}
+          {/* Quantity Selector */}
+          <div className="flex items-center justify-between mb-6">
+            <span className="font-semibold text-lg">Quantity</span>
+            <div className="flex items-center space-x-4">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                className="p-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300"
+              >
+                <Minus className="h-5 w-5" />
+              </motion.button>
+              <span className="font-bold text-xl w-8 text-center">{quantity}</span>
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setQuantity(q => q + 1)}
+                className="p-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300"
+              >
+                <Plus className="h-5 w-5" />
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Buy Now Button */}
           <motion.button
+            onClick={() => setIsModalOpen(true)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2"
           >
-            <ShoppingCart className="h-5 w-5" />
-            <span>Add to Cart</span>
+            <Zap className="h-5 w-5" />
+            <span>Buy Now</span>
           </motion.button>
         </motion.div>
       </div>
+      <CheckoutModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        product={product} 
+        quantity={quantity} 
+      />
     </div>
   );
 }
