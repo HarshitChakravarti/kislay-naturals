@@ -1,6 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { Yeseva_One } from 'next/font/google';
+
+const yeseva_One = Yeseva_One({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 const posts = [
   {
@@ -34,7 +40,7 @@ const BlogPreview = () => (
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className={`text-4xl mb-4 ${yeseva_One.className}`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 NOURISH YOUR KNOWLEDGE WITH US
               </span>

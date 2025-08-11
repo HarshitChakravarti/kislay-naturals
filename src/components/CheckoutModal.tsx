@@ -16,7 +16,17 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState({ street: '', city: '', state: '', zip: '' });
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Scroll to top when modal opens
+  if (typeof window !== 'undefined' && isOpen) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Prevent body scroll when modal is open
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+  }
 
   const validateForm = () => {
     const newErrors: any = {};

@@ -1,11 +1,5 @@
 import mongoose from 'mongoose';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
-}
-
-const MONGODB_URI = process.env.MONGODB_URI;
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -27,6 +21,13 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
+    // Check for MONGODB_URI at runtime, not at module load time
+    if (!process.env.MONGODB_URI) {
+      throw new Error('Please define the MONGODB_URI environment variable');
+    }
+
+    const MONGODB_URI = process.env.MONGODB_URI;
+    
     const opts = {
       bufferCommands: false,
       maxPoolSize: 10,

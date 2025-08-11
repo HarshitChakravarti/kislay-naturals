@@ -4,6 +4,12 @@ import Image from "next/image"
 import { ShoppingCart, Star, ArrowRight } from "lucide-react"
 import { Product } from "@/types"
 import Link from "next/link"
+import { Yeseva_One } from 'next/font/google'
+
+const yeseva_One = Yeseva_One({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -29,7 +35,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className="text-4xl font-bold mb-4">
+              <h2 className={`text-4xl mb-4 ${yeseva_One.className}`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   CHECK OUT OUR SWEET FAVOURITE!
                 </span>
@@ -44,19 +50,18 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         </div>
       </div>
       
-      <div className="w-full max-w-6xl mx-auto px-4 pt-8 pb-16 md:pt-12 md:pb-24">
-        {/* Product Card - Responsive Layout */}
-        <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
+      <div className="bg-gray-50">
+        <div className="w-full max-w-6xl mx-auto px-4 pt-8 pb-16 md:pt-12 md:pb-24">
+          {/* Product Card - Responsive Layout */}
+          <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
           {/* Mobile & Tablet: Vertical Layout */}
           <div className="md:hidden">
             {/* Product Image */}
             <div className="relative bg-white pt-4 px-4">
               <div className="absolute top-6 left-6 z-10">
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
-                  {product.badge}
-                </span>
+                
               </div>
-              <div className="relative h-64 w-full flex items-center justify-center">
+              <div className="relative h-100 w-full flex items-center justify-center">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -186,18 +191,12 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                     <span className="text-3xl font-bold text-green-700">
                       ₹{product.price?.toFixed(2) || '0.00'}
                     </span>
-                    {product.originalPrice && (
-                      <>
-                        <span className="text-lg text-gray-400 line-through">
-                          ₹{product.originalPrice.toFixed(2)}
-                        </span>
-                        {product.price && product.originalPrice > product.price && (
-                          <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                            {Math.round((((product.originalPrice - product.price) / product.originalPrice) * 100))}% OFF
-                          </span>
-                        )}
-                      </>
-                    )}
+                    <span className="text-lg text-gray-400 line-through">
+                      ₹350.00
+                    </span>
+                    <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                      {Math.round((((350 - (product.price || 0)) / 350) * 100))}% OFF
+                    </span>
                   </div>
                   <p className="text-sm text-gray-500">Inclusive of all taxes</p>
                 </div>
@@ -212,7 +211,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                   </Link>
                   <Link 
                     href={`/products/${product.id}`}
-                    className="flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300"
+                    className="flex-1 flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300"
                   >
                     View Details
                     <ArrowRight className="h-4 w-4" />
@@ -252,6 +251,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           </div>
         </div>
       </div>
+    </div>
     </section>
   )
 }

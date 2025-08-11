@@ -1,11 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-if (!process.env.JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is not set');
-}
-
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export interface JWTPayload {
   userId: string;
   username: string;
@@ -15,6 +9,12 @@ export interface JWTPayload {
 }
 
 export function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  
+  const JWT_SECRET = process.env.JWT_SECRET;
+  
   try {
     return jwt.sign(payload, JWT_SECRET, {
       expiresIn: '7d',
@@ -28,6 +28,12 @@ export function generateToken(payload: Omit<JWTPayload, 'iat' | 'exp'>): string 
 }
 
 export function verifyToken(token: string): JWTPayload {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET environment variable is not set');
+  }
+  
+  const JWT_SECRET = process.env.JWT_SECRET;
+  
   try {
     const decoded = jwt.verify(token, JWT_SECRET, {
       issuer: 'kislay-naturals',

@@ -1,31 +1,32 @@
 import { MongoClient, Db, MongoClientOptions } from 'mongodb';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
-}
-
-if (!process.env.MONGODB_DB) {
-  throw new Error('Please define the MONGODB_DB environment variable');
-}
-
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB;
-
 let cachedClient: MongoClient | null = null;
 let cachedDb: Db | null = null;
-
-const options: MongoClientOptions = {
-  // Disable SSL validation in development
-  tls: process.env.NODE_ENV === 'production',
-  tlsInsecure: process.env.NODE_ENV !== 'production',
-  retryWrites: true,
-  w: 'majority',
-};
 
 export async function connectToDatabase() {
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb };
   }
+
+  // Check for environment variables at runtime
+  if (!process.env.MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
+
+  if (!process.env.MONGODB_DB) {
+    throw new Error('Please define the MONGODB_DB environment variable');
+  }
+
+  const uri = process.env.MONGODB_URI;
+  const dbName = process.env.MONGODB_DB;
+
+  const options: MongoClientOptions = {
+    // Disable SSL validation in development
+    tls: process.env.NODE_ENV === 'production',
+    tlsInsecure: process.env.NODE_ENV !== 'production',
+    retryWrites: true,
+    w: 'majority',
+  };
 
   try {
     const client = new MongoClient(uri, options);
