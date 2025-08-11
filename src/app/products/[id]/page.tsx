@@ -4,7 +4,19 @@ import ProductDetailsWrapper from '@/components/ProductDetailsWrapper';
 
 async function fetchProductById(id: string): Promise<Product | null> {
   try {
-    const response = await fetch(`http://localhost:3000/api/products/${id}`);
+    // Use relative URL for API calls to work in both local and production environments
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000' 
+        : '';
+    
+    const url = baseUrl ? `${baseUrl}/api/products/${id}` : `/api/products/${id}`;
+    const response = await fetch(url, {
+      // Add cache control for better performance
+      next: { revalidate: 60 }
+    });
+    
     if (!response.ok) {
       return null;
     }
