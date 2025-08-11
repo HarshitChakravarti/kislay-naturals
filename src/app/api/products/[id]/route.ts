@@ -26,9 +26,9 @@ Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   try {
     const product = await getProduct(id);

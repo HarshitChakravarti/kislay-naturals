@@ -28,13 +28,12 @@ async function fetchProductById(id: string): Promise<Product | null> {
 }
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  // Ensure params is available before destructuring
   const { id } = await params;
   
   if (!id) {
