@@ -35,7 +35,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className={`text-4xl mb-4 ${yeseva_One.className}`}>
+              <h2 className={`text-4xl md:text-5xl mb-4 ${yeseva_One.className}`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   CHECK OUT OUR SWEET FAVOURITE!
                 </span>
@@ -51,13 +51,13 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       </div>
       
       <div className="bg-gray-50">
-        <div className="w-full max-w-6xl mx-auto px-4 pt-8 pb-16 md:pt-12 md:pb-24">
+        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-16">
           {/* Product Card - Responsive Layout */}
           <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
           {/* Mobile & Tablet: Vertical Layout */}
           <div className="md:hidden">
             {/* Product Image */}
-            <div className="relative bg-white pt-4 px-4">
+            <div className="relative bg-white pt-5 px-5">
               <div className="absolute top-6 left-6 z-10">
                 
               </div>

@@ -7,6 +7,8 @@ const Hero = () => {
   const [visible, setVisible] = useState(false);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [currentMobileImage, setCurrentMobileImage] = useState(0);
+  const [currentDesktopImage, setCurrentDesktopImage] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   const quotes = [
@@ -15,6 +17,9 @@ const Hero = () => {
     "Sweeten your life the natural way - 300x sweeter than sugar.",
     "From farm to table - the purest monk fruit sweetener on Earth."
   ];
+
+  const mobileImages = ['/mcover.png', '/mcover2.png'];
+  const desktopImages = ['/cover333.jpg', '/herophoto.png', '/herophoto2.png'];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,6 +32,21 @@ const Hero = () => {
 
     return () => clearInterval(interval);
   }, [quotes.length]);
+
+  useEffect(() => {
+    const mobileImageInterval = setInterval(() => {
+      setCurrentMobileImage(prev => (prev + 1) % mobileImages.length);
+    }, 3000);
+
+    const desktopImageInterval = setInterval(() => {
+      setCurrentDesktopImage(prev => (prev + 1) % desktopImages.length);
+    }, 3000);
+
+    return () => {
+      clearInterval(mobileImageInterval);
+      clearInterval(desktopImageInterval);
+    };
+  }, [mobileImages.length, desktopImages.length]);
 
   useEffect(() => {
     const observer = new window.IntersectionObserver(
@@ -42,38 +62,38 @@ const Hero = () => {
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
-          <Image
-            src="/cover333.jpg"
-            alt="Monk Fruit Sweeteners"
-            fill
-            priority
-            className="object-cover object-center"
-            style={{ 
-              filter: 'brightness(0.9) contrast(1.1)',
-              objectPosition: 'center center'
-            }}
-          />
+          {desktopImages.map((src, index) => (
+            <Image
+              key={src}
+              src={src}
+              alt="Monk Fruit Sweeteners"
+              fill
+              priority={index === 0}
+              className={`object-cover object-center transition-opacity duration-1000 ${index === currentDesktopImage ? 'opacity-100' : 'opacity-0'}`}
+              style={{ 
+                filter: 'brightness(0.9) contrast(1.1)',
+                objectPosition: 'center center'
+              }}
+            />
+          ))}
         </div>
         {/* Mobile Image - shown only on mobile */}
         <div className="md:hidden w-full h-full relative">
-          <Image
-            src="/mobilecoverfinal.jpg"
-            alt="Monk Fruit Sweeteners"
-            fill
-            priority
-            sizes="100vw"
-            quality={90}
-            className="object-cover object-center"
-            style={{ 
-              filter: 'brightness(0.9) contrast(1.1)',
-              objectPosition: 'center 30%',
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            }}
-          />
+          {mobileImages.map((src, index) => (
+            <Image
+              key={src}
+              src={src}
+              alt="Monk Fruit Sweeteners"
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              quality={90}
+              className={`object-cover object-center transition-opacity duration-1000 ${index === currentMobileImage ? 'opacity-100' : 'opacity-0'}`}
+              style={{ 
+                filter: 'brightness(0.9) contrast(1.1)'
+              }}
+            />
+          ))}
         </div>
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-green-900/40 via-green-800/30 to-green-900/50 z-10" />

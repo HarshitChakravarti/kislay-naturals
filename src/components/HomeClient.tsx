@@ -1,18 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-export type IconName = 'Leaf' | 'Award' | 'ShoppingBag' | 'Shield' | 'Users';
-
-export interface Feature {
-  title: string;
-  description: string;
-  icon: IconName;
-}
-
-export interface FeaturesBannerProps {
-  features: Feature[];
-}
-import { Product } from '@/types';
+import { Product, Feature, FeaturesBannerProps } from '@/types';
 
 // Dynamically import client components
 const Hero = dynamic(() => import('@/components/Hero'));
@@ -60,7 +49,7 @@ export default function HomeClient({ products }: HomeClientProps) {
     <main className="min-h-screen">
       <Hero />
       <SectionDivider />
-      {<FeaturedProducts products={products} />}
+      <FeaturedProducts products={products} />
       <FeaturesBanner features={features} />
       <Recipes />
       <Testimonials />

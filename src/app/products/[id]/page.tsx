@@ -27,7 +27,7 @@ async function getProductById(id: string): Promise<Product | null> {
   // This matches the data structure from your API route
   const product: Product = {
     id,
-    name: 'KislayNaturals Monk Fruit Sweetener',
+    name: 'Kislay Monk Fruit Sweetener Drops',
     description: `Kislay Monk Fruit Sweetener Drops – 100% Natural & Zero Calorie Sugar Substitute
 
 Fuel your lifestyle with natural, low-carb goodness – packed with clean energy, rich nutrients, and zero guilt.

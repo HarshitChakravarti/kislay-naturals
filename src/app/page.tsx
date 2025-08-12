@@ -5,7 +5,7 @@ export default async function Home() {
   const featuredProducts = [
     {
       id: '1',
-      name: 'Monk Fruit Drops',
+      name: 'Kislay Monk Fruit Sweetener Drops',
       price: 299,
       image: '/p1.png',
       description: 'Natural sweetener with zero calories',

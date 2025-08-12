@@ -40,7 +40,7 @@ const BlogPreview = () => (
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="text-center">
-            <h2 className={`text-4xl mb-4 ${yeseva_One.className}`}>
+            <h2 className={`text-4xl md:text-5xl mb-4 ${yeseva_One.className}`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 NOURISH YOUR KNOWLEDGE WITH US
               </span>
@@ -68,6 +68,7 @@ const BlogPreview = () => (
                 src={post.image}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -116,4 +117,4 @@ const BlogPreview = () => (
   </section>
 );
 
-export default BlogPreview; 
+export default BlogPreview;

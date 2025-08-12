@@ -135,7 +135,7 @@ export default function Recipes() {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className={`text-4xl mb-4 ${yeseva_One.className}`}>
+              <h2 className={`text-4xl md:text-5xl mb-4 ${yeseva_One.className}`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   DELICIOUS SUGAR-FREE RECIPES
                 </span>
@@ -150,7 +150,7 @@ export default function Recipes() {
       </div>
       
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative mx-auto px-4 sm:px-6 lg:px-12 py-12">
         <div className="relative">
           <button 
             onClick={scrollLeft}

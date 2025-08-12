@@ -10,7 +10,7 @@ const SectionDivider = () => {
           {[...Array(6)].map((_, i) => (
             <Leaf 
               key={i} 
-              className="inline-block w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-700 transform rotate-12 mx-4 sm:mx-6 md:mx-8 lg:mx-10"
+              className="inline-block w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-700 transform rotate-12 mx-8 sm:mx-10 md:mx-12 lg:mx-14"
               strokeWidth={1.5}
               fill="currentColor"
             />

@@ -82,6 +82,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               src={productImages[selectedImage]}
               alt={`${product.name} - View ${selectedImage + 1}`}
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain p-8 transition-transform duration-500 hover:scale-105"
               priority
             />
@@ -116,9 +117,10 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               >
                 <Image
                   src={img}
-                  alt={`${product.name} - View ${i + 1}`}
+                  alt={`Thumbnail ${i + 1}`}
                   fill
-                  className="object-contain p-2"
+                  sizes="(max-width: 768px) 33vw, 16vw"
+                  className="object-contain"
                 />
               </motion.div>
             ))}
