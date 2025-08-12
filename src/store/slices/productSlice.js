@@ -1,14 +1,46 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getProducts, getProductById, createProduct } from '../../api/products';
+
+// Helper to handle fetch with JSON and errors
+async function fetchJSON(url, options = {}) {
+  const res = await fetch(url, {
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    ...options,
+  });
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : {};
+  if (!res.ok) {
+    const message = data?.message || data?.error || `Request failed with ${res.status}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+// Products API wrappers using relative URLs
+function apiGetProducts(params) {
+  const query = params ? `?${new URLSearchParams(params).toString()}` : '';
+  return fetchJSON(`/api/products${query}`);
+}
+
+function apiGetProductById(id) {
+  return fetchJSON(`/api/products/${id}`);
+}
+
+function apiCreateProduct(productData) {
+  return fetchJSON('/api/products', {
+    method: 'POST',
+    body: JSON.stringify(productData),
+  });
+}
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchAll',
   async (params, { rejectWithValue }) => {
     try {
-      const { data } = await getProducts(params);
+      const data = await apiGetProducts(params);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -17,10 +49,10 @@ export const fetchProductDetails = createAsyncThunk(
   'products/fetchDetails',
   async (id, { rejectWithValue }) => {
     try {
-      const { data } = await getProductById(id);
+      const data = await apiGetProductById(id);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -29,10 +61,10 @@ export const addNewProduct = createAsyncThunk(
   'products/create',
   async (productData, { rejectWithValue }) => {
     try {
-      const { data } = await createProduct(productData);
+      const data = await apiCreateProduct(productData);
       return data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );

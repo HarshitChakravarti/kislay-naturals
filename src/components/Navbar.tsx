@@ -101,7 +101,7 @@ export default function Header() {
       <>
         <Link 
           href="/login" 
-          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          className="flex items-center px-4 py-3 text-sm text-white bg-green-700 hover:bg-green-800 transition-colors duration-200 font-medium"
           onClick={closeDropdown}
           role="menuitem"
         >
@@ -110,40 +110,13 @@ export default function Header() {
         </Link>
         <Link 
           href="/register" 
-          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          className="flex items-center px-4 py-3 text-sm text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 font-medium"
           onClick={closeDropdown}
           role="menuitem"
         >
           <UserPlus className="w-4 h-4 mr-3" />
           Create account
         </Link>
-        {process.env.NODE_ENV === 'development' && (
-          <>
-            <div className="border-t border-gray-100 my-1"></div>
-            <Link 
-              href="/test-auth" 
-              className="flex items-center px-4 py-2 text-sm text-gray-500 hover:bg-gray-100"
-              onClick={closeDropdown}
-              role="menuitem"
-            >
-              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Test Auth
-            </Link>
-            <Link 
-              href="/reset-auth" 
-              className="flex items-center px-4 py-2 text-sm text-red-500 hover:bg-red-50"
-              onClick={closeDropdown}
-              role="menuitem"
-            >
-              <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Reset Auth
-            </Link>
-          </>
-        )}
       </>
     );
   }, [user, closeDropdown, handleLogout]);
@@ -278,7 +251,7 @@ export default function Header() {
               {/* Dropdown Menu */}
               {isUserDropdownOpen && (
                 <div 
-                  className="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100"
+                  className="absolute right-0 mt-2 w-56 bg-gradient-to-b from-green-50 to-white rounded-md shadow-lg py-1 z-50 border border-green-100"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="user-menu"
@@ -288,11 +261,7 @@ export default function Header() {
               )}
             </div>
 
-            {/* Shopping Cart */}
-            <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-full transition-colors group relative">
-              <ShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
-              <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-            </Link>
+
 
             {/* Mobile Menu Button */}
             <button
@@ -320,18 +289,7 @@ export default function Header() {
                 PRODUCTS
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/find-in-store" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
-                FIND IN STORE
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link href="/subscribe" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
-                SUBSCRIBE
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link href="/free-sample" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
-                GET A FREE SAMPLE
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
+
             </nav>
           </div>
         )}

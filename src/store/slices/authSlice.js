@@ -1,17 +1,52 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register, getProfile } from '../../api/auth';
-import { setAuthToken } from '../../api/auth';
+
+// Helper functions for API calls
+const setAuthToken = (token) => {
+  if (token) {
+    localStorage.setItem('token', token);
+  } else {
+    localStorage.removeItem('token');
+  }
+};
+
+const apiCall = async (url, options = {}) => {
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.message || 'API call failed');
+  }
+  
+  return data;
+};
 
 // Async thunks
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const { data } = await login(credentials);
-      setAuthToken(data.token);
-      return data;
+      const data = await apiCall('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(credentials),
+        headers: {
+          'x-session-id': 'default-session'
+        }
+      });
+      
+      if (data.success) {
+        return data;
+      } else {
+        return rejectWithValue(data.message);
+      }
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -20,11 +55,21 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
-      const { data } = await register(userData);
-      setAuthToken(data.token);
-      return data;
+      const data = await apiCall('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+        headers: {
+          'x-session-id': 'default-session'
+        }
+      });
+      
+      if (data.success) {
+        return data;
+      } else {
+        return rejectWithValue(data.message);
+      }
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -34,11 +79,17 @@ export const loadUser = createAsyncThunk('auth/loadUser', async (_, { rejectWith
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) return rejectWithValue('No token found');
     
-    setAuthToken(token);
-    const { data } = await getProfile();
-    return data.user;
+    const data = await apiCall('/api/auth/me', {
+      method: 'GET',
+    });
+    
+    if (data.success) {
+      return data.user;
+    } else {
+      return rejectWithValue(data.message);
+    }
   } catch (error) {
-    return rejectWithValue(error.response?.data?.message || error.message);
+    return rejectWithValue(error.message);
   }
 });
 

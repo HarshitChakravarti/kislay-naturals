@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+// Edge-safe: do not import jsonwebtoken in middleware. API routes will verify tokens.
 
 // Define the routes that require authentication
 const protectedRoutes = ['/account', '/checkout'];
@@ -8,19 +8,18 @@ const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  // The 'as any' is required due to next-auth's getToken type signature in middleware
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const token = await getToken({ req: request as any });
+  const cookieToken = request.cookies.get('auth_token')?.value;
+  const isAuthenticated = Boolean(cookieToken);
 
   // Redirect to login if trying to access protected route without authentication
-  if (protectedRoutes.some(route => pathname.startsWith(route)) && !token) {
+  if (protectedRoutes.some(route => pathname.startsWith(route)) && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   // Redirect to account page if trying to access auth routes while already authenticated
-  if (authRoutes.includes(pathname) && token) {
+  if (authRoutes.includes(pathname) && isAuthenticated) {
     return NextResponse.redirect(new URL('/account', request.url));
   }
 

@@ -14,6 +14,7 @@ interface CheckoutModalProps {
 
 export default function CheckoutModal({ isOpen, onClose, product, quantity }: CheckoutModalProps) {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState({ street: '', city: '', state: '', zip: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -31,6 +32,8 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
   const validateForm = () => {
     const newErrors: any = {};
     if (!name) newErrors.name = 'Name is required';
+    if (!email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Invalid email address';
     if (!mobile) newErrors.mobile = 'Mobile number is required';
     else if (!/^\d{10}$/.test(mobile)) newErrors.mobile = 'Invalid mobile number (must be 10 digits)';
     if (!address.street) newErrors.street = 'Street is required';
@@ -73,6 +76,7 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
             const orderDetails = {
               user: {
                 name: name,
+                email: email,
                 mobile: mobile,
               },
               product: {
@@ -116,6 +120,7 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
           },
           prefill: {
             name: name,
+            email: email,
             contact: mobile,
           },
           notes: {
@@ -148,14 +153,14 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto"
         onClick={onClose}
       >
         <motion.div
           initial={{ scale: 0.9, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.9, y: 20 }}
-          className="bg-white rounded-2xl p-6 md:p-8 w-full max-w-2xl relative shadow-2xl"
+          className="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 md:p-8 relative"
           onClick={(e) => e.stopPropagation()}
         >
           <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -172,6 +177,13 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} className={`w-full p-3 border rounded-lg ${errors.name ? 'border-red-500' : 'border-gray-300'}`} />
               {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={`w-full p-3 border rounded-lg ${errors.email ? 'border-red-500' : 'border-gray-300'}`} />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
 
             {/* Mobile */}

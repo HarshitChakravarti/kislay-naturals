@@ -2,6 +2,14 @@ import { notFound } from 'next/navigation';
 import type { Product } from '@/types';
 import ProductDetailsWrapper from '@/components/ProductDetailsWrapper';
 
+// Only log in non-production to avoid noisy build output
+const debug = (...args: unknown[]) => {
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line no-console
+    console.log(...(args as []));
+  }
+};
+
 // Generate static params for known product IDs
 export async function generateStaticParams() {
   // Return the product IDs that should be pre-generated
@@ -39,38 +47,31 @@ Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply
 }
 
 interface PageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 export default async function ProductPage({ params }: PageProps) {
   try {
-    console.log('ProductPage: Starting with params:', params);
-    const { id } = await params;
-    console.log('ProductPage: Extracted id:', id);
+    const { id } = params;
     
     if (!id) {
-      console.log('ProductPage: No id found, calling notFound()');
       notFound();
     }
 
     const product = await getProductById(id);
-    console.log('ProductPage: Got product:', product ? 'success' : 'null');
 
     if (!product) {
-      console.log('ProductPage: No product found, calling notFound()');
       notFound();
     }
 
-    console.log('ProductPage: Rendering product page');
     return (
       <div className="min-h-screen bg-white">
         <ProductDetailsWrapper product={product} />
       </div>
     );
   } catch (error) {
-    console.error('ProductPage: Error occurred:', error);
     notFound();
   }
 }
