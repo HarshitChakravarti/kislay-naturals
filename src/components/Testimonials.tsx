@@ -10,21 +10,24 @@ const yeseva_One = Yeseva_One({
 const testimonials = [
   {
     id: 1,
-    name: "Priya S.",
-    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
-    review: "Kislay Naturals' monk fruit sweetener is a game changer! No aftertaste and so healthy.",
+    name: "Tanishka",
+    avatar: "https://randomuser.me/api/portraits/women/45.jpg",
+    review: "It's very nice alternative to sugar",
+    rating: 4.5,
   },
   {
     id: 2,
-    name: "Rahul M.",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-    review: "I love using it in my tea and baking. The best natural sweetener I've tried!",
+    name: "Harshit",
+    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+    review: "Tried your sugar replacement and I'm genuinely impressed! It tastes amazing - couldn't even tell there's no sugar in it. Highly recommended!",
+    rating: 4,
   },
   {
     id: 3,
-    name: "Anjali T.",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    review: "Great taste, great price, and I feel good about what I'm eating.",
+    name: "Sanju",
+    avatar: "https://randomuser.me/api/portraits/men/30.jpg",
+    review: "I've been using Kislay's sugar-free product for a few months now, and I honestly couldn't be more impressed. As someone managing diabetes, finding a product that satisfies my sweet cravings without compromising my health has always been a challenge — until I discovered Kislay. Not only is it completely sugar-free, but it also tastes amazing! Highly recommended.",
+    rating: 5,
   },
 ];
 
@@ -86,6 +89,37 @@ const Testimonials = () => (
               </div>
               
               <div className="w-16 h-1 bg-green-200 mx-auto my-4 rounded-full group-hover:bg-green-400 transition-colors duration-300"></div>
+              <div className="flex justify-center mb-2">
+                {[...Array(5)].map((_, i) => {
+                  const isHalfStar = i + 0.5 === t.rating;
+                  const isFilled = i < Math.floor(t.rating) || isHalfStar;
+                  
+                  return (
+                    <div key={i} className="relative">
+                      <svg
+                        className={`w-5 h-5 ${isFilled ? 'text-yellow-400' : 'text-gray-300'}`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      {isHalfStar && (
+                        <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
+                          <svg
+                            className="w-5 h-5 text-yellow-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
               <span className="font-semibold text-green-700 text-lg">{t.name}</span>
             </div>
           </div>
