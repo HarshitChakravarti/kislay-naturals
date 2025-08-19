@@ -277,15 +277,15 @@ export default function Header() {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-6 px-4">
-              <Link href="/" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 HOME
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/about" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/about" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 ABOUT US
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/products" className="group relative font-medium text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/products" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 PRODUCTS
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>

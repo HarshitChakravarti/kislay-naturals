@@ -1,177 +1,202 @@
 import Image from "next/image"
-import { Globe, Shield, Target, Users, Leaf, Clock } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Yeseva_One } from 'next/font/google'
+import { Leaf, Users, Shield, Heart, Target, Globe } from "lucide-react"
+import { Montserrat, Open_Sans, Yeseva_One as Yeseva_One_Font } from 'next/font/google'
 
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-})
+// Load fonts
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-montserrat",
+  display: 'swap',
+});
+
+const yeseva_One = Yeseva_One_Font({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-yeseva-one",
+  display: 'swap',
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-open-sans",
+  display: 'swap',
+});
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen bg-[#F9F9F9] ${openSans.variable} ${montserrat.variable} ${yeseva_One.variable}`}>
       {/* Page Header */}
-      <section className="py-8 md:py-12 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className={`text-3xl sm:text-4xl md:text-5xl mb-3 sm:mb-4 ${yeseva_One.className}`}>
-            ABOUT US
+      <section className="py-12 bg-green-700 text-white relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
+        
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+            <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+              ABOUT US
+            </span>
           </h1>
-          <div className="w-16 sm:w-20 h-1 bg-green-600 mx-auto"></div>
-        </div>
-      </section>
-
-      {/* Founder Section */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto relative">
-            <div className="flex flex-col lg:flex-row items-start">
-              <div className="lg:w-5/12 xl:w-1/2 pr-0 lg:pr-16 xl:pr-24">
-                <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight ${yeseva_One.className}`}>The <span className="text-green-600">Founder</span></h2>
-                
-                <div className="space-y-7 text-gray-700">
-                  <p className="leading-relaxed text-gray-600">
-                    <span className="font-bold">Nishchoy Gupta</span>, the passionate force behind Kislay Naturals - a brand rooted in authenticity, sustainability, and the power of nature. A student of LJ University with a strong foundation in sports management, Nishchoy blends scientific understanding with a deep respect for traditional wellness practices. His entrepreneurial journey was fueled by a simple yet powerful idea: to offer clean, natural, and guilt-free alternatives that promote a healthier lifestyle.
-                  </p>
-                  <p className="leading-relaxed text-gray-600">
-                    Beyond business, Nishchoy is a sportsman at heart. A dedicated cricketer and fitness enthusiast, he lives by the same values he brings to his brand - discipline, resilience, and performance with integrity. His sporting spirit reflects in the way he builds his company: with teamwork, commitment, and a relentless pursuit of excellence.
-                  </p>
-                  <p className="leading-relaxed text-gray-600">
-                    Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy's mission is to empower individuals to live better, more balanced lives through nature-backed solutions—while also fostering community and environmental responsibility.
-                  </p>
-                  <p className="leading-relaxed text-gray-600">
-                    With his unique blend of scientific insight, entrepreneurial energy, and sportsmanship, Nishchoy leads Kislay Naturals as not just a brand, but a lifestyle movement for those who seek wellness without compromise.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 mt-12 lg:mt-0 w-full lg:w-5/12 xl:w-[42%] relative h-[450px] sm:h-[500px] lg:h-[550px] xl:h-[600px] rounded-l-2xl lg:rounded-l-3xl overflow-hidden">
-                <Image
-                  src="/founder3.jpg"
-                  alt="Nishchoy Gupta, Founder of Kislay Naturals"
-                  fill
-                  className="object-cover object-center"
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+          <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+            Discover the story behind Kislay Naturals and our commitment to natural wellness
+          </p>
+          
+                  </div>
       </section>
 
       {/* Our Mission Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          {/* Mobile: Text first, then logo */}
-          <div className="md:hidden flex flex-col">
-            <div className="mb-8">
-              <h2 className={`text-3xl font-bold text-gray-900 mb-6 leading-tight ${yeseva_One.className}`}>
-                Our <span className="text-green-600">Mission</span>
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+                Our Mission
               </h2>
-              <p className="text-black leading-relaxed mb-4">
-                At Kislay Naturals, we believe that wellness should be simple, honest, and rooted in nature. Born from a passion for clean living and mindful nutrition, our brand is dedicated to delivering 100% natural, low-carb products that nourish your body and fuel your lifestyle - without compromise.
-              </p>
-              <p className="text-black leading-relaxed mb-4">
-                Each of our products is crafted with purpose, powered by nature's best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you're striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
-              </p>
-              <p className="text-black leading-relaxed">
-                With the guiding philosophy "Naturally Trusted | Deeply Connected | Truly Healthy," we're not just offering products - we're building a community around conscious choices and lasting well-being.
-              </p>
+              <div className="w-20 h-1 bg-green-400 mx-auto rounded-full"></div>
             </div>
-            <div className="flex justify-center">
-              <div className="relative w-48 h-48">
-                <Image
-                  src="/logo-transparent.png"
-                  alt="Kislay Naturals Logo"
-                  fill
-                  className="object-contain"
-                />
+            
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-green-100">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="order-2 md:order-1">
+                  <div className="space-y-6 text-gray-700">
+                    <p className="text-lg leading-relaxed">
+                      At Kislay Naturals, we believe that wellness should be simple, honest, and rooted in nature. Born from a passion for clean living and mindful nutrition, our brand is dedicated to delivering 100% natural, low-carb products that nourish your body and fuel your lifestyle - without compromise.
+                    </p>
+                    <p className="text-lg leading-relaxed">
+                      Each of our products is crafted with purpose, powered by nature's best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you're striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
+                    </p>
+                    <p className="text-lg leading-relaxed">
+                      With the guiding philosophy "Naturally Trusted | Deeply Connected | Truly Healthy," we're not just offering products - we're building a community around conscious choices and lasting well-being.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="order-1 md:order-2 flex justify-center">
+                  <div className="relative w-64 h-64 rounded-2xl p-8 flex items-center justify-center">
+                    <Image
+                      src="/logo-transparent.png"
+                      alt="Kislay Naturals Logo"
+                      width={200}
+                      height={200}
+                      className="object-contain"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Desktop: Original side-by-side layout */}
-          <div className="hidden md:grid md:grid-cols-2 gap-12 items-center">
-            <div className="flex justify-center">
-              <div className="relative w-64 h-64">
-                <Image
-                  src="/logo-transparent.png"
-                  alt="Kislay Naturals Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            </div>
-            <div>
-              <h2 className={`text-4xl md:text-5xl font-bold text-gray-900 mb-6 md:mb-8 leading-tight ${yeseva_One.className}`}>
-                Our <span className="text-green-600">Mission</span>
-              </h2>
-              <p className="text-black leading-relaxed mb-6">
-                At Kislay Naturals, we believe that wellness should be simple, honest, and rooted in nature. Born from a passion for clean living and mindful nutrition, our brand is dedicated to delivering 100% natural, low-carb products that nourish your body and fuel your lifestyle - without compromise.
-              </p>
-              <p className="text-black leading-relaxed mb-6">
-                Each of our products is crafted with purpose, powered by nature's best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you're striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
-              </p>
-              <p className="text-black leading-relaxed">
-                With the guiding philosophy "Naturally Trusted | Deeply Connected | Truly Healthy," we're not just offering products - we're building a community around conscious choices and lasting well-being.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Our Values Section */}
-      <section className="py-16">
+      <section className="py-20 bg-[#F9F9F9]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className={`text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight ${yeseva_One.className}`}>Our<span className="text-green-600"> Values</span></h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="text-center border-0 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Leaf className="w-8 h-8 text-green-600" />
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+                Our Values
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                The core principles that guide everything we do at Kislay Naturals
+              </p>
+              <div className="w-20 h-1 bg-green-400 mx-auto rounded-full mt-6"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Naturally Trusted */}
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-green-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Leaf className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-xl font-semibold text-gray-900 mb-3 ${yeseva_One.className}`}>Naturally Trusted</h3>
-                <p className="text-gray-600 text-sm">
-                  We believe in the power of nature and use only the purest, most natural ingredients in our products.
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                  Naturally Trusted
+                </h3>
+                <p className="text-gray-600 text-center leading-relaxed">
+                  We believe in the power of nature and use only the purest, most natural ingredients in our products. Every ingredient is carefully selected and ethically sourced.
                 </p>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="text-center border-0 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="w-8 h-8 text-green-600" />
+              {/* Deeply Connected */}
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-green-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-xl font-semibold text-gray-900 mb-3 ${yeseva_One.className}`}>Deeply Connected</h3>
-                <p className="text-gray-600 text-sm">
-                  We're building a community of health-conscious individuals who share our passion for wellness.
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                  Deeply Connected
+                </h3>
+                <p className="text-gray-600 text-center leading-relaxed">
+                  We're building a community of health-conscious individuals who share our passion for wellness. Together, we create a supportive network for better health.
                 </p>
-              </CardContent>
-            </Card>
+              </div>
 
-            <Card className="text-center border-0 shadow-sm hover:shadow-md transition-shadow">
-              <CardContent className="p-8">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-green-600" />
+              {/* Truly Healthy */}
+              <div className="bg-white rounded-2xl shadow-lg p-8 border border-green-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Shield className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-xl font-semibold text-gray-900 mb-3 ${yeseva_One.className}`}>Truly Healthy</h3>
-                <p className="text-gray-600 text-sm">
-                  Our products are designed to support your overall well-being, with no artificial additives or preservatives.
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                  Truly Healthy
+                </h3>
+                <p className="text-gray-600 text-center leading-relaxed">
+                  Our products are designed to support your overall well-being, with no artificial additives or preservatives. Pure nutrition for a healthier life.
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Meet The Team Section */}
-      <section className="py-16 bg-green-800 text-white">
-        <div className="container mx-auto px-4 text-center">
+      {/* The Founder Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+              Meet Our Founder
+            </h2>
+            <div className="w-20 h-1 bg-green-400 mx-auto rounded-full"></div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-green-100">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Founder Image */}
+              <div className="order-2 lg:order-1 flex justify-center">
+                <div className="relative w-80 h-96 rounded-2xl overflow-hidden shadow-xl">
+                  <Image
+                    src="/founder3.jpg"
+                    alt="Nishchoy Gupta, Founder of Kislay Naturals"
+                    fill
+                    className="object-cover object-center hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
 
-
+              {/* Founder Info */}
+              <div className="order-1 lg:order-2">
+                <div className="space-y-6 text-gray-700">
+                  <p className="text-lg leading-relaxed">
+                    Nishchoy Gupta, the visionary behind Kislay Naturals, is a dynamic entrepreneur with a profound passion for health, wellness, and sustainable living. His journey began with a simple yet powerful realization: that modern lifestyles often compromise on nutrition, leading to a host of health challenges. This insight fueled his mission to create a brand that offers clean, natural, and effective solutions for everyday wellness.
+                  </p>
+                  <p className="text-lg leading-relaxed">
+                    Beyond business, Nishchoy is a sportsman at heart. A dedicated cricketer and fitness enthusiast, he lives by the same values he brings to his brand - discipline, resilience, and performance with integrity. His sporting spirit reflects in the way he builds his company: with teamwork, commitment, and a relentless pursuit of excellence.
+                  </p>
+                  <p className="text-lg leading-relaxed">
+                    Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy's mission is to empower individuals to live better, more balanced lives through nature-backed solutions.
+                  </p>
+                  
+                  {/* Founder's Vision */}
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border-l-4 border-[#2E7D32]">
+                    <h4 className={`text-xl font-bold text-[#2E7D32] mb-3 ${yeseva_One.className}`}>
+                      Vision Statement
+                    </h4>
+                    <p className="text-gray-700 italic">
+                      "To create a world where natural wellness is accessible to everyone, fostering a community of health-conscious individuals who prioritize quality, transparency, and sustainable living."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

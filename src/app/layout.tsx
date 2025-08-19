@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReduxProvider>
             <Navbar />
             {children}
-                        <Footer />
+            <Footer />
             <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
           </ReduxProvider>
         </AuthProvider>

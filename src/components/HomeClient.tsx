@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { Product, Feature, FeaturesBannerProps } from '@/types';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 // Dynamically import client components
 const Hero = dynamic(() => import('@/components/Hero'));
@@ -54,6 +55,7 @@ export default function HomeClient({ products }: HomeClientProps) {
       <Recipes />
       <Testimonials />
       <BlogPreview />
+      <WhatsAppButton />
     </main>
   );
 }

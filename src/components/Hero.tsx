@@ -18,8 +18,8 @@ const Hero = () => {
     "From farm to table - the purest monk fruit sweetener on Earth."
   ];
 
-  const mobileImages = ['/mcover.png', '/mcover2.png'];
-  const desktopImages = ['/cover333.jpg', '/herophoto.png', '/herophoto2.png'];
+  const mobileImages = ['/herophoto.png',  '/mcover.png','/herophoto2.png', '/mcover2.png'];
+  const desktopImages = ['/herophoto.png', '/mcover.png', '/herophoto2.png', '/cover333.jpg'];
 
   useEffect(() => {
     const interval = setInterval(() => {

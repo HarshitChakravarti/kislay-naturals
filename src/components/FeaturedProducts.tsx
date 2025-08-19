@@ -35,13 +35,13 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className={`text-4xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   CHECK OUT OUR SWEET FAVOURITE!
                 </span>
                 {' \u{1F970}'}
               </h2>
-              <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+              <p className="text-base font-medium text-white/90 max-w-2xl mx-auto">
                 Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
                 individuals
               </p>
@@ -57,11 +57,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           {/* Mobile & Tablet: Vertical Layout */}
           <div className="md:hidden">
             {/* Product Image */}
-            <div className="relative bg-white pt-5 px-5">
+            <div className="relative bg-white pt-3 px-4">
               <div className="absolute top-6 left-6 z-10">
                 
               </div>
-              <div className="relative h-100 w-full flex items-center justify-center">
+              <div className="relative h-80 w-full flex items-center justify-center">
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -74,8 +74,8 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             </div>
 
             {/* Product Details */}
-            <div className="p-5">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="p-4">
+              <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => {
                     const rating = product.rating || 0;
@@ -96,7 +96,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
 
               <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
               
-              <div className="mb-4">
+              <div className="mb-3">
                 <div className="flex items-baseline gap-2">
                   <div className="text-2xl font-bold text-gray-900">
                     ₹{product.price?.toFixed(2) || '0.00'}
@@ -115,17 +115,17 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes</p>
               </div>
 
-              <div className="flex flex-col gap-3 mt-6">
+              <div className="flex flex-col gap-2 mt-4">
                 <Link 
                   href={`/products/${product.id}`}
-                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 text-center"
+                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2.5 px-4 rounded-lg font-medium transition-colors duration-300 text-center"
                 >
                   <ShoppingCart className="h-4 w-4" />
                   Buy Now
                 </Link>
                 <Link 
                   href={`/products/${product.id}`}
-                  className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-4 rounded-lg font-medium transition-colors duration-300"
+                  className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-2.5 px-4 rounded-lg font-medium transition-colors duration-300"
                 >
                   View Details
                   <ArrowRight className="h-4 w-4" />
@@ -221,27 +221,19 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 <div className="mt-8 pt-6 border-t border-gray-100">
                   <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                     <div className="flex items-center gap-2">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <span className="text-lg">🌿</span>
                       <span>100% Natural</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <span className="text-lg">🔥</span>
                       <span>Zero Calories</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <span className="text-lg">💚</span>
                       <span>Keto Friendly</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <svg className="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                      <span className="text-lg">✨</span>
                       <span>Diabetic Safe</span>
                     </div>
                   </div>

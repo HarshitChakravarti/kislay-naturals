@@ -35,9 +35,9 @@ Fuel your lifestyle with natural, low-carb goodness – packed with clean energy
 Say goodbye to sugar and artificial sweeteners! Kislay Monk Fruit Sweetener Drops are made from pure monk fruit extract, offering a zero-calorie, zero-glycemic index, and 100% natural sugar substitute that's perfect for your healthy lifestyle.
 
 Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply want a clean alternative to sugar, Kislay drops deliver the same sweet taste without the crash.`,
-    price: 299.99,
+    price: 299,
     image: '/p1.png',
-    originalPrice: 329.99,
+    originalPrice: 350,
     rating: 4.5,
     numReviews: 10,
     inStock: true
