@@ -89,25 +89,31 @@ export default function Footer() {
               <div className="flex space-x-3">
                 <a
                   href="#"
-                  className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors"
+                  className="w-10 h-10 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center transition-colors"
                 >
                   <Youtube className="w-5 h-5" />
                 </a>
                 <a
-                  href="#"
-                  className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors"
+                  href="https://www.facebook.com/share/179ALHJvH6/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-colors"
                 >
                   <Facebook className="w-5 h-5" />
                 </a>
                 <a
-                  href="#"
-                  className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors"
+                  href="https://www.linkedin.com/in/nishchoy-gupta-b1421b366?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-full flex items-center justify-center transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <a
-                  href="#"
-                  className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center transition-colors"
+                  href="https://www.instagram.com/kislay.naturals?igsh=azZ1azQ3ajV1M2Q="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-400 hover:from-purple-700 hover:via-pink-700 hover:to-orange-500 text-white rounded-full flex items-center justify-center transition-all"
                 >
                   <Instagram className="w-5 h-5" />
                 </a>

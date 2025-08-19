@@ -49,7 +49,7 @@ export default function EnquireNowModal({ isOpen, onClose, productName }: Enquir
         `*Enquiry Date:* ${new Date().toLocaleDateString('en-IN')}`;
 
       // WhatsApp number (replace with your actual WhatsApp number)
-      const phoneNumber = '919876543210'; // Replace with your business WhatsApp number
+      const phoneNumber = '917043630938'; // Replace with your business WhatsApp number
       
       // Create WhatsApp URL
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;

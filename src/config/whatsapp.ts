@@ -1,7 +1,7 @@
 // WhatsApp Button Configuration
 export const whatsappConfig = {
   // Your WhatsApp phone number (with country code, no + or spaces)
-  phoneNumber: "919876543210", // Replace with your actual number
+  phoneNumber: "917043630938", // Replace with your actual number
   
   // Default message that will be pre-filled when users click the button
   defaultMessage: "Hi! I'd like to know more about Kislay Naturals products.",

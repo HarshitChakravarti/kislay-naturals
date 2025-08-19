@@ -189,11 +189,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             </div>
           </motion.div>
 
-          {/* Enquire Now Section - Below Images */}
+          {/* Enquire Now Section - Desktop Only */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
+            className="hidden md:block"
           >
             <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
               <div className="text-center space-y-4">
@@ -355,7 +356,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           className="space-y-6"
         >
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl md:text-2xl lg:text-3xl font-bold text-gray-900">
               {product.name}
             </h1>
             
@@ -468,6 +469,164 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
             <Zap className="h-5 w-5" />
             <span>Buy Now</span>
           </motion.button>
+
+          {/* Enquire Now Section - Mobile Only */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="md:hidden"
+          >
+            <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
+              <div className="text-center space-y-4">
+                <div className="flex items-center justify-center space-x-2">
+                  <MessageSquare className="h-6 w-6 text-green-600" />
+                  <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
+                </div>
+                <p className="text-gray-600">
+                  Get personalized assistance about this product.<br/> We are here to help!
+                </p>
+                <motion.button
+                  onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  <span>{isEnquireFormVisible ? 'Hide Form' : 'Enquire Now'}</span>
+                </motion.button>
+              </div>
+
+              {/* Inline Enquiry Form - Mobile */}
+              {isEnquireFormVisible && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-6 pt-6 border-t border-green-200"
+                >
+                  <form onSubmit={handleEnquireSubmit} className="space-y-4">
+                    {/* Name Field */}
+                    <div>
+                      <label htmlFor="enquire-name-mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                        Full Name *
+                      </label>
+                      <input
+                        type="text"
+                        id="enquire-name-mobile"
+                        name="name"
+                        value={enquireFormData.name}
+                        onChange={handleEnquireInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+
+                    {/* Email Field */}
+                    <div>
+                      <label htmlFor="enquire-email-mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        id="enquire-email-mobile"
+                        name="email"
+                        value={enquireFormData.email}
+                        onChange={handleEnquireInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        placeholder="Enter your email address"
+                      />
+                    </div>
+
+                    {/* Mobile Field */}
+                    <div>
+                      <label htmlFor="enquire-mobile-mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                        Mobile Number *
+                      </label>
+                      <input
+                        type="tel"
+                        id="enquire-mobile-mobile"
+                        name="mobile"
+                        value={enquireFormData.mobile}
+                        onChange={handleEnquireInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        placeholder="Enter your mobile number"
+                        pattern="[0-9]{10}"
+                      />
+                    </div>
+
+                    {/* Address Field */}
+                    <div>
+                      <label htmlFor="enquire-address-mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                        Short Address *
+                      </label>
+                      <input
+                        type="text"
+                        id="enquire-address-mobile"
+                        name="address"
+                        value={enquireFormData.address}
+                        onChange={handleEnquireInputChange}
+                        required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        placeholder="City, State"
+                      />
+                    </div>
+
+                    {/* Message Field */}
+                    <div>
+                      <label htmlFor="enquire-message-mobile" className="block text-sm font-medium text-gray-700 mb-2">
+                        Additional Message
+                      </label>
+                      <textarea
+                        id="enquire-message-mobile"
+                        name="message"
+                        value={enquireFormData.message}
+                        onChange={handleEnquireInputChange}
+                        rows={3}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
+                        placeholder="Any specific questions or requirements..."
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <motion.button
+                      type="submit"
+                      disabled={!isEnquireFormValid || isSubmitting}
+                      whileHover={{ scale: isEnquireFormValid ? 1.02 : 1 }}
+                      whileTap={{ scale: isEnquireFormValid ? 0.98 : 1 }}
+                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
+                        isEnquireFormValid
+                          ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
+                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      }`}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Send Enquiry via WhatsApp</span>
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
+
+                  {/* Info Text */}
+                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
+                    <p className="text-sm text-green-700 text-center">
+                      Your enquiry will be sent directly to our WhatsApp for quick response
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         </motion.div>
       </div>
       <CheckoutModal 
