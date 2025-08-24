@@ -24,13 +24,13 @@ import {
 } from 'lucide-react';
 
 const FeatureCard = ({ emoji, title, description, iconBg, iconColor }: { emoji: string, title: string, description: string, iconBg: string, iconColor: string }) => (
-  <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex items-center space-x-3 hover:shadow-md transition-shadow">
-    <div className={`p-3 rounded-full ${iconBg} flex items-center justify-center`}>
-      <span className="text-3xl">{emoji}</span>
+  <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center text-center space-y-3 hover:shadow-md transition-shadow">
+    <div className={`p-2 rounded-full ${iconBg} flex items-center justify-center`}>
+      <span className="text-2xl md:text-3xl">{emoji}</span>
     </div>
-    <div>
-      <h4 className="font-semibold text-gray-800">{title}</h4>
-      <p className="text-sm text-gray-500">{description}</p>
+    <div className="space-y-1">
+      <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{title}</h4>
+      <p className="text-xs md:text-sm text-gray-600 leading-relaxed">{description}</p>
     </div>
   </div>
 );
@@ -427,7 +427,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           {/* Key Features Grid */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-gray-900">Why it's different?</h3>
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" iconBg="bg-white" iconColor="text-green-600" />
               <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" iconBg="bg-white" iconColor="text-red-600" />
               <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" iconBg="bg-white" iconColor="text-green-600" />

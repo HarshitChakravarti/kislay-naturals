@@ -41,7 +41,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 </span>
                 {' \u{1F970}'}
               </h2>
-              <p className="text-base font-medium text-white/90 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
                 Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
                 individuals
               </p>
@@ -97,22 +97,22 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
               
               <div className="mb-3">
-                <div className="flex items-baseline gap-2">
+                <div className="flex items-baseline gap-2 mb-1">
                   <div className="text-2xl font-bold text-gray-900">
                     ₹{product.price?.toFixed(2) || '0.00'}
                   </div>
                   {product.originalPrice && product.originalPrice > (product.price || 0) && (
-                    <div className="flex items-center gap-2">
+                    <>
                       <span className="text-sm text-gray-500 line-through">
                         ₹{product.originalPrice.toFixed(2)}
                       </span>
-                      <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
-                        {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
+                      <span className="text-xs font-medium text-white bg-green-600 px-2 py-0.5 rounded-full">
+                        Save {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}%
                       </span>
-                    </div>
+                    </>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes</p>
+                <p className="text-xs text-gray-500">Inclusive of all taxes</p>
               </div>
 
               <div className="flex flex-col gap-2 mt-4">
@@ -188,15 +188,19 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
 
                 <div className="mb-8">
                   <div className="flex items-baseline gap-3 mb-1">
-                    <span className="text-3xl font-bold text-green-700">
+                    <span className="text-3xl font-bold text-gray-900">
                       ₹{product.price?.toFixed(2) || '0.00'}
                     </span>
-                    <span className="text-lg text-gray-400 line-through">
-                      ₹350.00
-                    </span>
-                    <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                      {Math.round((((350 - (product.price || 0)) / 350) * 100))}% OFF
-                    </span>
+                    {product.originalPrice && product.originalPrice > (product.price || 0) && (
+                      <>
+                        <span className="text-lg text-gray-400 line-through">
+                          ₹{product.originalPrice.toFixed(2)}
+                        </span>
+                        <span className="text-sm font-medium text-white bg-green-600 px-2 py-0.5 rounded-full">
+                          Save {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}%
+                        </span>
+                      </>
+                    )}
                   </div>
                   <p className="text-sm text-gray-500">Inclusive of all taxes</p>
                 </div>

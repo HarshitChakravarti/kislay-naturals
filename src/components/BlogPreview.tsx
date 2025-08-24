@@ -11,15 +11,15 @@ const yeseva_One = Yeseva_One({
 const posts = [
   {
     id: 1,
-    title: "5 Surprising Benefits of Monk Fruit",
-    excerpt: "Discover why monk fruit is the healthiest sugar alternative for your daily routine.",
-    image: "/cover2.jpg", 
+    title: "Monk Fruit Sweetener – The Best Natural Sugar Substitute in India",
+    excerpt: "Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.",
+    image: "/cover3.jpg", 
     category: "Health & Wellness",
-    date: "July 28, 2025",
-    link: "#",
+    date: "August 24, 2025",
+    link: "/blog/monk-fruit-1",
   },
   {
-    id: 2,
+    id: 3,
     title: "Diabetes - The Silent Killer",
     excerpt: "How monk fruit sweetener can help manage blood sugar levels and support a healthy lifestyle.",
     image: "/diabetes.jpg", 
@@ -28,25 +28,7 @@ const posts = [
     link: "#",
   },
   {
-    id: 3,
-    title: "The Truth About Sugar Addiction",
-    excerpt: "Understanding how sugar affects your brain and why monk fruit is the perfect alternative to break free.",
-    image: "/cover3.jpg", 
-    category: "Health & Wellness",
-    date: "July 22, 2025",
-    link: "#",
-  },
-  {
-    id: 4,
-    title: "Monk Fruit vs Artificial Sweeteners",
-    excerpt: "A comprehensive comparison of natural monk fruit sweetener against synthetic alternatives.",
-    image: "/cover4.jpg", 
-    category: "Nutrition",
-    date: "July 20, 2025",
-    link: "#",
-  },
-  {
-    id: 5,
+    id: 6,
     title: "Managing Blood Sugar Naturally",
     excerpt: "Learn how to maintain healthy glucose levels with natural sweeteners and lifestyle changes.",
     image: "/herophoto.png", 
@@ -55,21 +37,12 @@ const posts = [
     link: "#",
   },
   {
-    id: 6,
+    id: 7,
     title: "The Hidden Dangers of Refined Sugar",
     excerpt: "Explore the long-term health effects of processed sugar and discover healthier alternatives.",
     image: "/herophoto2.png", 
     category: "Nutrition",
     date: "July 15, 2025",
-    link: "#",
-  },
-  {
-    id: 7,
-    title: "Keto-Friendly Sweetening Solutions",
-    excerpt: "How monk fruit sweetener perfectly fits into your ketogenic lifestyle without breaking ketosis.",
-    image: "/mcover.png", 
-    category: "Health & Wellness",
-    date: "July 12, 2025",
     link: "#",
   },
 ];
@@ -132,7 +105,7 @@ const BlogPreview = () => {
               </span>
               {' \u{1F60A}'}
             </h2>
-            <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
               Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
               individuals
             </p>

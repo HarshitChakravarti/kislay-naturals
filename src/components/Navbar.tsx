@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { Search, User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
+import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -17,9 +17,7 @@ import { useAuth } from "@/contexts/AuthContext"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -98,26 +96,65 @@ export default function Header() {
     }
 
     return (
-      <>
-        <Link 
-          href="/login" 
-          className="flex items-center px-4 py-3 text-sm text-white bg-green-700 hover:bg-green-800 transition-colors duration-200 font-medium"
-          onClick={closeDropdown}
-          role="menuitem"
-        >
-          <LogIn className="w-4 h-4 mr-3" />
-          Sign in
-        </Link>
-        <Link 
-          href="/register" 
-          className="flex items-center px-4 py-3 text-sm text-white bg-green-600 hover:bg-green-700 transition-colors duration-200 font-medium"
-          onClick={closeDropdown}
-          role="menuitem"
-        >
-          <UserPlus className="w-4 h-4 mr-3" />
-          Create account
-        </Link>
-      </>
+      <div className="p-6 w-80">
+        {/* Social Media Login Icons */}
+        <div className="flex gap-2 mb-4">
+          <a 
+            href="#" 
+            className="flex-1 bg-blue-600 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
+            onClick={(e) => e.preventDefault()}
+          >
+            Facebook
+          </a>
+          <a 
+            href="#" 
+            className="flex-1 bg-sky-400 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-sky-500 transition-colors"
+            onClick={(e) => e.preventDefault()}
+          >
+            Twitter
+          </a>
+          <a 
+            href="#" 
+            className="flex-1 bg-red-500 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-red-600 transition-colors"
+            onClick={(e) => e.preventDefault()}
+          >
+            Google+
+          </a>
+        </div>
+
+        {/* Or Divider */}
+        <div className="text-center text-gray-500 mb-4">
+          <span className="text-sm">Or</span>
+        </div>
+
+        {/* Login Form */}
+        <form className="space-y-4">
+          <input
+            type="email"
+            placeholder="example@email.com"
+            className="w-full px-3 py-3 border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+          />
+          <input
+            type="password"
+            placeholder="••••••••"
+            className="w-full px-3 py-3 border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+          />
+          <button
+            type="submit"
+            className="w-full bg-red-600 text-white py-3 px-4 rounded text-sm font-medium hover:bg-red-700 transition-colors"
+            onClick={(e) => e.preventDefault()}
+          >
+            LOGIN
+          </button>
+        </form>
+
+        {/* Forgot Password Link */}
+        <div className="text-center mt-4">
+          <a href="#" className="text-sm text-gray-600 hover:text-gray-800 underline">
+            Forgot Email / Password
+          </a>
+        </div>
+      </div>
     );
   }, [user, closeDropdown, handleLogout]);
 
@@ -202,37 +239,6 @@ export default function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-6">
-            {/* Search Bar */}
-            <div className={`fixed left-0 right-0 top-16 bg-white shadow-lg transition-all duration-300 overflow-hidden z-50 ${isSearchOpen ? 'h-16 opacity-100' : 'h-0 opacity-0'}`}>
-              <div className="container mx-auto px-4 h-full flex items-center">
-                <div className="relative w-full max-w-2xl mx-auto">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for products..."
-                    className="w-full pl-10 pr-12 py-2 border-2 border-green-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                  <button 
-                    onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            {/* Search Icon */}
-            <button 
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors group"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
-            </button>
-
             {/* User Account Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button 
@@ -251,7 +257,7 @@ export default function Header() {
               {/* Dropdown Menu */}
               {isUserDropdownOpen && (
                 <div 
-                  className="absolute right-0 mt-2 w-56 bg-gradient-to-b from-green-50 to-white rounded-md shadow-lg py-1 z-50 border border-green-100"
+                  className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="user-menu"

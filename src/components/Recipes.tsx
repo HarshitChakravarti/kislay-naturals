@@ -141,7 +141,7 @@ export default function Recipes() {
                 </span>
                 {' \u{1F60B}'}
               </h2>
-              <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
                 Discover tasty recipes made with Kislay Monk Fruit Sweetener that are both healthy and satisfying.
               </p>
             </div>

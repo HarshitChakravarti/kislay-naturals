@@ -48,7 +48,7 @@ const Testimonials = () => (
               </span>
               {' \u{1F607}'}
             </h2>
-            <p className="text-lg font-medium text-white/90 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
               Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
               individuals
             </p>
