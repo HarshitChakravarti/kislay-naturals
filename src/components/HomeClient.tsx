@@ -21,23 +21,23 @@ export default function HomeClient({ products }: HomeClientProps) {
   const features: Feature[] = [
     {
       title: "100% NATURAL",
-      description: "Plant based",
+      description: "Plant Based",
       icon: 'Leaf',
     },
     {
       title: "ZERO CALORIES",
       description: "100% Healthy",
-      icon: 'Award',
+      icon: 'Zap',
     },
     {
       title: "TASTY",
-      description: "No bitter aftertaste",
-      icon: 'ShoppingBag',
+      description: "Tastes Like Sugar",
+      icon: 'Smile',
     },
     {
       title: "NO SIDE EFFECTS",
-      description: "Scientifically backed",
-      icon: 'Shield',
+      description: "Scientifically Backed",
+      icon: 'CheckCircle',
     },
     {
       title: "FOR ALL AGE GROUP",

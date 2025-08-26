@@ -111,7 +111,7 @@ const Hero = () => {
           </h1>
         </div>
         <p className="text-xl sm:text-xl md:text-2xl text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif' }}>
-        Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the crash, guilt, or chemicals.
+        Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the sugar crash, guilt, or chemicals.
         </p>
         <Link 
           href="/products/1" 

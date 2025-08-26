@@ -38,7 +38,7 @@ export interface Review {
   updatedAt?: string | Date;
 }
 
-export type IconName = 'Leaf' | 'Award' | 'ShoppingBag' | 'Shield' | 'Users';
+export type IconName = 'Leaf' | 'Zap' | 'Smile' | 'CheckCircle' | 'Users';
 
 export interface Feature {
   title: string;

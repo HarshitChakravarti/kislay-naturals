@@ -17,7 +17,7 @@ const ProductsPage = () => {
     price: 299,
     originalPrice: 350,
     image: '/p1.png',
-    description: 'Natural sweetener with zero calories',
+    description: 'The perfect monk fruit sweetener for you',
     inStock: true,
     rating: 4.5,
     numReviews: 12,
@@ -112,7 +112,7 @@ const ProductsPage = () => {
                       </div>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes</p>
+                  <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes • Free shipping across India</p>
                 </div>
 
                 <div className="flex flex-col gap-2 mt-4">
@@ -202,7 +202,7 @@ const ProductsPage = () => {
                         </>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500">Inclusive of all taxes</p>
+                    <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
                   </div>
 
                   <div className="flex gap-4">

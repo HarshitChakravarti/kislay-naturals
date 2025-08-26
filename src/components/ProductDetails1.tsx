@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Product } from '@/types';
 import CheckoutModal from './CheckoutModal';
+import ProductReviews from './ProductReviews';
 import {
   Star,
   ShoppingCart,
@@ -400,7 +401,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   </>
                 )}
               </div>
-              <p className="text-sm text-gray-500">Inclusive of all taxes</p>
+              <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
             </div>
 
             {/* Stock Status */}
@@ -629,6 +630,13 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
           </motion.div>
         </motion.div>
       </div>
+      
+      {/* Product Reviews Section */}
+      <ProductReviews 
+        productId={product.id.toString()} 
+        productName={product.name} 
+      />
+      
       <CheckoutModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 

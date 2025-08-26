@@ -12,7 +12,7 @@ export default function Footer() {
               <Image src="/logo-transparent.png" alt="Kislay Logo" width={150} height={80} className="h-16 w-auto" />
             </div>
             <p className="text-gray-600 font-semibold text-sm leading-relaxed">
-              Naturally trusted | Deeply connected | <br></br> Truly Healthy
+              Naturally Trusted | Deeply Connected | <br></br> Truly Healthy
             </p>
           </div>
 
@@ -85,7 +85,7 @@ export default function Footer() {
 
             {/* Social Networks */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 uppercase tracking-wide">Social Networks</h3>
+              <h3 className="text-lg font-semibold text-gray-900 uppercase tracking-wide">Follow Us On:</h3>
               <div className="flex space-x-3">
                 <a
                   href="#"

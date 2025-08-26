@@ -2,13 +2,13 @@
 
 import { 
   Leaf, 
-  Award, 
-  ShoppingBag, 
-  Shield, 
+  Zap, 
+  Smile, 
+  CheckCircle, 
   Users 
 } from 'lucide-react';
 import { ReactNode } from 'react';
-export type IconName = 'Leaf' | 'Award' | 'ShoppingBag' | 'Shield' | 'Users';
+export type IconName = 'Leaf' | 'Zap' | 'Smile' | 'CheckCircle' | 'Users';
 
 export interface Feature {
   title: string;
@@ -22,17 +22,17 @@ export interface FeaturesBannerProps {
 
 const iconComponents: Record<IconName, ReactNode> = {
   'Leaf': <Leaf className="w-12 h-12 text-green-600" />,
-  'Award': <Award className="w-12 h-12 text-green-600" />,
-  'ShoppingBag': <ShoppingBag className="w-12 h-12 text-green-600" />,
-  'Shield': <Shield className="w-12 h-12 text-green-600" />,
+  'Zap': <Zap className="w-12 h-12 text-green-600" />,
+  'Smile': <Smile className="w-12 h-12 text-green-600" />,
+  'CheckCircle': <CheckCircle className="w-12 h-12 text-green-600" />,
   'Users': <Users className="w-12 h-12 text-green-600" />
 };
 
 const mobileIconComponents: Record<IconName, ReactNode> = {
   'Leaf': <Leaf className="w-8 h-8 text-green-600" />,
-  'Award': <Award className="w-8 h-8 text-green-600" />,
-  'ShoppingBag': <ShoppingBag className="w-8 h-8 text-green-600" />,
-  'Shield': <Shield className="w-8 h-8 text-green-600" />,
+  'Zap': <Zap className="w-8 h-8 text-green-600" />,
+  'Smile': <Smile className="w-8 h-8 text-green-600" />,
+  'CheckCircle': <CheckCircle className="w-8 h-8 text-green-600" />,
   'Users': <Users className="w-8 h-8 text-green-600" />
 };
 

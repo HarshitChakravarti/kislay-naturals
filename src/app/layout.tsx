@@ -33,12 +33,35 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "Kislay Naturals – Monk Fruit Sweeteners",
   description: "Kislay Naturals offers pure monk fruit-based sweeteners for a healthy, sustainable lifestyle.",
+  icons: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      url: '/logo.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png', 
+      sizes: '16x16',
+      url: '/logo.png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      url: '/logo.png',
+    }
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head />
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/kislayfavicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/kislayfavicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/kislayfavicon.png" />
+      </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
         <AuthProvider>
           <ReduxProvider>
