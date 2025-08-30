@@ -41,7 +41,7 @@ export default function PrivacyPolicyPage() {
         {/* Privacy Commitment */}
         <section className="mb-8 md:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Privacy Commitment</h2>
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-green-100 dark:border-green-800/30">
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-green-100 dark:border-green-800/30">
             <p className="text-base sm:text-lg leading-relaxed text-foreground">
               KISLAY NATURALS is committed to ensuring that your privacy is protected. Should we ask you to provide certain information by which you can be identified when using this website, then you can be assured that it will only be used in accordance with this privacy statement.
             </p>
@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
         {/* Policy Updates */}
         <section className="mb-8 md:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Policy Updates</h2>
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-yellow-100 dark:border-yellow-800/30">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-yellow-100 dark:border-yellow-800/30">
             <p className="text-base sm:text-lg leading-relaxed text-foreground">
               KISLAY NATURALS may change this policy from time to time by updating this page. You should check this page from time to time to ensure that you adhere to these changes.
             </p>
@@ -65,15 +65,15 @@ export default function PrivacyPolicyPage() {
             We may collect the following information:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-blue-100 dark:border-blue-800/30">
-              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 md:mb-3 text-base md:text-lg">Personal Information</h3>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 text-base md:text-lg">Personal Information</h3>
               <ul className="text-blue-800 dark:text-blue-200 space-y-1 text-sm md:text-base">
                 <li>• Name</li>
                 <li>• Contact information including email address</li>
               </ul>
             </div>
-            <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-purple-100 dark:border-purple-800/30">
-              <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2 md:mb-3 text-base md:text-lg">Additional Data</h3>
+            <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-purple-100 dark:border-purple-800/30">
+              <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2 text-base md:text-lg">Additional Data</h3>
               <ul className="text-purple-800 dark:text-purple-200 space-y-1 text-sm md:text-base">
                 <li>• Demographic information (postcode, preferences, interests)</li>
                 <li>• Customer survey responses</li>
@@ -116,7 +116,7 @@ export default function PrivacyPolicyPage() {
         {/* Data Security */}
         <section className="mb-8 md:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Data Security</h2>
-          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-indigo-100 dark:border-indigo-800/30">
+          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-indigo-100 dark:border-indigo-800/30">
             <p className="text-base sm:text-lg leading-relaxed text-foreground">
               We are committed to ensuring that your information is secure. In order to prevent unauthorised access or disclosure we have put in suitable measures.
             </p>
@@ -128,8 +128,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">How We Use Cookies</h2>
           
           <div className="space-y-4 md:space-y-6">
-            <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-orange-100 dark:border-orange-800/30">
-              <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-2 md:mb-3 text-base md:text-lg">What are Cookies?</h3>
+            <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-orange-100 dark:border-orange-800/30">
+              <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-2 text-base md:text-lg">What are Cookies?</h3>
               <p className="text-orange-800 dark:text-orange-200 text-sm md:text-base">
                 A cookie is a small file which asks permission to be placed on your computer's hard drive. Once you agree, the file is added and the cookie helps analyze web traffic or lets you know when you visit a particular site.
               </p>
@@ -139,8 +139,8 @@ export default function PrivacyPolicyPage() {
               Cookies allow web applications to respond to you as an individual. The web application can tailor its operations to your needs, likes and dislikes by gathering and remembering information about your preferences.
             </p>
             
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-blue-100 dark:border-blue-800/30">
-              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 md:mb-3 text-base md:text-lg">Traffic Analysis</h3>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 text-base md:text-lg">Traffic Analysis</h3>
               <p className="text-blue-800 dark:text-blue-200 text-sm md:text-base">
                 We use traffic log cookies to identify which pages are being used. This helps us analyze data about webpage traffic and improve our website in order to tailor it to customer needs. We only use this information for statistical analysis purposes and then the data is removed from the system.
               </p>
@@ -150,8 +150,8 @@ export default function PrivacyPolicyPage() {
               Overall, cookies help us provide you with a better website, by enabling us to monitor which pages you find useful and which you do not. A cookie in no way gives us access to your computer or any information about you, other than the data you choose to share with us.
             </p>
             
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-yellow-100 dark:border-yellow-800/30">
-              <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-2 md:mb-3 text-base md:text-lg">Cookie Control</h3>
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-yellow-100 dark:border-yellow-800/30">
+              <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-2 text-base md:text-lg">Cookie Control</h3>
               <p className="text-yellow-800 dark:text-yellow-200 text-sm md:text-base">
                 You can choose to accept or decline cookies. Most web browsers automatically accept cookies, but you can usually modify your browser setting to decline cookies if you prefer. This may prevent you from taking full advantage of the website.
               </p>
@@ -183,7 +183,7 @@ export default function PrivacyPolicyPage() {
               </div>
             </div>
             
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-green-100 dark:border-green-800/30">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-green-100 dark:border-green-800/30">
               <p className="text-base sm:text-lg leading-relaxed text-green-800 dark:text-green-200">
                 <strong>Third-Party Sharing:</strong> We will not sell, distribute or lease your personal information to third parties unless we have your permission or are required by law to do so. We may use your personal information to send you promotional information about third parties which we think you may find interesting if you tell us that you wish this to happen.
               </p>
@@ -194,7 +194,7 @@ export default function PrivacyPolicyPage() {
         {/* Contact Information */}
         <section className="mb-8 md:mb-12">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Contact Us About Your Data</h2>
-          <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-gray-100 dark:border-gray-800/30">
+          <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-gray-100 dark:border-gray-800/30">
             <p className="text-base sm:text-lg leading-relaxed text-foreground mb-4 md:mb-6">
               If you believe that any information we are holding on you is incorrect or incomplete, please contact us as soon as possible. We will promptly correct any information found to be incorrect.
             </p>
@@ -235,7 +235,7 @@ export default function PrivacyPolicyPage() {
 
         {/* Important Notice */}
         <section className="mb-8 md:mb-12">
-          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-yellow-100 dark:border-yellow-800/30">
+          <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-yellow-100 dark:border-yellow-800/30">
             <div className="flex">
               <div className="flex-shrink-0">
                 <AlertTriangle className="h-5 w-5 md:h-6 md:w-6 text-yellow-400" />
