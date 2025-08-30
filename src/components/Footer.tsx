@@ -1,5 +1,6 @@
 import { Phone, MapPin, Mail, Youtube, Facebook, Linkedin, Instagram, ChevronRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 export default function Footer() {
   return (
@@ -44,24 +45,29 @@ export default function Footer() {
             <h3 className="text-lg font-semibold text-gray-900 uppercase tracking-wide">Our Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
+                <Link href="/about" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
                   About us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
+                <Link href="/refund-policy" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
                   Refund policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
+                <Link href="/terms-and-conditions" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
                   T&C
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
+                <Link href="/privacy-policy" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact-us" className="text-gray-700 hover:text-green-600 text-sm transition-colors">
                   Contact us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
