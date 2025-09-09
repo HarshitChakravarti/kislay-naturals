@@ -19,6 +19,15 @@ const posts = [
     link: "/blog/monk-fruit-1",
   },
   {
+    id: 2,
+    title: "Is Monk Fruit Sweetener Good for Diabetics?",
+    excerpt: "Find out why monk fruit sweetener is safe for diabetics. Zero sugar, zero carbs, and a natural way to sweeten food without raising blood sugar levels.",
+    image: "/cover.jpg", 
+    category: "Health & Diabetes",
+    date: "September 9, 2025",
+    link: "/blog/monk-fruit-2",
+  },
+  {
     id: 3,
     title: "Diabetes - The Silent Killer",
     excerpt: "How monk fruit sweetener can help manage blood sugar levels and support a healthy lifestyle.",
