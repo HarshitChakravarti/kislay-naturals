@@ -4,19 +4,19 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-// import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
+  const { showToast } = useAuth();
   
   // Check for success message from registration
   useEffect(() => {
     if (searchParams?.get('registered') === 'true') {
-      // You can add a toast notification here if needed
-      console.log('Registration successful! Please log in to continue.');
+      showToast('Registration successful! Please sign in to continue.', 'success');
     }
-  }, [searchParams]);
+  }, [searchParams, showToast]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -35,6 +35,25 @@ export default function LoginPage() {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
         </h2>
+        {searchParams?.get('registered') === 'true' && (
+          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-green-800">
+                  Account created successfully!
+                </p>
+                <p className="mt-1 text-sm text-green-700">
+                  Please sign in with your email and password to continue.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}
           <Link href="/register" className="font-medium text-green-600 hover:text-green-500">

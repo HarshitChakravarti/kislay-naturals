@@ -16,7 +16,7 @@ interface AuthContextType {
   isVerifying: boolean;
   error: string | null;
   login: (emailOrUsername: string, password: string, callbackUrl?: string) => Promise<UserData | undefined>;
-  register: (username: string, email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string, csrfToken: string) => Promise<void>;
   logout: () => Promise<void>;
   clearVerification: () => void;
   showToast: (message: string, type: 'success' | 'error') => void;
@@ -75,24 +75,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
     
     try {
-      // First check if we have a user in localStorage for immediate UI update
-      let localUser = null;
-      if (typeof window !== 'undefined') {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          try {
-            localUser = JSON.parse(storedUser);
-            // Only set the local user if we don't have a user or if forced
-            if (!user || forceCheck) {
-              setUser(localUser);
-            }
-          } catch (e) {
-            console.error('Error parsing stored user:', e);
-            localStorage.removeItem('user');
-          }
-        }
-      }
-      
       // Then validate with the server
       const response = await fetch('/api/auth/me', {
         credentials: 'include',
@@ -104,11 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       });
 
-      console.log('Auth check response status:', response.status);
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Auth check response data:', data);
         if (data.user) {
           // Ensure consistent user data format
           const serverUser = {
@@ -129,34 +108,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             localStorage.removeItem('user');
           }
         }
-      } else if (response.status === 401) {
-        // User is not authenticated or token is invalid
-        console.log('User not authenticated or token invalid - clearing all data');
+      } else if (response.status === 401 || response.status === 404) {
+        // User is not authenticated or not found
         clearAuthData();
-        // The server should have already cleared the invalid cookie
-      } else if (response.status === 404) {
-        // User not found in database
-        console.log('User not found in database - clearing all data');
-        clearAuthData();
-        // The server should have already cleared the invalid cookie
       } else {
         // Handle other errors
         console.error('Auth check failed with status:', response.status);
         clearAuthData();
-        
-        // If we had a local user but server validation failed, clear the session
-        if (localUser) {
-          console.log('Server validation failed, clearing local session');
-          // Optionally try to logout to clear any invalid tokens
-          try {
-            await fetch('/api/auth/logout', {
-              method: 'POST',
-              credentials: 'include'
-            });
-          } catch (e) {
-            console.error('Error during logout after failed validation:', e);
-          }
-        }
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
@@ -175,44 +133,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const shouldValidateWithServer = !user && typeof window !== 'undefined' && localStorage.getItem('user');
     
     if (shouldValidateWithServer) {
-      // Initial check with timeout
-      const timeoutId = setTimeout(() => {
-        if (isLoading) {
-          console.log('Auth check timeout - forcing loading to false');
-          setIsLoading(false);
-          clearAuthData();
-        }
-      }, 5000); // 5 second timeout
-
       checkAuth();
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
-
-    // Set up periodic check every 10 minutes (less frequent)
-    const intervalId = setInterval(() => {
-      // Only check if user is logged in
-      if (user) {
-        checkAuth(true);
-      }
-    }, 10 * 60 * 1000);
-
-    // Check when the page becomes visible again (only if user is logged in)
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && user) {
-        checkAuth(true);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      clearInterval(intervalId);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [checkAuth, isLoading, user, clearAuthData]);
+  }, []); // Run only once on mount
 
   const login = async (emailOrUsername: string, password: string, callbackUrl = '/') => {
     setIsLoading(true);
@@ -300,32 +223,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (username: string, email: string, password: string) => {
+  const register = async (username: string, email: string, password: string, csrfToken: string) => {
     setIsLoading(true);
     setError(null);
     
     try {
-      // Get CSRF token first
-      const csrfResponse = await fetch('/api/auth/signup', {
-        method: 'GET',
-        headers: {
-          'x-session-id': 'auth-context',
-        },
-      });
-      const csrfData = await csrfResponse.json();
-      
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'x-session-id': 'auth-context',
+          'x-session-id': 'signup-form',
         },
         body: JSON.stringify({ 
-          username, 
+          name: username, // Changed from username to name to match API expectation
           email, 
           password, 
-          csrfToken: csrfData.csrfToken 
+          csrfToken 
         }),
         credentials: 'include',
       });
@@ -345,10 +259,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       // Show success message
-      showToast('Registration successful! Welcome to Kislay Naturals.', 'success');
+      showToast('Registration successful! Please sign in to continue.', 'success');
       
-      // After successful registration, log the user in
-      return login(username, password);
+      // After successful registration, redirect to login page
+      router.push('/login?registered=true');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       console.error('Registration error:', error);

@@ -7,9 +7,9 @@ export async function POST() {
       { status: 200 }
     );
 
-    // Clear the auth cookie
+    // Clear the auth cookie (using 'token' to match Express.js backend)
     response.cookies.set({
-      name: 'auth_token',
+      name: 'token',
       value: '',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

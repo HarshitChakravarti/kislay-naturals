@@ -114,7 +114,7 @@ export default function SignupForm() {
     }
 
     try {
-      await register(formData.username, formData.email, formData.password);
+      await register(formData.username, formData.email, formData.password, csrfToken);
     } catch (error) {
       // Error is handled by the auth context
       console.error('Registration error:', error);

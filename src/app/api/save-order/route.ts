@@ -1,37 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
-import { Order } from '@/types';
-import { WithId } from 'mongodb';
+import { supabase } from '@/lib/supabase';
+import type { OrderDetails } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    const orderData: Omit<Order, '_id' | 'createdAt' | 'updatedAt' | 'orderStatus'> = await request.json();
+    const body: OrderDetails = await request.json();
 
-    if (!orderData) {
-      return NextResponse.json({ success: false, message: 'Order data is missing.' }, { status: 400 });
+    if (!body || !body.user || !body.product || !body.quantity || !body.totalAmount || !body.shippingAddress || !body.paymentDetails) {
+      return NextResponse.json({ success: false, message: 'Invalid order payload.' }, { status: 400 });
     }
 
-    const { db } = await connectToDatabase();
-    const collection = db.collection<Omit<Order, '_id'>>('orders');
+    const payload = body;
 
-    const newOrder: Omit<Order, '_id'> = {
-      ...orderData,
-      orderStatus: 'paid',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    // Normalize key fields for easier querying; also store full payload
+    const insertRow = {
+      user_name: payload.user.name,
+      user_email: payload.user.email,
+      user_mobile: payload.user.mobile,
+      product_id: payload.product.id,
+      product_name: payload.product.name,
+      unit_price: payload.product.price,
+      quantity: payload.quantity,
+      total_amount: payload.totalAmount,
+      shipping_street: payload.shippingAddress.street,
+      shipping_city: payload.shippingAddress.city,
+      shipping_state: payload.shippingAddress.state,
+      shipping_zip: payload.shippingAddress.zip,
+      razorpay_payment_id: payload.paymentDetails.razorpay_payment_id,
+      razorpay_order_id: payload.paymentDetails.razorpay_order_id,
+      razorpay_signature: payload.paymentDetails.razorpay_signature,
+      status: 'paid' as const,
+      payload, // store full JSON for flexibility
     };
 
-    const result = await collection.insertOne(newOrder);
+    const { data, error } = await supabase
+      .from('orders')
+      .insert([insertRow])
+      .select('*')
+      .single();
 
-    const insertedOrder = {
-      _id: result.insertedId.toHexString(),
-      ...newOrder
-    } as WithId<Order>;
+    if (error) {
+      throw error;
+    }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       message: 'Order saved successfully.',
-      order: insertedOrder
+      order: data,
     }, { status: 201 });
 
   } catch (error) {

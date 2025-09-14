@@ -1,183 +1,91 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongoose';
-import { User } from '@/lib/models/User';
-import { rateLimit } from '@/lib/middleware/rateLimit';
-import { generateCSRFToken, validateCSRFToken } from '@/lib/middleware/csrf';
-import { generateToken } from '@/lib/jwt';
+import { NextRequest, NextResponse } from 'next/server'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
+import { rateLimit } from '@/lib/middleware/rateLimit'
+import { generateCSRFToken, validateCSRFToken } from '@/lib/middleware/csrf'
+
+// Helper to set cookie with Supabase access token
+const setSessionCookie = (response: NextResponse, access_token: string) => {
+  const maxAge = parseInt(process.env.JWT_COOKIE_EXPIRE || '7', 10) * 24 * 60 * 60 * 1000
+  response.cookies.set({
+    name: 'token',
+    value: access_token,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge,
+    path: '/',
+  })
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting
-    const rateLimitResult = rateLimit(request, 5, 15 * 60 * 1000); // 5 requests per 15 minutes
+    const rateLimitResult = rateLimit(request, 10, 15 * 60 * 1000)
     if (!rateLimitResult.success) {
       return NextResponse.json(
         { success: false, message: rateLimitResult.message },
-        { 
-          status: 429,
-          headers: {
-            'Retry-After': rateLimitResult.retryAfter?.toString() || '900'
-          }
-        }
-      );
+        { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter?.toString() || '900' } }
+      )
     }
 
-    // Parse request body
-    let body;
+    let body
     try {
-      body = await request.json();
+      body = await request.json()
     } catch {
-      return NextResponse.json(
-        { success: false, message: 'Invalid JSON in request body' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'Invalid JSON in request body' }, { status: 400 })
     }
 
-    const { username, email, password, csrfToken } = body;
+    const { name, email, password, role, csrfToken } = body
 
-    // CSRF validation
-    const sessionId = request.headers.get('x-session-id') || 'default';
+    const sessionId = request.headers.get('x-session-id') || 'default'
     if (!validateCSRFToken(sessionId, csrfToken)) {
-      return NextResponse.json(
-        { success: false, message: 'Invalid CSRF token' },
-        { status: 403 }
-      );
+      return NextResponse.json({ success: false, message: 'Invalid CSRF token' }, { status: 403 })
     }
 
-    // Validation
-    if (!username || !email || !password) {
-      return NextResponse.json(
-        { success: false, message: 'Username, email, and password are required' },
-        { status: 400 }
-      );
+    if (!name || !email || !password) {
+      return NextResponse.json({ success: false, message: 'Name, email, and password are required' }, { status: 400 })
     }
-
     if (password.length < 8) {
-      return NextResponse.json(
-        { success: false, message: 'Password must be at least 8 characters long' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'Password must be at least 8 characters long' }, { status: 400 })
     }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, message: 'Please enter a valid email address' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'Please enter a valid email address' }, { status: 400 })
     }
 
-    // Username validation
-    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
-    if (!usernameRegex.test(username)) {
-      return NextResponse.json(
-        { success: false, message: 'Username can only contain letters, numbers, and underscores (3-30 characters)' },
-        { status: 400 }
-      );
+    // Create user via Admin API so we can set metadata
+    const { data: created, error: createErr } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { name, role: role || 'user' },
+    })
+
+    if (createErr) {
+      return NextResponse.json({ success: false, message: createErr.message || 'Failed to register' }, { status: 400 })
     }
 
-    await connectToDatabase();
-
-    // Check for existing user
-    const existingUser = await User.findOne({
-      $or: [
-        { email: email.toLowerCase() },
-        { username: username.toLowerCase() }
-      ]
-    });
-
-    if (existingUser) {
-      if (existingUser.email.toLowerCase() === email.toLowerCase()) {
-        return NextResponse.json(
-          { success: false, message: 'An account with this email already exists' },
-          { status: 409 }
-        );
-      } else {
-        return NextResponse.json(
-          { success: false, message: 'Username is already taken' },
-          { status: 409 }
-        );
-      }
+    // Sign in to get a session (Admin API doesn't return a session)
+    const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password })
+    if (signInErr || !signInData?.session?.access_token) {
+      return NextResponse.json({ success: false, message: signInErr?.message || 'Failed to sign in newly created user' }, { status: 500 })
     }
 
-    // Create new user
-    const newUser = new User({
-      username: username.toLowerCase(),
-      email: email.toLowerCase(),
-      password, // Will be hashed by the pre-save hook
-    });
+    const response = NextResponse.json({ 
+      success: true, 
+      user: signInData.user, 
+      token: signInData.session.access_token 
+    }, { status: 200 })
 
-    await newUser.save();
-
-    // Generate JWT token
-    const token = generateToken({
-      userId: newUser._id.toString(),
-      username: newUser.username,
-      email: newUser.email,
-    });
-
-    // Create response
-    const response = NextResponse.json(
-      {
-        success: true,
-        message: 'User registered successfully',
-        user: {
-          _id: newUser._id,
-          username: newUser.username,
-          email: newUser.email,
-          createdAt: newUser.createdAt,
-          updatedAt: newUser.updatedAt,
-        }
-      },
-      { status: 201 }
-    );
-
-    // Set secure cookie
-    response.cookies.set({
-      name: 'auth_token',
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: '/',
-    });
-
-    return response;
+    setSessionCookie(response, signInData.session.access_token)
+    return response
   } catch (error) {
-    console.error('Signup error:', error);
-    
-    // Handle Mongoose validation errors
-    if (error instanceof Error && error.name === 'ValidationError') {
-      return NextResponse.json(
-        { success: false, message: 'Validation error: ' + error.message },
-        { status: 400 }
-      );
-    }
-
-    // Handle duplicate key errors
-    if (error instanceof Error && error.name === 'MongoServerError') {
-      const mongoError = error as { code?: number; keyPattern?: Record<string, unknown> };
-      if (mongoError.code === 11000 && mongoError.keyPattern) {
-        const field = Object.keys(mongoError.keyPattern)[0];
-        return NextResponse.json(
-          { success: false, message: `${field} is already taken` },
-          { status: 409 }
-        );
-      }
-    }
-
-    return NextResponse.json(
-      { success: false, message: 'An error occurred during registration' },
-      { status: 500 }
-    );
+    console.error('Signup error:', error)
+    return NextResponse.json({ success: false, message: 'An error occurred during registration' }, { status: 500 })
   }
 }
 
-// Generate CSRF token for signup form
 export async function GET(request: NextRequest) {
-  const sessionId = request.headers.get('x-session-id') || 'default';
-  const csrfToken = generateCSRFToken(sessionId);
-  
-  return NextResponse.json({ csrfToken });
+  const sessionId = request.headers.get('x-session-id') || 'default'
+  const csrfToken = generateCSRFToken(sessionId)
+  return NextResponse.json({ csrfToken })
 } 

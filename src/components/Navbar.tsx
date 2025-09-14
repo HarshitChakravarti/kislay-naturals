@@ -96,64 +96,25 @@ export default function Header() {
     }
 
     return (
-      <div className="p-6 w-80">
-        {/* Social Media Login Icons */}
-        <div className="flex gap-2 mb-4">
-          <a 
-            href="#" 
-            className="flex-1 bg-blue-600 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-blue-700 transition-colors"
-            onClick={(e) => e.preventDefault()}
-          >
-            Facebook
-          </a>
-          <a 
-            href="#" 
-            className="flex-1 bg-sky-400 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-sky-500 transition-colors"
-            onClick={(e) => e.preventDefault()}
-          >
-            Twitter
-          </a>
-          <a 
-            href="#" 
-            className="flex-1 bg-red-500 text-white text-center py-3 px-4 rounded text-sm font-medium hover:bg-red-600 transition-colors"
-            onClick={(e) => e.preventDefault()}
-          >
-            Google+
-          </a>
-        </div>
-
-        {/* Or Divider */}
-        <div className="text-center text-gray-500 mb-4">
-          <span className="text-sm">Or</span>
-        </div>
-
-        {/* Login Form */}
-        <form className="space-y-4">
-          <input
-            type="email"
-            placeholder="example@email.com"
-            className="w-full px-3 py-3 border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
-          />
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="w-full px-3 py-3 border border-gray-300 rounded text-sm placeholder-gray-400 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
-          />
-          <button
-            type="submit"
-            className="w-full bg-red-600 text-white py-3 px-4 rounded text-sm font-medium hover:bg-red-700 transition-colors"
-            onClick={(e) => e.preventDefault()}
-          >
-            LOGIN
-          </button>
-        </form>
-
-        {/* Forgot Password Link */}
-        <div className="text-center mt-4">
-          <a href="#" className="text-sm text-gray-600 hover:text-gray-800 underline">
-            Forgot Email / Password
-          </a>
-        </div>
+      <div className="py-2 w-48">
+        <Link 
+          href="/login" 
+          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+          onClick={closeDropdown}
+          role="menuitem"
+        >
+          <LogIn className="w-4 h-4 mr-3 text-green-600" />
+          Sign In
+        </Link>
+        <Link 
+          href="/register" 
+          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+          onClick={closeDropdown}
+          role="menuitem"
+        >
+          <UserPlus className="w-4 h-4 mr-3 text-green-600" />
+          Sign Up
+        </Link>
       </div>
     );
   }, [user, closeDropdown, handleLogout]);

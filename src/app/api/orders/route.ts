@@ -1,35 +1,150 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { demoOrders, Order } from './store';
+import { supabase } from '@/lib/supabase';
+import { authenticateUser } from '@/lib/middleware/auth';
+import type { OrderItem } from '@/types';
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
+  try {
+    const user = await authenticateUser(request);
+    if (!user) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ success: false, message: error.message || 'Failed to fetch orders' }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      count: data?.length || 0,
+      data: data || [],
+    });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+  }
+}
 
 export async function POST(request: NextRequest) {
-  const headers = new Headers();
-  headers.set('Content-Type', 'application/json');
-
   try {
-    let body: Partial<Order>;
+    const user = await authenticateUser(request);
+    if (!user) {
+      return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    let body: any;
     try {
       body = await request.json();
     } catch {
-      return new NextResponse(JSON.stringify({ error: 'Invalid JSON body' }), {
-        status: 400,
-        headers,
-      });
+      return NextResponse.json({ success: false, message: 'Invalid JSON body' }, { status: 400 });
     }
 
-    const order: Order = {
-      id: body.id || `o_${Date.now()}`,
-      items: Array.isArray(body.items) ? body.items : [],
-      total: typeof body.total === 'number' ? body.total : 0,
-      user: typeof body.user === 'string' ? body.user : undefined,
-      status: (body.status as Order['status']) || 'created',
-      createdAt: new Date().toISOString(),
+    const {
+      orderItems,
+      shippingInfo,
+      paymentInfo,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    } = body;
+
+    if (!orderItems || orderItems.length === 0) {
+      return NextResponse.json({ success: false, message: 'No order items' }, { status: 400 });
+    }
+
+    // Get product details for all items to ensure correctness and pricing
+    const productIds = orderItems.map((i: any) => i.product);
+    const { data: products, error: productsError } = await supabase
+      .from('products')
+      .select('id,name,price,images')
+      .in('id', productIds);
+
+    if (productsError) {
+      return NextResponse.json({ success: false, message: productsError.message || 'Failed to fetch products' }, { status: 500 });
+    }
+
+    // Build normalized items from DB data
+    const itemsFromDB = orderItems.map((item: any) => {
+      const dbProduct = products?.find((p) => `${p.id}` === `${item.product}`);
+      if (!dbProduct) {
+        throw new Error(`Product not found with id ${item.product}`);
+      }
+      return {
+        name: dbProduct.name,
+        quantity: item.quantity,
+        image: Array.isArray(dbProduct.images) ? dbProduct.images[0] : dbProduct.images,
+        price: dbProduct.price,
+        product_id: dbProduct.id,
+      };
+    });
+
+    const computedItemsPrice = itemsFromDB.reduce((acc: number, it: any) => acc + it.price * it.quantity, 0);
+    const finalItemsPrice = typeof itemsPrice === 'number' ? itemsPrice : computedItemsPrice;
+    const finalTaxPrice = typeof taxPrice === 'number' ? taxPrice : Math.round(finalItemsPrice * 0.15 * 100) / 100;
+    const finalShippingPrice = typeof shippingPrice === 'number' ? shippingPrice : (finalItemsPrice > 100 ? 0 : 10);
+    const finalTotalPrice = typeof totalPrice === 'number' ? totalPrice : finalItemsPrice + finalTaxPrice + finalShippingPrice;
+
+    // Insert order in orders table
+    const orderPayload = {
+      user_id: user.id,
+      shipping_info: shippingInfo || null,
+      payment_info: paymentInfo || null,
+      items_price: finalItemsPrice,
+      tax_price: finalTaxPrice,
+      shipping_price: finalShippingPrice,
+      total_price: finalTotalPrice,
+      paid_at: new Date().toISOString(),
+      order_status: 'Processing',
+      // Optionally store items snapshot as JSON if your schema supports it
+      order_items_snapshot: itemsFromDB,
     };
 
-    demoOrders.unshift(order);
+    const { data: orderInsert, error: orderError } = await supabase
+      .from('orders')
+      .insert([orderPayload])
+      .select('id')
+      .single();
 
-    return NextResponse.json({ order }, { status: 201, headers });
+    if (orderError) {
+      return NextResponse.json({ success: false, message: orderError.message || 'Failed to create order' }, { status: 500 });
+    }
+
+    const orderId = orderInsert.id;
+
+    // If you have a separate order_items table, insert rows there as well
+    if (orderId) {
+      const orderItemsRows = itemsFromDB.map((it: any) => ({
+        order_id: orderId,
+        product_id: it.product_id,
+        name: it.name,
+        image: it.image,
+        price: it.price,
+        quantity: it.quantity,
+      }));
+
+      const { error: itemsError } = await supabase.from('order_items').insert(orderItemsRows);
+      if (itemsError && itemsError.code !== '42P01') {
+        // 42P01 = relation does not exist (in case the table isn't present). Ignore if no table.
+        return NextResponse.json({ success: false, message: itemsError.message || 'Failed to create order items' }, { status: 500 });
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      order: { id: orderId, ...orderPayload },
+    }, { status: 201 });
   } catch (error) {
     console.error('Error creating order:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
   }
 }

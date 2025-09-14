@@ -6,26 +6,12 @@ Before deploying to Vercel, make sure to set the following environment variables
 
 ### Required Environment Variables:
 
-1. **MONGODB_URI** - Your MongoDB connection string
-   ```
-   mongodb+srv://username:password@cluster.mongodb.net/database_name
-   ```
-
-2. **MONGODB_DB** - Your MongoDB database name
-   ```
-   kislay_naturals
-   ```
-
-3. **JWT_SECRET** - A secure secret key for JWT token generation
-   ```
-   your-super-secret-jwt-key-here
-   ```
-
-4. **RAZORPAY_KEY_ID** - Your Razorpay key ID (for payment processing)
-
-5. **RAZORPAY_KEY_SECRET** - Your Razorpay key secret
-
-6. **NEXT_PUBLIC_RAZORPAY_KEY_ID** - Your Razorpay key ID for client-side usage
+1. **NEXT_PUBLIC_SUPABASE_URL** – Your Supabase project URL
+2. **NEXT_PUBLIC_SUPABASE_ANON_KEY** – Supabase anonymous client key
+3. **JWT_SECRET** – A secure secret key for JWT token generation
+4. **RAZORPAY_KEY_ID** – Razorpay key ID (server-side)
+5. **RAZORPAY_KEY_SECRET** – Razorpay key secret (server-side)
+6. **NEXT_PUBLIC_RAZORPAY_KEY_ID** – Razorpay key ID for client-side usage
 
 ## Setting Environment Variables in Vercel:
 
@@ -38,7 +24,7 @@ Before deploying to Vercel, make sure to set the following environment variables
 ## Build Fixes Applied:
 
 - Moved environment variable checks from module level to function level to prevent build-time errors
-- Updated `src/lib/mongoose.ts`, `src/lib/mongodb.ts`, and `src/lib/jwt.ts`
+- Updated `src/lib/jwt.ts` to read JWT_SECRET at runtime
 - Created `vercel.json` configuration file
 
 ## Deployment Command:

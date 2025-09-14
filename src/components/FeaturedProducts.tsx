@@ -59,7 +59,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             {/* Product Image */}
             <div className="relative bg-white pt-3 px-4">
               <div className="absolute top-6 left-6 z-10">
-                
+                {product.badge && (
+                  <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                    {product.badge}
+                  </span>
+                )}
               </div>
               <div className="relative h-80 w-full flex items-center justify-center">
                 <Image
@@ -139,9 +143,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
             {/* Left Section - Product Image */}
             <div className="w-1/2 relative bg-white flex items-center justify-center p-6">
               <div className="absolute top-4 left-4 z-10">
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
-                  {product.badge}
-                </span>
+                {product.badge && (
+                  <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                    {product.badge}
+                  </span>
+                )}
               </div>
               <div className="relative w-full h-full flex items-center justify-center">
                 <Image

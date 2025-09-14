@@ -1,43 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Product } from '@/types';
-
-// TODO: Replace this with your actual product data or database query
-const getProduct = async (id: string): Promise<Product | null> => {
-  // Implement your product fetching logic here
-  // This is just a placeholder
-  return {
-    id,
-    name: 'KislayNaturals Monk Fruit Sweetener',
-    description: `Kislay Monk Fruit Sweetener Drops – 100% Natural & Zero Calorie Sugar Substitute
-
-Fuel your lifestyle with natural, low-carb goodness – packed with clean energy, rich nutrients, and zero guilt.
-
-Say goodbye to sugar and artificial sweeteners! Kislay Monk Fruit Sweetener Drops are made from pure monk fruit extract, offering a zero-calorie, zero-glycemic index, and 100% natural sugar substitute that's perfect for your healthy lifestyle.
-
-Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply want a clean alternative to sugar, Kislay drops deliver the same sweet taste without the crash.`,
-    price: 299.99,
-    image: '/p1.png',
-    originalPrice: 329.99,
-    rating: 4.5,
-    numReviews: 10,
-    inStock: false
-  };
-};
+import { supabase } from '@/lib/supabase';
+import type { Product } from '@/types';
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  _request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params;
+  const { id } = params;
 
   try {
-    const product = await getProduct(id);
-    
-    if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) {
+      if ((error as any).code === 'PGRST116') {
+        // No rows found
+        return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      }
+      throw error;
     }
 
-    return NextResponse.json({ product });
+    return NextResponse.json({ product: data as Product });
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

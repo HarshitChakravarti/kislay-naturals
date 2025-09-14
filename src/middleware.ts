@@ -8,7 +8,7 @@ const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const cookieToken = request.cookies.get('auth_token')?.value;
+  const cookieToken = request.cookies.get('token')?.value;
   const isAuthenticated = Boolean(cookieToken);
 
   // Redirect to login if trying to access protected route without authentication

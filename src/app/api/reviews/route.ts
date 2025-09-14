@@ -1,34 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongoose';
-import Review from '../../../lib/models/Review';
+import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
-// GET /api/reviews - Get all reviews with optional product filter
 export async function GET(request: NextRequest) {
   try {
-    await connectToDatabase();
-    
-    const { searchParams } = new URL(request.url);
-    const productId = searchParams.get('productId');
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
-    const skip = (page - 1) * limit;
+        const { searchParams } = new URL(request.url)
+    const productId = searchParams.get('productId')
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
+    const from = (page - 1) * limit
+    const to = from + limit - 1
 
-    let query = {};
-    if (productId) {
-      query = { product: productId };
-    }
+    let query = supabase.from('reviews').select('*', { count: 'exact' }).order('created_at', { ascending: false })
+    if (productId) query = query.eq('product_id', productId)
+    query = query.range(from, to)
 
-    const reviews = await Review.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    const { data, count, error } = await query
+    if (error) throw error
 
-    const totalReviews = await Review.countDocuments(query);
-    const totalPages = Math.ceil(totalReviews / limit);
+    const totalReviews = count || 0
+    const totalPages = Math.ceil(totalReviews / limit)
 
     return NextResponse.json({
       success: true,
-      data: reviews,
+      data: data || [],
       pagination: {
         page,
         limit,
@@ -37,75 +31,53 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1
       }
-    });
-
+    })
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error('Error fetching reviews:', error)
     return NextResponse.json(
       { success: false, message: 'Failed to fetch reviews' },
       { status: 500 }
-    );
+    )
   }
 }
 
-// POST /api/reviews - Create a new review
 export async function POST(request: NextRequest) {
   try {
-    await connectToDatabase();
-    
-    const body = await request.json();
-    const { productId, rating, comment, name, email } = body;
+        const body = await request.json()
+    const { productId, rating, comment, name, email } = body
 
-    // Validate required fields
     if (!productId || !rating || !comment || !name || !email) {
-      return NextResponse.json(
-        { success: false, message: 'All fields are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 })
     }
-
-    // Validate rating range
     if (rating < 1 || rating > 5) {
-      return NextResponse.json(
-        { success: false, message: 'Rating must be between 1 and 5' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'Rating must be between 1 and 5' }, { status: 400 })
     }
 
-    // Check if user already reviewed this product (by email for now)
-    const existingReview = await Review.findOne({ 
-      product: productId, 
-      email: email 
-    });
-
-    if (existingReview) {
-      return NextResponse.json(
-        { success: false, message: 'You have already reviewed this product' },
-        { status: 400 }
-      );
+    // prevent duplicates by (product_id, email)
+    const { data: existing, error: existErr } = await supabase
+      .from('reviews')
+      .select('id')
+      .eq('product_id', productId)
+      .eq('email', email)
+      .maybeSingle()
+    if (existErr) throw existErr
+    if (existing) {
+      return NextResponse.json({ success: false, message: 'You have already reviewed this product' }, { status: 400 })
     }
 
-    // Create the review
-    const review = await Review.create({
-      product: productId,
-      name,
-      email,
-      rating,
-      comment,
-      createdAt: new Date()
-    });
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert([{ product_id: productId, rating, comment, name, email }])
+      .select()
+      .single()
+    if (error) throw error
 
-    return NextResponse.json({
-      success: true,
-      message: 'Review submitted successfully',
-      data: review
-    }, { status: 201 });
-
+    return NextResponse.json({ success: true, message: 'Review submitted successfully', data }, { status: 201 })
   } catch (error) {
-    console.error('Error creating review:', error);
+    console.error('Error creating review:', error)
     return NextResponse.json(
       { success: false, message: 'Failed to submit review' },
       { status: 500 }
-    );
+    )
   }
 }
