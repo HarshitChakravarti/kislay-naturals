@@ -18,7 +18,7 @@ export default function BlogDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-4 md:mb-6">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            <span>December 15, 2024</span>
+            <span>September 14, 2025</span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
@@ -186,7 +186,7 @@ export default function BlogDetailPage() {
         </div>
 
         <div className="text-xs md:text-sm text-muted-foreground">
-          <p>Last updated: December 15, 2024</p>
+          <p>Last updated: September 14, 2025</p>
         </div>
       </footer>
     </article>
