@@ -14,3 +14,6 @@ export async function PUT(
     return NextResponse.json({ success: false, message: 'An error occurred while processing reset password' }, { status: 500 })
   }
 }
+
+
+

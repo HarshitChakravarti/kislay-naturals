@@ -28,3 +28,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, message: 'An error occurred while processing forgot password' }, { status: 500 })
   }
 }
+
+
+
