@@ -54,10 +54,18 @@ export const metadata: Metadata = {
   ],
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="icon" type="image/png" sizes="32x32" href="/kislayfavicon.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/kislayfavicon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/kislayfavicon.png" />

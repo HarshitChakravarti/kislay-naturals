@@ -17,6 +17,7 @@ export type UserData = {
   username: string;
   name?: string;
   email: string;
+  role?: string; // Added role for admin functionality
   createdAt?: string | Date;
   updatedAt?: string | Date;
   // Add other user properties as needed
@@ -53,16 +54,23 @@ export type Review = {
 };
 
 export type Product = {
-  id: string;
+  id: string | number;
   name: string;
-  description: string;
+  description?: string;
   price: number;
-  image: string; // primary image URL
-  badge?: string;
   originalPrice?: number;
   rating?: number;
-  numReviews?: number;
+  reviews?: Review[];
+  numReviews?: number; // Total number of reviews
+  avgRating?: number; // Average rating
+  image: string; // primary image URL
+  badge?: string;
+  category?: string;
+  sku?: string; // Stock keeping unit
   inStock?: boolean;
+  slug?: string;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 };
 
 export type Address = {
@@ -78,15 +86,11 @@ export type OrderDetails = {
     email: string;
     mobile: string;
   };
-  product: {
-    id: string;
-    name: string;
-    price: number;
-  };
+  product: Product; // Use the full Product type
   quantity: number;
   totalAmount: number;
   shippingAddress: Address;
-  paymentDetails: {
+  paymentDetails?: {
     razorpay_payment_id: string;
     razorpay_order_id: string;
     razorpay_signature: string;
@@ -104,9 +108,19 @@ export type OrderItem = {
 
 export type Order = {
   id?: string;
+  _id?: string; // MongoDB compatibility
   user?: string; // user id/email
   items?: OrderItem[];
   total?: number;
+  totalAmount?: number; // For compatibility with existing OrderDetails
   status?: 'created' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
-  createdAt?: string;
+  orderStatus?: 'paid' | 'shipped' | 'delivered' | 'cancelled'; // For compatibility
+  shippingAddress?: Address;
+  paymentDetails?: {
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+  };
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 };

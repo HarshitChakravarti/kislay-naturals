@@ -1,17 +1,14 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { Product, Feature, FeaturesBannerProps } from '@/types';
 import WhatsAppButton from '@/components/WhatsAppButton';
-
-// Dynamically import client components
-const Hero = dynamic(() => import('@/components/Hero'));
-const FeaturedProducts = dynamic(() => import('@/components/FeaturedProducts'));
-const BlogPreview = dynamic(() => import('@/components/BlogPreview'));
-const Testimonials = dynamic(() => import('@/components/Testimonials'));
-const FeaturesBanner = dynamic(() => import('@/components/FeaturesBanner'));
-const Recipes = dynamic(() => import('@/components/Recipes'));
-const SectionDivider = dynamic(() => import('@/components/SectionDivider'));
+import Hero from '@/components/Hero';
+import FeaturedProducts from '@/components/FeaturedProducts';
+import BlogPreview from '@/components/BlogPreview';
+import Testimonials from '@/components/Testimonials';
+import FeaturesBanner from '@/components/FeaturesBanner';
+import Recipes from '@/components/Recipes';
+import SectionDivider from '@/components/SectionDivider';
 
 interface HomeClientProps {
   products: Product[];

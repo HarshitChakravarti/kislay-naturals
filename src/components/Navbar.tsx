@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
+import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -19,6 +19,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -31,18 +32,30 @@ export default function Header() {
   // Callback to handle logout
   const handleLogout = useCallback(async () => {
     try {
+      setIsLoggingOut(true);
       closeDropdown();
+      
+      // Add a small delay to show the loading state
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       await logout();
+      
+      // Add another small delay before redirecting
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
       router.push('/');
     } catch (error) {
       console.error('Logout failed:', error);
+    } finally {
+      setIsLoggingOut(false);
     }
   }, [logout, router, closeDropdown]);
 
   // Debounced dropdown toggle to prevent rapid state changes
   const toggleDropdown = useCallback(() => {
+    if (isLoggingOut) return; // Don't open dropdown when logging out
     setIsUserDropdownOpen(prev => !prev);
-  }, []);
+  }, [isLoggingOut]);
 
   // Memoize the dropdown content to prevent unnecessary re-renders
   const dropdownContent = useMemo(() => {
@@ -73,23 +86,24 @@ export default function Header() {
             </svg>
             My Orders
           </Link>
-          <Link 
-            href="/account/settings" 
-            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            onClick={closeDropdown}
-            role="menuitem"
-          >
-            <Settings className="w-4 h-4 mr-3" />
-            Settings
-          </Link>
           <div className="border-t border-gray-100 my-1"></div>
           <button 
             onClick={handleLogout}
-            className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            disabled={isLoggingOut}
+            className="w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200"
             role="menuitem"
           >
-            <LogOut className="w-4 h-4 mr-3" />
-            Sign out
+            {isLoggingOut ? (
+              <>
+                <div className="w-4 h-4 mr-3 animate-spin rounded-full border-2 border-red-600 border-t-transparent"></div>
+                <span className="font-medium">Signing out...</span>
+              </>
+            ) : (
+              <>
+                <LogOut className="w-4 h-4 mr-3" />
+                <span className="font-medium">Sign out</span>
+              </>
+            )}
           </button>
         </>
       );
@@ -121,6 +135,14 @@ export default function Header() {
 
   // Memoize the user icon to prevent flickering
   const userIcon = useMemo(() => {
+    if (isLoggingOut) {
+      return (
+        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+          <div className="w-4 h-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent"></div>
+        </div>
+      );
+    }
+    
     if (user) {
       return (
         <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-medium">
@@ -130,7 +152,7 @@ export default function Header() {
     }
 
     return <User className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />;
-  }, [user]);
+  }, [user, isLoggingOut]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -204,11 +226,12 @@ export default function Header() {
             <div className="relative" ref={dropdownRef}>
               <button 
                 onClick={toggleDropdown}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors group relative"
+                disabled={isLoggingOut}
+                className={`p-2 hover:bg-gray-100 rounded-full transition-colors group relative ${isLoggingOut ? 'cursor-not-allowed opacity-70' : ''}`}
                 aria-expanded={isUserDropdownOpen}
                 aria-haspopup="true"
-                aria-label={user ? 'User menu' : 'Account menu'}
-                title={user ? 'Logged In' : 'Not Logged In'}
+                aria-label={isLoggingOut ? 'Signing out...' : (user ? 'User menu' : 'Account menu')}
+                title={isLoggingOut ? 'Signing out...' : (user ? 'Logged In' : 'Not Logged In')}
               >
                 <div className="relative">
                   {userIcon}

@@ -1,7 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { Product } from '@/types';
+import PendingOrderHandler from './PendingOrderHandler';
+import CheckoutModal from './CheckoutModal';
+import ClientOnly from './ClientOnly';
 
 const ProductDetails = dynamic(
   () => import('./ProductDetails1'),
@@ -13,5 +17,35 @@ interface ProductDetailsWrapperProps {
 }
 
 export default function ProductDetailsWrapper({ product }: ProductDetailsWrapperProps) {
-  return <ProductDetails product={product} />;
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutQuantity, setCheckoutQuantity] = useState(1);
+
+  const handleOpenCheckout = (productId: string, quantity: number) => {
+    // Only open if it's for the current product
+    if (productId === product.id.toString()) {
+      setCheckoutQuantity(quantity);
+      setIsCheckoutOpen(true);
+    }
+  };
+
+  return (
+    <>
+      <ProductDetails 
+        product={product} 
+        onOpenCheckout={(quantity) => {
+          setCheckoutQuantity(quantity);
+          setIsCheckoutOpen(true);
+        }}
+      />
+      <ClientOnly>
+        <PendingOrderHandler onOpenCheckout={handleOpenCheckout} />
+      </ClientOnly>
+      <CheckoutModal 
+        isOpen={isCheckoutOpen} 
+        onClose={() => setIsCheckoutOpen(false)} 
+        product={product} 
+        quantity={checkoutQuantity} 
+      />
+    </>
+  );
 }

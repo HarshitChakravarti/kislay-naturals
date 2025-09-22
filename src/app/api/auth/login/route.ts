@@ -60,9 +60,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: error?.message || 'Invalid credentials' }, { status: 401 })
     }
 
+    // Map Supabase user to our UserData format
+    const userData = {
+      _id: data.user.id,
+      username: data.user.user_metadata?.username || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'User',
+      name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'User',
+      email: data.user.email,
+      role: data.user.user_metadata?.role || 'user',
+      createdAt: data.user.created_at,
+      updatedAt: data.user.updated_at
+    };
+
     const response = NextResponse.json({ 
       success: true, 
-      user: data.user, 
+      user: userData, 
       token: data.session.access_token 
     }, { status: 200 })
 

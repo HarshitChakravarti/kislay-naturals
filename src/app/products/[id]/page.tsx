@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Product } from '@/types';
 import ProductDetailsWrapper from '@/components/ProductDetailsWrapper';
+import { supabase } from '@/lib/supabase';
 
 // Only log in non-production to avoid noisy build output
 const debug = (...args: unknown[]) => {
@@ -12,38 +13,91 @@ const debug = (...args: unknown[]) => {
 
 // Generate static params for known product IDs
 export async function generateStaticParams() {
-  // Return the product IDs that should be pre-generated
-  return [
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-  ];
+  try {
+    // Fetch actual product IDs from database
+    const { data: products, error } = await supabase
+      .from('products')
+      .select('id, slug')
+      .eq('in_stock', true);
+    
+    if (error) {
+      console.error('Error fetching products for static params:', error);
+      // Fallback to known IDs
+      return [
+        { id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' }, // Your Kislay product
+      ];
+    }
+    
+    // Return both ID and slug for flexibility
+    return products?.map(product => ({
+      id: product.id,
+    })) || [];
+  } catch (error) {
+    console.error('Error in generateStaticParams:', error);
+    // Fallback to known IDs
+    return [
+      { id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' }, // Your Kislay product
+    ];
+  }
 }
 
-// Import the product data directly instead of making API calls
-// This avoids potential server-side fetch issues on Vercel
+// Fetch product data from database
 async function getProductById(id: string): Promise<Product | null> {
-  // Return the same product data that the API would return
-  // This matches the data structure from your API route
-  const product: Product = {
-    id,
-    name: 'Kislay Monk Fruit Sweetener Drops',
-    description: `Kislay Monk Fruit Sweetener Drops – 100% Natural & Zero Calorie Sugar Substitute
+  try {
+    debug('Fetching product with ID:', id);
+    
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-Fuel your lifestyle with natural, low-carb goodness – packed with clean energy, rich nutrients, and zero guilt.
+    if (error) {
+      console.error('Error fetching product by ID:', error);
+      
+      // Try to find by slug as fallback
+      const { data: slugData, error: slugError } = await supabase
+        .from('products')
+        .select('*')
+        .eq('slug', id)
+        .single();
+      
+      if (slugError) {
+        console.error('Error fetching product by slug:', slugError);
+        
+        // Fallback to hardcoded product data for legacy ID '1'
+        if (id === '1') {
+          debug('Using fallback product data for legacy ID 1');
+          return {
+            id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8', // Use the real UUID from database
+            name: 'Kislay Monk Fruit Sweetener Drops',
+            price: 299,
+            originalPrice: 350,
+            image: '/p1.png',
+            description: 'The perfect monk fruit sweetener for you. Made from 100% natural monk fruit extract, our sweetener provides the perfect balance of sweetness without any calories or artificial ingredients.',
+            in_stock: true,
+            rating: 4.5,
+            numReviews: 12,
+            avgRating: 4.5,
+            badge: 'Featured',
+            category: 'Sweeteners',
+            slug: 'kislay-monk-fruit-sweetener-drops'
+          } as Product;
+        }
+        
+        return null;
+      }
+      
+      debug('Found product by slug:', slugData);
+      return slugData as Product;
+    }
 
-Say goodbye to sugar and artificial sweeteners! Kislay Monk Fruit Sweetener Drops are made from pure monk fruit extract, offering a zero-calorie, zero-glycemic index, and 100% natural sugar substitute that's perfect for your healthy lifestyle.
-
-Whether you're diabetic, health-conscious, on a low-carb or keto diet, or simply want a clean alternative to sugar, Kislay drops deliver the same sweet taste without the crash.`,
-    price: 299,
-    image: '/p1.png',
-    originalPrice: 350,
-    rating: 4.5,
-    numReviews: 10,
-    inStock: true
-  };
-
-  return product;
+    debug('Found product by ID:', data);
+    return data as Product;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
 }
 
 interface PageProps {

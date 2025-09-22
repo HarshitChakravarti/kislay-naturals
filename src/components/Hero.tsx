@@ -114,7 +114,7 @@ const Hero = () => {
         Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the sugar crash, guilt, or chemicals.
         </p>
         <Link 
-          href="/products/1" 
+          href="/products/e60c3e2e-083b-4da2-8cb4-6789f934f7a8" 
           className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-8 py-3 sm:px-10 sm:py-4 text-base sm:text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
         >
           Shop Now

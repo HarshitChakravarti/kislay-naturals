@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const razorpay = new Razorpay({ key_id, key_secret });
 
     const options = {
-      amount: Math.round(amount * 100),
+      amount: Math.round(amount), // Amount is already in paise from frontend
       currency: cur,
       receipt: `receipt_order_${Date.now()}`,
     } as const;

@@ -1,17 +1,15 @@
-// import { Navigate } from 'next/navigation';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { Navigate } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AdminRoute = ({ children }) => {
-  const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
-  // const location = useLocation();
+  const { user, isLoading, showToast } = useAuth();
 
-  if (!isAuthenticated && !loading) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!user && !isLoading) {
+    return <Navigate to="/login" replace />;
   }
 
-  if (isAuthenticated && !loading && user && user.role !== 'admin') {
-    toast.error('Not authorized as an admin');
+  if (user && !isLoading && user.role !== 'admin') {
+    showToast('Not authorized as an admin', 'error');
     return <Navigate to="/" />;
   }
 

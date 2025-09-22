@@ -3,26 +3,58 @@ import Image from 'next/image';
 import { Star, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Yeseva_One } from 'next/font/google';
+import { supabase } from '@/lib/supabase';
 
 const yeseva_One = Yeseva_One({
   weight: '400',
   subsets: ['latin'],
 });
 
-const ProductsPage = () => {
-  // Product data (same as featured product from home page)
-  const product = {
-    id: '1',
-    name: 'Kislay Monk Fruit Sweetener Drops',
-    price: 299,
-    originalPrice: 350,
-    image: '/p1.png',
-    description: 'The perfect monk fruit sweetener for you',
-    inStock: true,
-    rating: 4.5,
-    numReviews: 12,
-    badge: 'Featured'
-  };
+const ProductsPage = async () => {
+  // Fetch all products from database
+  let products: any[] = [];
+  
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('in_stock', true)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching products:', error);
+      // Fallback to hardcoded data if database fails
+      products = [{
+        id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
+        name: 'Kislay Monk Fruit Sweetener Drops',
+        price: 299,
+        originalPrice: 350,
+        image: '/p1.png',
+        description: 'The perfect monk fruit sweetener for you',
+        in_stock: true,
+        rating: 4.5,
+        numReviews: 12,
+        badge: 'Featured'
+      }];
+    } else {
+      products = data || [];
+    }
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    // Fallback to hardcoded data if database fails
+    products = [{
+      id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
+      name: 'Kislay Monk Fruit Sweetener Drops',
+      price: 299,
+      originalPrice: 350,
+      image: '/p1.png',
+      description: 'The perfect monk fruit sweetener for you',
+      inStock: true,
+      rating: 4.5,
+      numReviews: 12,
+      badge: 'Featured'
+    }];
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -52,14 +84,20 @@ const ProductsPage = () => {
 
       <div className="bg-gray-50">
         <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-16">
-          {/* Product Card - Responsive Layout */}
-          <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <div key={product.id} className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
             {/* Mobile & Tablet: Vertical Layout */}
             <div className="md:hidden">
               {/* Product Image */}
               <div className="relative bg-white pt-3 px-4">
                 <div className="absolute top-6 left-6 z-10">
-                  
+                  {product.badge && (
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                      {product.badge}
+                    </span>
+                  )}
                 </div>
                 <div className="relative h-80 w-full flex items-center justify-center">
                   <Image
@@ -90,7 +128,7 @@ const ProductsPage = () => {
                     })}
                   </div>
                   <span className="text-xs text-gray-500">
-                    ({product.numReviews} reviews)
+                    ({product.numReviews || 0} reviews)
                   </span>
                 </div>
 
@@ -99,15 +137,15 @@ const ProductsPage = () => {
                 <div className="mb-3">
                   <div className="flex items-baseline gap-2">
                     <div className="text-2xl font-bold text-gray-900">
-                      ₹{product.price?.toFixed(2)}
+                      ₹{product.price?.toFixed(2) || '0.00'}
                     </div>
-                    {product.originalPrice && product.originalPrice > product.price && (
+                    {product.originalPrice && product.originalPrice > (product.price || 0) && (
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500 line-through">
                           ₹{product.originalPrice.toFixed(2)}
                         </span>
                         <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
-                          {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                          {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
                         </span>
                       </div>
                     )}
@@ -139,9 +177,11 @@ const ProductsPage = () => {
               {/* Left Section - Product Image */}
               <div className="w-1/2 relative bg-white flex items-center justify-center p-6">
                 <div className="absolute top-4 left-4 z-10">
-                  <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
-                    {product.badge}
-                  </span>
+                  {product.badge && (
+                    <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
+                      {product.badge}
+                    </span>
+                  )}
                 </div>
                 <div className="relative w-full h-full flex items-center justify-center">
                   <Image
@@ -174,7 +214,7 @@ const ProductsPage = () => {
                       })}
                     </div>
                     <span className="text-sm text-gray-500">
-                      ({product.numReviews} reviews)
+                      ({product.numReviews || 0} reviews)
                     </span>
                   </div>
 
@@ -183,21 +223,21 @@ const ProductsPage = () => {
                   </h2>
                   
                   <p className="text-gray-600 mb-6 text-justify">
-                    {product.description}
+                    {product.description || 'No description available.'}
                   </p>
 
                   <div className="mb-8">
                     <div className="flex items-baseline gap-3 mb-1">
                       <span className="text-3xl font-bold text-green-700">
-                        ₹{product.price?.toFixed(2)}
+                        ₹{product.price?.toFixed(2) || '0.00'}
                       </span>
-                      {product.originalPrice && product.originalPrice > product.price && (
+                      {product.originalPrice && product.originalPrice > (product.price || 0) && (
                         <>
                           <span className="text-lg text-gray-400 line-through">
                             ₹{product.originalPrice.toFixed(2)}
                           </span>
                           <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                            {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                            {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
                           </span>
                         </>
                       )}
@@ -218,11 +258,10 @@ const ProductsPage = () => {
                       className="flex-1 flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300"
                     >
                       View Details
-                      <ArrowRight className="h-5 w-5" />
+                      <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
 
-                  {/* Product Features */}
                   <div className="mt-8 pt-6 border-t border-gray-100">
                     <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
@@ -246,6 +285,8 @@ const ProductsPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+            ))}
           </div>
         </div>
       </div>

@@ -1,26 +1,25 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// Edge-safe: do not import jsonwebtoken in middleware. API routes will verify tokens.
 
 // Define the routes that require authentication
-const protectedRoutes = ['/account', '/checkout'];
+const protectedRoutes = ['/checkout']; // Only protect checkout, let account routes handle auth client-side
 const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const cookieToken = request.cookies.get('token')?.value;
-  const isAuthenticated = Boolean(cookieToken);
-
-  // Redirect to login if trying to access protected route without authentication
-  if (protectedRoutes.some(route => pathname.startsWith(route)) && !isAuthenticated) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Redirect to account page if trying to access auth routes while already authenticated
-  if (authRoutes.includes(pathname) && isAuthenticated) {
-    return NextResponse.redirect(new URL('/account', request.url));
+  
+  // Check if this is a protected route
+  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  
+  if (isProtectedRoute) {
+    // Check for token cookie - let client-side handle actual validation
+    const token = request.cookies.get('token')?.value;
+    
+    if (!token) {
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('callbackUrl', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return NextResponse.next();

@@ -27,13 +27,15 @@ export async function GET(request: NextRequest) {
       return response
     }
 
-    // Normalize user object to match Express.js format
+    // Map Supabase user to our UserData format
     const user = {
-      id: data.user.id,
+      _id: data.user.id,
+      username: data.user.user_metadata?.username || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'User',
+      name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'User',
       email: data.user.email,
       role: data.user.user_metadata?.role || 'user',
-      name: data.user.user_metadata?.name || data.user.email,
-      user_metadata: data.user.user_metadata || {},
+      createdAt: data.user.created_at,
+      updatedAt: data.user.updated_at
     }
 
     return NextResponse.json({ success: true, data: user }, { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0' } })

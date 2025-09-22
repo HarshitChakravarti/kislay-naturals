@@ -1,22 +1,12 @@
 "use client"
 
-import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/contexts/AuthContext';
 import LoginForm from '@/components/auth/LoginForm';
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
-  const { showToast } = useAuth();
-  
-  // Check for success message from registration
-  useEffect(() => {
-    if (searchParams?.get('registered') === 'true') {
-      showToast('Registration successful! Please sign in to continue.', 'success');
-    }
-  }, [searchParams, showToast]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -36,18 +26,20 @@ export default function LoginPage() {
           Sign in to your account
         </h2>
         {searchParams?.get('registered') === 'true' && (
-          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <div className="flex">
+          <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg shadow-sm animate-in slide-in-from-top-2 duration-500">
+            <div className="flex items-start">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
+                <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
+                  <svg className="h-3 w-3 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-green-800">
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-semibold text-green-800 animate-in fade-in duration-700 delay-200">
                   Account created successfully!
                 </p>
-                <p className="mt-1 text-sm text-green-700">
+                <p className="mt-1 text-sm text-green-700 animate-in fade-in duration-700 delay-300">
                   Please sign in with your email and password to continue.
                 </p>
               </div>

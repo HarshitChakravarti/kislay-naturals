@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
-        const { searchParams } = new URL(request.url)
+    const { searchParams } = new URL(request.url)
     const productId = searchParams.get('productId')
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const from = (page - 1) * limit
     const to = from + limit - 1
 
-    let query = supabase.from('reviews').select('*', { count: 'exact' }).order('created_at', { ascending: false })
+    let query = supabaseAdmin.from('reviews').select('*', { count: 'exact' }).order('created_at', { ascending: false })
     if (productId) query = query.eq('product_id', productId)
     query = query.range(from, to)
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-        const body = await request.json()
+    const body = await request.json()
     const { productId, rating, comment, name, email } = body
 
     if (!productId || !rating || !comment || !name || !email) {
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // prevent duplicates by (product_id, email)
-    const { data: existing, error: existErr } = await supabase
+    const { data: existing, error: existErr } = await supabaseAdmin
       .from('reviews')
       .select('id')
       .eq('product_id', productId)
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'You have already reviewed this product' }, { status: 400 })
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('reviews')
       .insert([{ product_id: productId, rating, comment, name, email }])
       .select()

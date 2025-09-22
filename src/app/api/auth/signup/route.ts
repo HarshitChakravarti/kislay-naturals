@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { name, email, password, role, csrfToken } = body
+    const username = name // Use name as username for now
 
     const sessionId = request.headers.get('x-session-id') || 'default'
     if (!validateCSRFToken(sessionId, csrfToken)) {
@@ -57,11 +58,32 @@ export async function POST(request: NextRequest) {
       email,
       password,
       email_confirm: true,
-      user_metadata: { name, role: role || 'user' },
+      user_metadata: { 
+        name, 
+        username, 
+        role: role || 'user' 
+      },
     })
 
     if (createErr) {
       return NextResponse.json({ success: false, message: createErr.message || 'Failed to register' }, { status: 400 })
+    }
+
+    // Create user profile record
+    const { error: profileError } = await supabaseAdmin
+      .from('user_profiles')
+      .insert({
+        id: created.user.id,
+        username: username,
+        full_name: name,
+        phone: null, // Can be updated later
+        address: null, // Can be updated later
+        preferences: {}
+      });
+
+    if (profileError) {
+      console.warn('Failed to create user profile:', profileError);
+      // Don't fail the signup if profile creation fails
     }
 
     // Sign in to get a session (Admin API doesn't return a session)
@@ -70,9 +92,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: signInErr?.message || 'Failed to sign in newly created user' }, { status: 500 })
     }
 
+    // Map Supabase user to our UserData format
+    const userData = {
+      _id: signInData.user.id,
+      username: signInData.user.user_metadata?.username || signInData.user.user_metadata?.full_name || signInData.user.email?.split('@')[0] || 'User',
+      name: signInData.user.user_metadata?.full_name || signInData.user.user_metadata?.name || signInData.user.email?.split('@')[0] || 'User',
+      email: signInData.user.email,
+      role: signInData.user.user_metadata?.role || 'user',
+      createdAt: signInData.user.created_at,
+      updatedAt: signInData.user.updated_at
+    };
+
     const response = NextResponse.json({ 
       success: true, 
-      user: signInData.user, 
+      user: userData, 
       token: signInData.session.access_token 
     }, { status: 200 })
 

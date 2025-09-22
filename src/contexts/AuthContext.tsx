@@ -25,15 +25,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserData | null>(() => {
-    // Initialize user from localStorage if available
-    if (typeof window !== 'undefined') {
-      const savedUser = localStorage.getItem('user');
-      return savedUser ? JSON.parse(savedUser) : null;
-    }
-    return null;
-  });
-  const [isLoading, setIsLoading] = useState(false); // Start with false since we check localStorage first
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Start with true to prevent hydration mismatch
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -127,6 +120,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user, isCheckingAuth, clearAuthData]);
 
+  // Initialize user from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        try {
+          const localUser = JSON.parse(savedUser);
+          setUser(localUser);
+        } catch (e) {
+          console.error('Error parsing stored user:', e);
+          localStorage.removeItem('user');
+        }
+      }
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     // Only check with server if we have a user from localStorage but no current user state
     // This means we need to validate the stored user with the server
@@ -201,8 +211,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Show verification state for a moment before redirecting
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Show success message
-      showToast('Login successful! Welcome back.', 'success');
+      // Show success message with username
+      const displayName = userData.username || userData.name || userData.email?.split('@')[0] || 'User';
+      showToast(`Welcome Back! ${displayName}`, 'success');
       
       // Redirect to the callback URL or home page
       router.push(callbackUrl);
@@ -258,9 +269,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.message || 'Registration failed. Please try again.');
       }
 
-      // Show success message
-      showToast('Registration successful! Please sign in to continue.', 'success');
-      
       // After successful registration, redirect to login page
       router.push('/login?registered=true');
     } catch (error) {
@@ -290,6 +298,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!response.ok) {
         throw new Error('Logout failed');
       }
+      
+      // Show success message
+      showToast('Successfully signed out!', 'success');
       
       // Redirect to login page
       router.push('/login');
@@ -335,31 +346,66 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={value}>
       {children}
       {toasts.length > 0 && (
-        <div className="fixed top-4 right-4 z-50 space-y-2">
-          {toasts.map((toast) => (
-            <div
-              key={toast.id}
-              className={`max-w-sm w-full border rounded-lg shadow-lg p-4 transition-all duration-300 ${
-                toast.type === 'success' 
-                  ? 'bg-green-50 border-green-200 text-green-800' 
-                  : 'bg-red-50 border-red-200 text-red-800'
-              }`}
-            >
-              <div className="flex items-start">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{toast.message}</p>
+        <div className="fixed top-4 right-4 z-50 space-y-3">
+          {toasts.map((toast, index) => {
+            const isWelcomeMessage = toast.message.startsWith('Welcome Back!');
+            return (
+              <div
+                key={toast.id}
+                className={`max-w-sm w-full border rounded-xl shadow-xl p-4 transform transition-all duration-500 ease-out animate-in slide-in-from-right-2 fade-in ${
+                  toast.type === 'success' 
+                    ? isWelcomeMessage
+                      ? 'bg-gradient-to-r from-green-100 to-emerald-100 border-green-300 text-green-900 shadow-green-200/50'
+                      : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 text-green-800'
+                    : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200 text-red-800'
+                }`}
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  transform: 'translateX(0)',
+                }}
+              >
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                      toast.type === 'success' 
+                        ? isWelcomeMessage
+                          ? 'bg-green-500 animate-pulse'
+                          : 'bg-green-100 animate-pulse'
+                        : 'bg-red-100 animate-pulse'
+                    }`}>
+                      {toast.type === 'success' ? (
+                        <svg className={`h-4 w-4 ${isWelcomeMessage ? 'text-white' : 'text-green-600'}`} viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="h-4 w-4 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex-1 ml-3">
+                    <p className={`font-semibold ${isWelcomeMessage ? 'text-base' : 'text-sm'}`}>
+                      {toast.message}
+                    </p>
+                    {isWelcomeMessage && (
+                      <p className="text-xs text-green-700 mt-1 font-medium">
+                        You're all set! 🎉
+                      </p>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => removeToast(toast.id)}
+                    className="ml-4 p-1.5 rounded-full hover:bg-gray-100 transition-colors duration-200 group"
+                  >
+                    <svg className="w-4 h-4 text-gray-500 group-hover:text-gray-700 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                 </div>
-                <button
-                  onClick={() => removeToast(toast.id)}
-                  className="ml-4 p-1 rounded-full hover:bg-opacity-20 hover:bg-gray-600"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </AuthContext.Provider>

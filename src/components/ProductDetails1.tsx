@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { Product } from '@/types';
-import CheckoutModal from './CheckoutModal';
 import ProductReviews from './ProductReviews';
 import {
   Star,
@@ -38,12 +37,12 @@ const FeatureCard = ({ emoji, title, description, iconBg, iconColor }: { emoji: 
 
 interface ProductDetailsProps {
   product: Product;
+  onOpenCheckout?: (quantity: number) => void;
 }
 
-export default function ProductDetails({ product }: ProductDetailsProps) {
+export default function ProductDetails({ product, onOpenCheckout }: ProductDetailsProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEnquireFormVisible, setIsEnquireFormVisible] = useState(false);
   const [enquireFormData, setEnquireFormData] = useState({
     name: '',
@@ -462,7 +461,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           {/* Buy Now Button */}
           <motion.button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => onOpenCheckout?.(quantity)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="w-full py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2"
@@ -637,12 +636,6 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         productName={product.name} 
       />
       
-      <CheckoutModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        product={product} 
-        quantity={quantity} 
-      />
 
     </div>
   );

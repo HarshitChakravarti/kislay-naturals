@@ -28,6 +28,7 @@ export default function LoginForm() {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [csrfToken, setCsrfToken] = useState<string>('');
+  const [isLoadingToken, setIsLoadingToken] = useState(true);
 
   // Generate CSRF token on component mount
   useEffect(() => {
@@ -39,10 +40,26 @@ export default function LoginForm() {
             'x-session-id': 'login-form',
           },
         });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
-        setCsrfToken(data.csrfToken);
+        if (data.csrfToken) {
+          setCsrfToken(data.csrfToken);
+          setIsLoadingToken(false);
+        } else {
+          console.error('No CSRF token received from server');
+          setIsLoadingToken(false);
+        }
       } catch (error) {
         console.error('Failed to generate CSRF token:', error);
+        setIsLoadingToken(false);
+        // Retry after a short delay
+        setTimeout(() => {
+          generateCSRFToken();
+        }, 2000);
       }
     };
 
@@ -156,12 +173,17 @@ export default function LoginForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || !csrfToken}
+            disabled={isLoading || isLoadingToken || !csrfToken}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Signing In...
+              </>
+            ) : isLoadingToken ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
               </>
             ) : (
               'Sign In'

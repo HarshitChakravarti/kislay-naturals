@@ -5,14 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ThumbsUp, User, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 
 interface Review {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   rating: number;
   comment: string;
-  helpful: number;
-  verified: boolean;
-  createdAt: string;
+  helpful?: number;
+  verified?: boolean;
+  created_at: string;
 }
 
 interface ReviewFormData {
@@ -410,7 +410,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
           ) : (
             reviews.map((review) => (
               <motion.div
-                key={review._id}
+                key={review.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
@@ -429,7 +429,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
                           </div>
                         )}
                       </h4>
-                      <p className="text-sm text-gray-500">{formatDate(review.createdAt)}</p>
+                      <p className="text-sm text-gray-500">{formatDate(review.created_at)}</p>
                     </div>
                   </div>
                   <div className="flex-shrink-0">

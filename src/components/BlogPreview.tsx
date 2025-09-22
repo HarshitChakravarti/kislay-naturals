@@ -37,7 +37,7 @@ const posts = [
     link: "/blog/monk-fruit-3",
   },
   {
-    id: 6,
+    id: 4,
     title: "Managing Blood Sugar Naturally",
     excerpt: "Learn how to maintain healthy glucose levels with natural sweeteners and lifestyle changes.",
     image: "/herophoto.png", 
@@ -90,12 +90,8 @@ const BlogPreview = () => {
 
   return (
   <section className="w-full bg-white">
-    {/* Header with green background and gradient shadow */}
     <div className="relative bg-green-700 text-white w-full overflow-hidden">
-      {/* Gradient shadow at the bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
-      
-      {/* Content layer */}
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="text-center">
@@ -115,9 +111,7 @@ const BlogPreview = () => {
     </div>
     
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      {/* Desktop Carousel Container (3 blogs with pagination) */}
       <div className="relative hidden lg:block">
-        {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
           className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white hover:bg-gray-50 border-2 border-green-600 text-green-600 hover:text-green-700 rounded-full p-3 shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -134,7 +128,6 @@ const BlogPreview = () => {
           <ChevronRight className="w-6 h-6" />
         </button>
 
-        {/* Blog Posts Grid for Desktop */}
         <div className="grid grid-cols-3 gap-8 transition-all duration-300">
           {getCurrentPosts().map((post) => (
             <article 
