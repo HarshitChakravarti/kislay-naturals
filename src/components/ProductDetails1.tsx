@@ -367,7 +367,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <Star
                     key={star}
                     className={`h-5 w-5 ${
-                      star <= Math.floor(product.rating || 0)
+                      star <= Math.floor(product.avgRating || 0)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-200'
                     }`}

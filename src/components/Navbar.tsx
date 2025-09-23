@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react"
-import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon } from "lucide-react"
+import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -86,6 +86,29 @@ export default function Header() {
             </svg>
             My Orders
           </Link>
+          {/* Admin Dashboard - Only show for admin users */}
+          {user.role === 'admin' && (
+            <>
+              <div className="border-t border-gray-100 my-1"></div>
+              <div className="bg-green-50/30 px-2 py-1">
+                <div className="text-xs text-green-600 font-medium px-2 py-1 mb-1">Admin Tools</div>
+                <Link 
+                  href="/admin" 
+                  className="flex items-center justify-between px-2 py-2 text-sm text-green-700 hover:bg-green-100 rounded-md font-medium group transition-colors"
+                  onClick={closeDropdown}
+                  role="menuitem"
+                >
+                  <div className="flex items-center">
+                    <Settings className="w-4 h-4 mr-3" />
+                    Admin Dashboard
+                  </div>
+                  <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full font-medium">
+                    ADMIN
+                  </span>
+                </Link>
+              </div>
+            </>
+          )}
           <div className="border-t border-gray-100 my-1"></div>
           <button 
             onClick={handleLogout}
@@ -214,10 +237,6 @@ export default function Header() {
               PRODUCTS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/subscribe" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
-              SUBSCRIBE
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-            </Link>
           </nav>
 
           {/* Right Side Actions */}
@@ -279,7 +298,21 @@ export default function Header() {
                 PRODUCTS
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-
+              {/* Admin Dashboard in Mobile Menu - Only show for admin users */}
+              {user && user.role === 'admin' && (
+                <Link href="/admin" className="group relative font-bold text-green-700 block py-3 text-base bg-green-50 rounded-lg px-3" onClick={() => setIsMenuOpen(false)}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <Settings className="w-5 h-5 mr-2" />
+                      ADMIN DASHBOARD
+                    </div>
+                    <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-medium">
+                      ADMIN
+                    </span>
+                  </div>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              )}
             </nav>
           </div>
         )}

@@ -82,7 +82,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
               <div className="flex items-center gap-2 mb-2">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => {
-                    const rating = product.rating || 0;
+                    const rating = product.avgRating || 0;
                     return (
                       <Star
                         key={i}
@@ -168,7 +168,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 <div className="flex items-center gap-2 mb-4">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => {
-                      const rating = product.rating || 0;
+                      const rating = product.avgRating || 0;
                       return (
                         <Star
                           key={i}

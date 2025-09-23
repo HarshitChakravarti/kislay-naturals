@@ -160,14 +160,20 @@ export default function AboutPage() {
           <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-green-100">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Founder Image */}
-              <div className="order-2 lg:order-1 flex justify-center">
-                <div className="relative w-80 h-96 rounded-2xl overflow-hidden shadow-xl">
+              <div className="order-2 lg:order-1 flex flex-col items-center">
+                <div className="relative w-96 h-[28rem] rounded-2xl overflow-hidden shadow-xl">
                   <Image
                     src="/founder3.jpg"
                     alt="Nishchoy Gupta, Founder of Kislay Naturals"
                     fill
                     className="object-cover object-center hover:scale-105 transition-transform duration-500"
                   />
+                </div>
+                {/* Founder Name */}
+                <div className="mt-6 text-center">
+                  <h3 className={`text-2xl font-bold text-[#2E7D32] ${yeseva_One.className}`}>
+                    Nishchoy Gupta
+                  </h3>
                 </div>
               </div>
 

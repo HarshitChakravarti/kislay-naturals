@@ -1,21 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
-import { authenticateUser } from '@/lib/middleware/auth';
+import { supabaseAdmin } from '@/lib/supabase';
+import { withAdminAuth, AdminRequest } from '@/lib/middleware/admin';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest) {
+export const GET = withAdminAuth(async (request: AdminRequest) => {
   try {
-    const user = await authenticateUser(request);
-    if (!user) {
-      return NextResponse.json({ success: false, message: 'Authentication required' }, { status: 401 });
-    }
-
-    // Check if user is admin
-    if (user.role !== 'admin') {
-      return NextResponse.json({ success: false, message: 'Not authorized to access this route' }, { status: 403 });
-    }
-
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
@@ -23,7 +13,8 @@ export async function GET(request: NextRequest) {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit - 1;
 
-    let query = supabase
+    // Build query for orders only (without join to avoid relationship issues)
+    let query = supabaseAdmin
       .from('orders')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false });
@@ -36,10 +27,31 @@ export async function GET(request: NextRequest) {
     // Pagination
     query = query.range(startIndex, endIndex);
 
-    const { data, count, error } = await query;
+    const { data: orders, count, error } = await query;
 
     if (error) {
-      return NextResponse.json({ success: false, message: error.message || 'Failed to fetch orders' }, { status: 500 });
+      return NextResponse.json({ 
+        success: false, 
+        message: error.message || 'Failed to fetch orders' 
+      }, { status: 500 });
+    }
+
+    // Fetch user profiles for the orders if needed
+    let ordersWithProfiles = orders || [];
+    if (orders && orders.length > 0) {
+      const userIds = Array.from(new Set(orders.map(order => order.user_id).filter(Boolean)));
+      if (userIds.length > 0) {
+        const { data: profiles } = await supabaseAdmin
+          .from('user_profiles')
+          .select('id, username, full_name, phone')
+          .in('id', userIds);
+        
+        // Map profiles to orders
+        ordersWithProfiles = orders.map(order => ({
+          ...order,
+          user_profiles: profiles?.find(profile => profile.id === order.user_id) || null
+        }));
+      }
     }
 
     // Build pagination info
@@ -55,13 +67,16 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      count: data?.length || 0,
+      count: ordersWithProfiles?.length || 0,
       total: count || 0,
       pagination,
-      data: data || [],
+      data: ordersWithProfiles || [],
     });
   } catch (error) {
     console.error('Error fetching admin orders:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Internal server error' 
+    }, { status: 500 });
   }
-}
+});

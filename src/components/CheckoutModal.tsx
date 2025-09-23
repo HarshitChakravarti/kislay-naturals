@@ -23,6 +23,8 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
   const [address, setAddress] = useState({ street: '', city: '', state: '', zip: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [paymentStep, setPaymentStep] = useState('');
 
   // Scroll to top when modal opens
   useEffect(() => {
@@ -53,6 +55,14 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
     }
   }, [user, isOpen]);
 
+  // Reset loading state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsProcessingPayment(false);
+      setPaymentStep('');
+    }
+  }, [isOpen]);
+
   // Handle authentication requirement
   const handleLoginRedirect = () => {
     setIsRedirecting(true);
@@ -82,10 +92,16 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
   };
 
   const handlePayment = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setIsProcessingPayment(false);
+      return;
+    }
 
+    setIsProcessingPayment(true);
+    
     try {
       // Step 1: Create order in Supabase first
+      setPaymentStep('Creating order...');
       console.log('Creating order in Supabase...');
       
       const orderDetails = {
@@ -126,6 +142,7 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
       const totalPrice = createOrderResult.order.total_price;
 
       // Step 2: Create Razorpay order
+      setPaymentStep('Setting up payment...');
       console.log('Creating Razorpay order...');
       
       const response = await fetch('/api/create-razorpay-order', {
@@ -199,8 +216,13 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
           },
         };
 
+        setPaymentStep('Opening payment gateway...');
         const rzp = new (window as any).Razorpay(options);
         rzp.open();
+        
+        // Reset loading state when Razorpay modal opens
+        setIsProcessingPayment(false);
+        setPaymentStep('');
       } else {
         console.error('Failed to create Razorpay order:', razorpayOrder.error);
         alert('Failed to create Razorpay order. Please try again.');
@@ -208,6 +230,9 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
     } catch (error) {
       console.error('Error during payment process:', error);
       alert('An error occurred during the payment process. Please try again.');
+    } finally {
+      setIsProcessingPayment(false);
+      setPaymentStep('');
     }
   };
 
@@ -391,9 +416,17 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
           {/* Proceed to Payment Button */}
           <button 
             onClick={handlePayment}
-            className="w-full mt-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+            disabled={isProcessingPayment}
+            className="w-full mt-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
           >
-            Proceed to Payment
+            {isProcessingPayment ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span className="animate-pulse">{paymentStep || 'Processing Payment...'}</span>
+              </>
+            ) : (
+              <span>Proceed to Payment</span>
+            )}
           </button>
         </motion.div>
       </motion.div>
