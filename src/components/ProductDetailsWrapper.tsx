@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import type { Product } from '@/types';
-import PendingOrderHandler from './PendingOrderHandler';
 import CheckoutModal from './CheckoutModal';
 import ClientOnly from './ClientOnly';
 
@@ -37,9 +36,6 @@ export default function ProductDetailsWrapper({ product }: ProductDetailsWrapper
           setIsCheckoutOpen(true);
         }}
       />
-      <ClientOnly>
-        <PendingOrderHandler onOpenCheckout={handleOpenCheckout} />
-      </ClientOnly>
       <CheckoutModal 
         isOpen={isCheckoutOpen} 
         onClose={() => setIsCheckoutOpen(false)} 

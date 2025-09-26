@@ -25,9 +25,10 @@ interface ReviewFormData {
 interface ProductReviewsProps {
   productId: string;
   productName: string;
+  onReviewSubmit?: () => void;
 }
 
-export default function ProductReviews({ productId, productName }: ProductReviewsProps) {
+export default function ProductReviews({ productId, productName, onReviewSubmit }: ProductReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -44,6 +45,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
     totalReviews: 0,
     ratingDistribution: [0, 0, 0, 0, 0] // 1-star to 5-star counts
   });
+  const [visibleReviewsCount, setVisibleReviewsCount] = useState(5);
 
   // Fetch reviews on component mount
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
   const fetchReviews = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/reviews?productId=${productId}`);
+      const response = await fetch(`/api/reviews?productId=${productId}&limit=100`);
       const data = await response.json();
       
       if (data.success) {
@@ -122,6 +124,7 @@ export default function ProductReviews({ productId, productName }: ProductReview
         setFormData({ name: '', email: '', rating: 5, comment: '' });
         setShowReviewForm(false);
         fetchReviews(); // Refresh reviews
+        onReviewSubmit?.(); // Notify parent component to refresh stats
         
         // Reset success message after 3 seconds
         setTimeout(() => setSubmitSuccess(false), 3000);
@@ -408,49 +411,78 @@ export default function ProductReviews({ productId, productName }: ProductReview
               </button>
             </div>
           ) : (
-            reviews.map((review) => (
-              <motion.div
-                key={review.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User className="w-6 h-6 text-green-600" />
+            <>
+              {reviews.slice(0, visibleReviewsCount).map((review) => (
+                <motion.div
+                  key={review.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-gray-900 flex items-center space-x-2">
+                          <span className="truncate">{review.name}</span>
+                          {review.verified && (
+                            <div title="Verified Purchase">
+                              <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
+                            </div>
+                          )}
+                        </h4>
+                        <p className="text-sm text-gray-500">{formatDate(review.created_at)}</p>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 flex items-center space-x-2">
-                        <span className="truncate">{review.name}</span>
-                        {review.verified && (
-                          <div title="Verified Purchase">
-                            <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                          </div>
-                        )}
-                      </h4>
-                      <p className="text-sm text-gray-500">{formatDate(review.created_at)}</p>
+                    <div className="flex-shrink-0">
+                      {renderStars(review.rating, 'sm')}
                     </div>
                   </div>
-                  <div className="flex-shrink-0">
-                    {renderStars(review.rating, 'sm')}
+                  
+                  <p className="text-gray-700 leading-relaxed mb-3">
+                    {review.comment}
+                  </p>
+                  
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <div className="flex items-center space-x-4">
+                      <button className="flex items-center space-x-1 hover:text-green-600 transition-colors">
+                        <ThumbsUp className="w-4 h-4" />
+                        <span>Helpful ({review.helpful})</span>
+                      </button>
+                    </div>
                   </div>
+                </motion.div>
+              ))}
+              
+              {/* Show More/Less Button */}
+              {reviews.length > 5 && (
+                <div className="flex justify-center pt-6">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setVisibleReviewsCount(visibleReviewsCount === 5 ? reviews.length : 5)}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                  >
+                    <span>
+                      {visibleReviewsCount === 5 
+                        ? `Show All ${reviews.length} Reviews` 
+                        : 'Show Less'
+                      }
+                    </span>
+                    <motion.div
+                      animate={{ rotate: visibleReviewsCount === 5 ? 0 : 180 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </motion.div>
+                  </motion.button>
                 </div>
-                
-                <p className="text-gray-700 leading-relaxed mb-3">
-                  {review.comment}
-                </p>
-                
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 hover:text-green-600 transition-colors">
-                      <ThumbsUp className="w-4 h-4" />
-                      <span>Helpful ({review.helpful})</span>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            ))
+              )}
+            </>
           )}
         </div>
       </div>

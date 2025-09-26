@@ -28,11 +28,9 @@ export async function POST(request: NextRequest) {
 
     const payload = body;
 
-    // Calculate pricing
+    // Calculate pricing - only product price, no tax or shipping
     const itemsPrice = payload.product.price * payload.quantity;
-    const taxPrice = Math.round(itemsPrice * 0.18 * 100) / 100; // 18% tax
-    const shippingPrice = itemsPrice > 100 ? 0 : 10; // Free shipping over ₹100
-    const totalPrice = itemsPrice + taxPrice + shippingPrice;
+    const totalPrice = itemsPrice; // Only product price
 
     // Normalize key fields for easier querying; also store full payload
     const insertRow = {
@@ -46,8 +44,8 @@ export async function POST(request: NextRequest) {
       quantity: payload.quantity,
       total_amount: totalPrice,
       items_price: itemsPrice,
-      tax_price: taxPrice,
-      shipping_price: shippingPrice,
+      tax_price: 0, // No tax
+      shipping_price: 0, // No shipping
       total_price: totalPrice,
       shipping_street: payload.shippingAddress.street,
       shipping_city: payload.shippingAddress.city,
@@ -76,7 +74,6 @@ export async function POST(request: NextRequest) {
 
     // Insert into order_items table
     const itemTotalPrice = payload.product.price * payload.quantity;
-    const itemTaxAmount = Math.round(itemTotalPrice * 0.18 * 100) / 100; // 18% tax
     
     const orderItem = {
       order_id: orderData.id,
@@ -90,8 +87,8 @@ export async function POST(request: NextRequest) {
       sku: payload.product.sku || null,
       total_price: itemTotalPrice,
       discount_amount: 0, // No discount for now
-      tax_rate: 18.00,
-      tax_amount: itemTaxAmount,
+      tax_rate: 0, // No tax
+      tax_amount: 0, // No tax
     };
 
     console.log('💾 Attempting to insert order item:', JSON.stringify(orderItem, null, 2));

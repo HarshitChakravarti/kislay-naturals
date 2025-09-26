@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Define the routes that require authentication
-const protectedRoutes = ['/checkout']; // Only protect checkout, let account routes handle auth client-side
+const protectedRoutes: string[] = []; // No routes require authentication for checkout
 const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {

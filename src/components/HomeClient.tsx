@@ -5,7 +5,6 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import BlogPreview from '@/components/BlogPreview';
-import Testimonials from '@/components/Testimonials';
 import FeaturesBanner from '@/components/FeaturesBanner';
 import Recipes from '@/components/Recipes';
 import SectionDivider from '@/components/SectionDivider';
@@ -50,7 +49,6 @@ export default function HomeClient({ products }: HomeClientProps) {
       <FeaturedProducts products={products} />
       <FeaturesBanner features={features} />
       <Recipes />
-      <Testimonials />
       <BlogPreview />
       <WhatsAppButton />
     </main>

@@ -52,12 +52,44 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reviewStats, setReviewStats] = useState({
+    averageRating: 0,
+    totalReviews: 0
+  });
   
   const productImages = [
     product.image,
     '/p2.png',
     '/p33.png'
   ];
+
+  // Fetch reviews for the product
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`/api/reviews?productId=${product.id}&limit=100`);
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        const reviews = data.data;
+        const totalReviews = reviews.length;
+        const sumRatings = reviews.reduce((sum: number, review: any) => sum + review.rating, 0);
+        const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
+        
+        setReviewStats({
+          averageRating: Math.round(averageRating * 10) / 10,
+          totalReviews
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (product.id) {
+      fetchReviews();
+    }
+  }, [product.id]);
 
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % productImages.length);
@@ -367,7 +399,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <Star
                     key={star}
                     className={`h-5 w-5 ${
-                      star <= Math.floor(product.avgRating || 0)
+                      star <= Math.floor(reviewStats.averageRating || 0)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-200'
                     }`}
@@ -375,7 +407,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 ))}
               </div>
               <span className="text-sm text-gray-600">
-                ({product.numReviews || 0} reviews)
+                ({reviewStats.totalReviews || 0} reviews)
               </span>
             </div>
           </div>
@@ -633,7 +665,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
       {/* Product Reviews Section */}
       <ProductReviews 
         productId={product.id.toString()} 
-        productName={product.name} 
+        productName={product.name}
+        onReviewSubmit={fetchReviews}
       />
       
 

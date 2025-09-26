@@ -90,9 +90,9 @@ export async function POST(request: NextRequest) {
 
     const computedItemsPrice = itemsFromDB.reduce((acc: number, it: any) => acc + it.price * it.quantity, 0);
     const finalItemsPrice = typeof itemsPrice === 'number' ? itemsPrice : computedItemsPrice;
-    const finalTaxPrice = typeof taxPrice === 'number' ? taxPrice : Math.round(finalItemsPrice * 0.15 * 100) / 100;
-    const finalShippingPrice = typeof shippingPrice === 'number' ? shippingPrice : (finalItemsPrice > 100 ? 0 : 10);
-    const finalTotalPrice = typeof totalPrice === 'number' ? totalPrice : finalItemsPrice + finalTaxPrice + finalShippingPrice;
+    const finalTaxPrice = 0; // No tax
+    const finalShippingPrice = 0; // No shipping
+    const finalTotalPrice = finalItemsPrice; // Only product price
 
     // Insert order in orders table
     const orderPayload = {
