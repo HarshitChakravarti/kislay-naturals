@@ -47,7 +47,13 @@ export async function PUT(request: NextRequest) {
     console.log('✅ Order updated successfully:', data);
 
     // Send order confirmation notifications (email and WhatsApp)
-    let notificationResults = null;
+    let notificationResults: {
+      success: boolean;
+      results: {
+        email: { success: boolean; error: string | null; errorType: string | null; shouldRetry: boolean };
+        whatsapp: { success: boolean; error: string | null; whatsappLink: string | null; messageId: string | null };
+      };
+    } | null = null;
     try {
       const notificationData = {
         customerName: data.user_name,
