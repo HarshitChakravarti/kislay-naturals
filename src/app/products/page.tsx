@@ -93,6 +93,36 @@ const ProductsPage = async () => {
           ))}
         </div>
       </div>
+
+      {/* More Products Coming Soon Section */}
+      <div className="bg-green-50 py-16 md:py-20">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className={`text-3xl md:text-4xl font-bold text-black mb-4 ${yeseva_One.className}`}>
+            More Products Coming Soon! 🚀
+          </h2>
+          <p className="text-lg md:text-xl text-green-700 mb-8 max-w-2xl mx-auto leading-relaxed">
+            We're constantly working on expanding our range of natural, sugar-free products. 
+            Stay tuned for exciting new additions to our collection!
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link 
+              href="/"
+              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+            >
+              <span>🏠</span>
+              Back to Home
+            </Link>
+            <Link 
+              href="/contact-us"
+              className="inline-flex items-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+            >
+              <span>📧</span>
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

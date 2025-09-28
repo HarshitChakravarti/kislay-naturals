@@ -189,16 +189,7 @@ export default function AboutPage() {
                   <p className="text-lg leading-relaxed">
                     Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy's mission is to empower individuals to live better, more balanced lives through nature-backed solutions.
                   </p>
-                  
-                  {/* Founder's Vision */}
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border-l-4 border-[#2E7D32]">
-                    <h4 className={`text-xl font-bold text-[#2E7D32] mb-3 ${yeseva_One.className}`}>
-                      Vision Statement
-                    </h4>
-                    <p className="text-gray-700 italic">
-                      "To create a world where natural wellness is accessible to everyone, fostering a community of health-conscious individuals who prioritize quality, transparency, and sustainable living."
-                    </p>
-                  </div>
+            
                 </div>
               </div>
             </div>

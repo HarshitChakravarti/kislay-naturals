@@ -27,6 +27,46 @@ interface Product {
   description?: string;
 }
 
+// Indian States and Union Territories
+const INDIAN_STATES = [
+  'Andhra Pradesh',
+  'Arunachal Pradesh',
+  'Assam',
+  'Bihar',
+  'Chhattisgarh',
+  'Goa',
+  'Gujarat',
+  'Haryana',
+  'Himachal Pradesh',
+  'Jharkhand',
+  'Karnataka',
+  'Kerala',
+  'Madhya Pradesh',
+  'Maharashtra',
+  'Manipur',
+  'Meghalaya',
+  'Mizoram',
+  'Nagaland',
+  'Odisha',
+  'Punjab',
+  'Rajasthan',
+  'Sikkim',
+  'Tamil Nadu',
+  'Telangana',
+  'Tripura',
+  'Uttar Pradesh',
+  'Uttarakhand',
+  'West Bengal',
+  'Andaman and Nicobar Islands',
+  'Chandigarh',
+  'Dadra and Nagar Haveli and Daman and Diu',
+  'Delhi',
+  'Jammu and Kashmir',
+  'Ladakh',
+  'Lakshadweep',
+  'Puducherry'
+];
+
 export default function CheckoutPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,6 +87,11 @@ export default function CheckoutPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [paymentTimeout, setPaymentTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [emailValidation, setEmailValidation] = useState<{
+    isValid: boolean;
+    message: string;
+    isChecking: boolean;
+  }>({ isValid: true, message: '', isChecking: false });
 
   // Get product data from URL params
   useEffect(() => {
@@ -81,11 +126,75 @@ export default function CheckoutPage() {
     };
   }, [paymentTimeout]);
 
+  // Enhanced email validation function
+  const validateEmail = (email: string): string | null => {
+    if (!email) return 'Email is required';
+    
+    // Basic format validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    
+    // Check for common typos and issues
+    if (email.includes('..')) {
+      return 'Email cannot contain consecutive dots';
+    }
+    
+    if (email.startsWith('.') || email.endsWith('.')) {
+      return 'Email cannot start or end with a dot';
+    }
+    
+    // Check for common Gmail typos
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/i;
+    if (gmailRegex.test(email)) {
+      const localPart = email.split('@')[0];
+      if (localPart.length < 2) {
+        return 'Gmail username must be at least 2 characters';
+      }
+      if (localPart.includes('..')) {
+        return 'Gmail username cannot contain consecutive dots';
+      }
+    }
+    
+    // Check for suspicious patterns
+    if (email.includes(' ')) {
+      return 'Email cannot contain spaces';
+    }
+    
+    return null; // Valid email
+  };
+
+  // Debounced email validation
+  useEffect(() => {
+    if (formData.email && formData.email.length > 3) {
+      setEmailValidation({ isValid: false, message: 'Checking email...', isChecking: true });
+      
+      const timeoutId = setTimeout(() => {
+        const validation = validateEmail(formData.email);
+        setEmailValidation({
+          isValid: !validation,
+          message: validation || 'Email looks good!',
+          isChecking: false
+        });
+      }, 500);
+      
+      return () => clearTimeout(timeoutId);
+    } else if (formData.email.length === 0) {
+      setEmailValidation({ isValid: true, message: '', isChecking: false });
+    }
+  }, [formData.email]);
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email address';
+    
+    // Use enhanced email validation
+    const emailValidationError = validateEmail(formData.email);
+    if (emailValidationError) {
+      newErrors.email = emailValidationError;
+    }
+    
     if (!formData.mobile) newErrors.mobile = 'Mobile number is required';
     else if (!/^\d{10}$/.test(formData.mobile)) newErrors.mobile = 'Invalid mobile number (must be 10 digits)';
     if (!formData.address.street) newErrors.street = 'Street is required';
@@ -101,7 +210,7 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name.startsWith('address.')) {
       const field = name.split('.')[1];
@@ -359,23 +468,17 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      <div className="bg-green-700 text-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link 
                 href="/products" 
-                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+                className="flex items-center text-white hover:text-yellow-300 transition-colors"
               >
                 <ArrowLeft className="h-5 w-5 mr-2" />
                 Back to Products
               </Link>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <h1 className="text-2xl font-bold text-gray-900">Checkout</h1>
-            </div>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <ShoppingCart className="h-4 w-4" />
-              <span>Secure Checkout</span>
             </div>
           </div>
         </div>
@@ -419,17 +522,42 @@ export default function CheckoutPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Email Address *
                     </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                        errors.email ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="Enter your email"
-                    />
+                    <div className="relative">
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-10 ${
+                          errors.email ? 'border-red-500' : 
+                          emailValidation.isValid && !emailValidation.isChecking ? 'border-green-500' : 
+                          'border-gray-300'
+                        }`}
+                        placeholder="Enter your email"
+                      />
+                      {emailValidation.isChecking && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+                        </div>
+                      )}
+                      {!emailValidation.isChecking && emailValidation.message && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                          {emailValidation.isValid ? (
+                            <div className="w-4 h-4 text-green-500">✓</div>
+                          ) : (
+                            <div className="w-4 h-4 text-red-500">✗</div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                    {!errors.email && emailValidation.message && !emailValidation.isChecking && (
+                      <p className={`text-sm mt-1 ${
+                        emailValidation.isValid ? 'text-green-600' : 'text-red-500'
+                      }`}>
+                        {emailValidation.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -498,16 +626,21 @@ export default function CheckoutPage() {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           State *
                         </label>
-                        <input
-                          type="text"
+                        <select
                           name="address.state"
                           value={formData.address.state}
                           onChange={handleInputChange}
                           className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
                             errors.state ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="State"
-                        />
+                        >
+                          <option value="">Select State</option>
+                          {INDIAN_STATES.map((state) => (
+                            <option key={state} value={state}>
+                              {state}
+                            </option>
+                          ))}
+                        </select>
                         {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
                       </div>
 

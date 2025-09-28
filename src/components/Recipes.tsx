@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
 import { Yeseva_One } from 'next/font/google';
 
@@ -207,12 +208,15 @@ export default function Recipes() {
                   </ul>
                 </div>
                 
-                <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-green-100">
+                <Link 
+                  href={`/recipes/${recipe.id}`}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-green-100"
+                >
                   <span>View Full Recipe</span>
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
-                </button>
+                </Link>
               </div>
             </div>
           ))}

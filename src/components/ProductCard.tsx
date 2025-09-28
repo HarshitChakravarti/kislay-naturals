@@ -94,9 +94,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                 );
               })}
             </div>
-            <span className="text-xs text-gray-500">
-              ({reviewStats.totalReviews} reviews)
-            </span>
           </div>
 
           <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
@@ -180,9 +177,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                   );
                 })}
               </div>
-              <span className="text-sm text-gray-500">
-                ({reviewStats.totalReviews} reviews)
-              </span>
             </div>
 
             <h2 className="text-2xl font-bold text-gray-900 mb-3">
