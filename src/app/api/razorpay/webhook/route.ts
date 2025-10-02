@@ -62,11 +62,37 @@ export async function POST(request: NextRequest) {
           .eq('id', found.id)
       }
     } else if (eventType === 'payment.failed') {
+      // Extract failure details from the payment entity
+      const paymentEntity = payload?.payment?.entity || {}
+      const errorCode = paymentEntity.error_code || 'UNKNOWN_ERROR'
+      const errorDescription = paymentEntity.error_description || 'Payment failed'
+      const errorReason = paymentEntity.error_reason || 'payment_failed'
+      
+      console.log('Payment failure webhook received:', {
+        orderId: found.id,
+        errorCode,
+        errorDescription,
+        errorReason,
+        paymentEntity
+      });
+      
       if (found.status === 'created' || found.order_status === 'created') {
-        await supabase
+        const { error } = await supabase
           .from('orders')
-          .update({ order_status: 'cancelled', status: 'cancelled', updated_at: new Date().toISOString() })
-          .eq('id', found.id)
+          .update({ 
+            order_status: 'failed', // Mark as failed, not cancelled
+            status: 'failed',
+            last_failure_code: errorCode,
+            last_failure_message: `${errorReason}: ${errorDescription}`,
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', found.id);
+          
+        if (error) {
+          console.error('Failed to update order with failure details:', error);
+        } else {
+          console.log('Order marked as failed:', found.id);
+        }
       }
     } else if (eventType === 'refund.processed') {
       // optional: mark refunded/cancelled or store refund info

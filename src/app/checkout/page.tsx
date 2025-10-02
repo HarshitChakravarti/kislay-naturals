@@ -87,6 +87,7 @@ export default function CheckoutPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [paymentTimeout, setPaymentTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null); // Track current order
   const [emailValidation, setEmailValidation] = useState<{
     isValid: boolean;
     message: string;
@@ -257,39 +258,49 @@ export default function CheckoutPage() {
     setIsProcessingPayment(true);
     
     try {
-      // Step 1: Create order in Supabase first
-      setPaymentStep('Creating order...');
-      console.log('Creating order in Supabase...');
+      let orderId = currentOrderId;
       
-      const orderDetails = {
-        user: {
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobile
-        },
-        product: product,
-        quantity: quantity,
-        totalAmount: product.price * quantity,
-        shippingAddress: formData.address
-      };
+      // Step 1: Create order in Supabase first (only if we don't have one)
+      if (!orderId) {
+        setPaymentStep('Creating order...');
+        console.log('Creating new order in Supabase...');
+        
+        const orderDetails = {
+          user: {
+            name: formData.name,
+            email: formData.email,
+            mobile: formData.mobile
+          },
+          product: product,
+          quantity: quantity,
+          totalAmount: product.price * quantity,
+          shippingAddress: formData.address
+        };
 
-      const createOrderResponse = await fetch('/api/orders/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderDetails),
-      });
+        const createOrderResponse = await fetch('/api/orders/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(orderDetails),
+        });
 
-      if (!createOrderResponse.ok) {
-        throw new Error(`Order creation failed with status: ${createOrderResponse.status}`);
-      }
+        if (!createOrderResponse.ok) {
+          throw new Error(`Order creation failed with status: ${createOrderResponse.status}`);
+        }
 
-      const orderResult = await createOrderResponse.json();
-      console.log('Order creation result:', orderResult);
+        const orderResult = await createOrderResponse.json();
+        console.log('Order creation result:', orderResult);
 
-      if (!orderResult.success) {
-        throw new Error(orderResult.message || 'Failed to create order');
+        if (!orderResult.success) {
+          throw new Error(orderResult.message || 'Failed to create order');
+        }
+        
+        orderId = orderResult.order?.id || orderResult.data?.id;
+        setCurrentOrderId(orderId); // Store order ID for reuse
+        console.log('✅ New order created with ID:', orderId);
+      } else {
+        console.log('♻️ Reusing existing order ID:', orderId);
       }
 
       // Step 2: Create Razorpay order
@@ -302,14 +313,30 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          amount: Math.round((orderResult.order?.total_price || orderResult.data?.total_price || orderResult.data?.total) * 100),
+          amount: Math.round((product.price * quantity) * 100), // Use product price directly
           currency: 'INR',
-          orderId: orderResult.order?.id || orderResult.data?.id
+          orderId: orderId
         }),
       });
 
       if (!razorpayResponse.ok) {
-        throw new Error(`Razorpay order creation failed with status: ${razorpayResponse.status}`);
+        const errorData = await razorpayResponse.json().catch(() => ({}));
+        
+        if (razorpayResponse.status === 410) {
+          // Order expired - reset order ID and show message
+          setCurrentOrderId(null);
+          alert('Your order has expired. Please try again with a fresh checkout.');
+          setIsProcessingPayment(false);
+          return;
+        } else if (razorpayResponse.status === 400 && errorData.message?.includes('Maximum payment attempts')) {
+          // Max attempts exceeded
+          setCurrentOrderId(null);
+          alert('Maximum payment attempts exceeded. Starting fresh checkout...');
+          setIsProcessingPayment(false);
+          return;
+        }
+        
+        throw new Error(errorData.message || `Razorpay order creation failed with status: ${razorpayResponse.status}`);
       }
 
       const razorpayResult = await razorpayResponse.json();
@@ -347,7 +374,7 @@ export default function CheckoutPage() {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                orderId: orderResult.order?.id || orderResult.data?.id,
+                orderId: orderId, // Use the stored orderId
                 paymentDetails: {
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_order_id: response.razorpay_order_id,
@@ -365,7 +392,7 @@ export default function CheckoutPage() {
 
             if (updateResult.success) {
               // Redirect to success page
-              router.push(`/order-success?orderId=${orderResult.order?.id || orderResult.data?.id}`);
+              router.push(`/order-success?orderId=${orderId}`);
             } else {
               throw new Error(updateResult.message || 'Failed to update payment');
             }
@@ -388,13 +415,45 @@ export default function CheckoutPage() {
       
       razorpay.on('payment.failed', function (response: any) {
         console.error('Payment failed:', response);
-        alert('Payment failed. Please try again.');
+        
+        // Extract failure details for better user messaging
+        const error = response.error || {};
+        const reason = error.reason || 'payment_failed';
+        const description = error.description || 'Payment failed. Please try again.';
+        const code = error.code || 'PAYMENT_FAILED';
+        
+        // Record the failure in our database (as backup to webhook)
+        fetch('/api/orders/record-failure', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderId: orderId,
+            failureCode: code,
+            failureMessage: `${reason}: ${description}`,
+            failureReason: reason
+          }),
+        }).catch(err => console.warn('Failed to record payment failure:', err));
+        
+        // Show user-friendly error message based on failure reason
+        let userMessage = 'Payment failed. Please try again.';
+        if (reason.includes('card')) {
+          userMessage = 'Card payment failed. Please check your card details and try again.';
+        } else if (reason.includes('insufficient')) {
+          userMessage = 'Insufficient funds. Please try with a different payment method.';
+        } else if (reason.includes('network')) {
+          userMessage = 'Network error. Please check your connection and try again.';
+        }
+        
+        alert(userMessage);
         setIsProcessingPayment(false);
         setPaymentStep('');
         if (paymentTimeout) {
           clearTimeout(paymentTimeout);
           setPaymentTimeout(null);
         }
+        // Don't refresh - allow retry with the same order
       });
       
       razorpay.on('payment.cancelled', function (response: any) {

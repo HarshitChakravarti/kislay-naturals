@@ -89,6 +89,12 @@ export default function OrderDetailPage() {
     }
   };
 
+  const formatShortOrderId = (id: string) => {
+    if (!id) return '#—';
+    const core = String(id).replace(/[^a-zA-Z0-9]/g, '');
+    return `#${core.slice(-8).toLowerCase()}`;
+  };
+
   const handleStatusUpdate = async () => {
     if (!order || newStatus === order.order_status) return;
 
@@ -189,7 +195,7 @@ export default function OrderDetailPage() {
           <Link href="/admin/orders" className="text-sm text-gray-500 hover:text-gray-700 mb-2 inline-block">
             ← Back to Orders
           </Link>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Order #{order.id.slice(-8)}</h1>
+          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Order {formatShortOrderId(order.id)}</h1>
           <p className="mt-1 lg:mt-2 text-sm lg:text-base text-gray-600">Order placed on {formatDate(order.created_at)}</p>
         </div>
         <div className="text-left lg:text-right">

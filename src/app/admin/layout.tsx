@@ -107,6 +107,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <span>Orders</span>
                 </Link>
               </li>
+              
               <li className="border-t border-gray-200 pt-2 mt-4">
                 <Link 
                   href="/"
@@ -150,6 +151,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <span>Orders</span>
                 </Link>
               </li>
+              
               <li className="border-t border-gray-200 pt-2 mt-4">
                 <Link 
                   href="/"

@@ -8,34 +8,37 @@ interface DashboardStats {
   pendingOrders: number;
   completedOrders: number;
   totalRevenue: number;
+  recentOrders: any[];
 }
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [range, setRange] = useState<'today' | '7d' | '15d' | '30d' | '6m' | '1y'>('7d');
 
   useEffect(() => {
     fetchDashboardStats();
-  }, []);
+  }, [range]);
 
   const fetchDashboardStats = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/admin/orders?limit=1');
-      const data = await response.json();
+      const response = await fetch(`/api/admin/stats?range=${range}`);
+      const res = await response.json();
       
-      if (data.success) {
-        // For now, we'll use basic stats from the orders endpoint
-        // In a real app, you'd have a dedicated stats endpoint
+      if (res.success) {
+        const s = res.data;
+        const byStatus = s?.orders?.byStatus || {};
         setStats({
-          totalOrders: data.total || 0,
-          pendingOrders: 0, // Would need to filter by status
-          completedOrders: 0, // Would need to filter by status
-          totalRevenue: 0 // Would need to sum total_price
+          totalOrders: s?.orders?.total || 0,
+          pendingOrders: (byStatus.processing || 0) + (byStatus.created || 0),
+          completedOrders: (byStatus.paid || 0) + (byStatus.delivered || 0),
+          totalRevenue: s?.revenue?.total || 0,
+          recentOrders: s?.recentOrders || []
         });
       } else {
-        setError(data.message || 'Failed to fetch dashboard data');
+        setError(res.message || 'Failed to fetch dashboard data');
       }
     } catch (err) {
       setError('Failed to fetch dashboard data');
@@ -43,6 +46,12 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatShortOrderId = (id: string) => {
+    if (!id) return '#—';
+    const core = String(id).replace(/[^a-zA-Z0-9]/g, '');
+    return `#${core.slice(-8).toLowerCase()}`;
   };
 
   if (loading) {
@@ -66,6 +75,26 @@ export default function AdminDashboard() {
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="mt-1 lg:mt-2 text-sm lg:text-base text-gray-600">Manage your e-commerce store</p>
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-between">
+        <div></div>
+        <div className="flex items-center space-x-2">
+          <label className="text-sm text-gray-600">Time range</label>
+          <select
+            value={range}
+            onChange={(e) => setRange(e.target.value as any)}
+            className="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            <option value="today">Today</option>
+            <option value="7d">Last 7 days</option>
+            <option value="15d">Last 15 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="6m">Last 6 months</option>
+            <option value="1y">Last year</option>
+          </select>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -132,6 +161,69 @@ export default function AdminDashboard() {
               <p className="text-lg lg:text-2xl font-semibold text-gray-900">₹{stats?.totalRevenue || 0}</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Orders List (filtered by time range) */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="px-4 py-3 lg:px-6 lg:py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h2 className="text-base lg:text-lg font-medium text-gray-900">Recent Orders</h2>
+            <p className="text-xs lg:text-sm text-gray-500">Latest 5 orders within selected range</p>
+          </div>
+          <a href="/admin/orders" className="text-sm font-medium text-green-600 hover:text-green-700">View All</a>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {(stats?.recentOrders || []).map((order: any) => (
+                <tr key={order.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 text-sm font-mono text-gray-900">{formatShortOrderId(order.id)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">
+                    <div className="font-medium text-gray-900">{order.user_name || '—'}</div>
+                    <div className="text-gray-500 text-xs">{order.user_email || '—'}</div>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-700">
+                    {order.created_at ? new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900">₹{(order.total_price ?? order.total_amount ?? 0).toFixed(2)}</td>
+                  <td className="px-6 py-4 text-sm">
+                    <span className={
+                      `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        (order.order_status || '').toLowerCase() === 'paid'
+                          ? 'bg-blue-100 text-blue-800'
+                          : (order.order_status || '').toLowerCase() === 'processing'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : (order.order_status || '').toLowerCase() === 'delivered'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`
+                    }>
+                      {(order.order_status || order.status || '—').charAt(0).toUpperCase() + (order.order_status || order.status || '—').slice(1)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-right">
+                    <a href={`/admin/orders/${order.id}`} className="text-green-600 hover:text-green-700 font-medium">View Details</a>
+                  </td>
+                </tr>
+              ))}
+              {stats && stats.recentOrders.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-6 text-center text-sm text-gray-500">No orders in this range.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
