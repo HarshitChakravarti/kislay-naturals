@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
         .select('*')
         .gte('created_at', (shouldFilter ? (startIso as string) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()))
         .order('created_at', { ascending: false })
-        .limit(5)
+        .limit(3)
     ]);
 
     // Calculate total revenue

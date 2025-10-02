@@ -9,13 +9,22 @@ const yeseva_One = Yeseva_One({
 
 const blogPosts = [
   {
-    id: 'monk-fruit-1',
-    title: 'Why Monk Fruit Sweetener is the Best Natural Sugar Substitute in India',
-    excerpt: 'Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.',
-    image: '/cover3.jpg',
-    date: 'August 24, 2025',
+    id: 'monk-fruit-weight-loss',
+    title: 'How Monk Fruit Sweetener Supports Weight Loss Naturally',
+    excerpt: 'Find out how monk fruit sweetener helps with weight loss. Zero calories, reduces cravings, and keeps you full without sugar spikes.',
+    image: '/herophoto2.png',
+    date: 'October 2, 2025',
     readTime: '5 min read',
-    category: 'Health & Nutrition'
+    category: 'Weight Loss'
+  },
+  {
+    id: 'monk-fruit-3',
+    title: '5 Reasons to Switch from Sugar to Monk Fruit Sweetener Today',
+    excerpt: 'Thinking of quitting sugar? Here are 5 powerful reasons why monk fruit sweetener is the healthiest sugar replacement for your daily lifestyle.',
+    image: '/mcover.png',
+    date: 'September 14, 2025',
+    readTime: '6 min read',
+    category: 'Health & Wellness'
   },
   {
     id: 'monk-fruit-2',
@@ -27,13 +36,13 @@ const blogPosts = [
     category: 'Health & Diabetes'
   },
   {
-    id: 'monk-fruit-3',
-    title: '5 Reasons to Switch from Sugar to Monk Fruit Sweetener Today',
-    excerpt: 'Thinking of quitting sugar? Here are 5 powerful reasons why monk fruit sweetener is the healthiest sugar replacement for your daily lifestyle.',
-    image: '/mcover.png',
-    date: 'September 14, 2025',
-    readTime: '6 min read',
-    category: 'Health & Wellness'
+    id: 'monk-fruit-1',
+    title: 'Why Monk Fruit Sweetener is the Best Natural Sugar Substitute in India',
+    excerpt: 'Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.',
+    image: '/cover3.jpg',
+    date: 'August 24, 2025',
+    readTime: '5 min read',
+    category: 'Health & Nutrition'
   }
 ]
 

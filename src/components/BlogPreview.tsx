@@ -38,6 +38,15 @@ const posts = [
   },
   {
     id: 4,
+    title: "How Monk Fruit Sweetener Supports Weight Loss Naturally",
+    excerpt: "Find out how monk fruit sweetener helps with weight loss. Zero calories, reduces cravings, and keeps you full without sugar spikes.",
+    image: "/herophoto2.png", 
+    category: "Weight Loss",
+    date: "October 2, 2025",
+    link: "/blog/monk-fruit-weight-loss",
+  },
+  {
+    id: 5,
     title: "Managing Blood Sugar Naturally",
     excerpt: "Learn how to maintain healthy glucose levels with natural sweeteners and lifestyle changes.",
     image: "/herophoto.png", 
