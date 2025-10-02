@@ -149,18 +149,16 @@ export default function OrderSuccessPage() {
                 </div>
 
                 <div className="mt-6">
-                  <p className="text-sm text-gray-500 mb-2">Delivery Address</p>
-                  <div className="rounded-xl border border-gray-200 p-4 bg-gray-50">
-                    <p className="text-gray-900 font-semibold">
-                      {notificationStatus?.shippingAddress?.street || '—'}
-                    </p>
-                    <p className="text-gray-900 font-semibold">
-                      {[notificationStatus?.shippingAddress?.city, notificationStatus?.shippingAddress?.state]
-                        .filter(Boolean)
-                        .join(', ') || '—'}
-                    </p>
-                    <p className="text-gray-900 font-semibold">{notificationStatus?.shippingAddress?.zip || ''}</p>
-                  </div>
+                  <p className="text-sm text-gray-500">Delivery Address</p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {notificationStatus?.shippingAddress?.street || '—'}
+                  </p>
+                  <p className="text-lg font-semibold text-gray-900">
+                    {[notificationStatus?.shippingAddress?.city, notificationStatus?.shippingAddress?.state]
+                      .filter(Boolean)
+                      .join(', ') || '—'}
+                  </p>
+                  <p className="text-lg font-semibold text-gray-900">{notificationStatus?.shippingAddress?.zip || ''}</p>
                 </div>
 
                 {/* Key order progress items (compact) */}
