@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import Razorpay from 'razorpay'
+import { verifyPaymentSignature } from '@/lib/razorpay'
 import { sendOrderConfirmationNotifications } from '@/lib/notifications';
 
 // Force dynamic rendering for this route
@@ -10,13 +12,57 @@ export async function PUT(request: NextRequest) {
     console.log('📥 Update order payment endpoint called');
     
     const body = await request.json();
-    console.log('📦 Request body received:', JSON.stringify(body, null, 2));
+    // Avoid logging sensitive PII/signatures in production
+    console.log('📦 Request body received (sanitized):', {
+      hasPaymentDetails: Boolean(body?.paymentDetails),
+      orderId: body?.orderId ? 'present' : 'missing'
+    });
 
     const { orderId, paymentDetails } = body;
 
     if (!orderId || !paymentDetails) {
       console.log('❌ Invalid payload - missing orderId or paymentDetails');
       return NextResponse.json({ success: false, message: 'Invalid payload.' }, { status: 400 });
+    }
+
+    // Verify signature server-side before any update
+    const secret = process.env.RAZORPAY_KEY_SECRET || ''
+    const isValid = verifyPaymentSignature({
+      razorpay_order_id: paymentDetails.razorpay_order_id,
+      razorpay_payment_id: paymentDetails.razorpay_payment_id,
+      razorpay_signature: paymentDetails.razorpay_signature,
+      secret
+    })
+    if (!isValid) {
+      console.warn('❌ Invalid Razorpay signature for order', orderId)
+      return NextResponse.json({ success: false, message: 'Invalid signature' }, { status: 400 })
+    }
+
+    // Fetch order from Razorpay and validate amount/currency
+    const key_id = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
+    const key_secret = process.env.RAZORPAY_KEY_SECRET
+    if (!key_id || !key_secret) {
+      return NextResponse.json({ success: false, message: 'Razorpay is not configured' }, { status: 500 })
+    }
+    const rp = new Razorpay({ key_id, key_secret })
+
+    const rpOrder = await rp.orders.fetch(paymentDetails.razorpay_order_id)
+
+    // Load our internal order to cross-check expected amount
+    const { data: internalOrder } = await supabase
+      .from('orders')
+      .select('id, total_price, order_status, status')
+      .eq('id', orderId)
+      .single()
+
+    if (!internalOrder) {
+      return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 })
+    }
+
+    const expectedAmountPaise = Math.round((internalOrder.total_price as number) * 100)
+    if (rpOrder.currency !== 'INR' || rpOrder.amount !== expectedAmountPaise) {
+      console.warn('❌ Amount/currency mismatch', { rpAmount: rpOrder.amount, rpCurrency: rpOrder.currency, expectedAmountPaise })
+      return NextResponse.json({ success: false, message: 'Amount or currency mismatch' }, { status: 400 })
     }
 
     // Update order with payment details
@@ -30,7 +76,10 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    console.log('💾 Attempting to update order:', orderId, updateData);
+    console.log('💾 Attempting to update order:', orderId, {
+      hasPaymentId: Boolean(updateData.razorpay_payment_id),
+      hasOrderId: Boolean(updateData.razorpay_order_id)
+    });
 
     const { data, error } = await supabase
       .from('orders')

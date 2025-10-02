@@ -150,17 +150,21 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
   const isEnquireFormValid = enquireFormData.name && enquireFormData.email && enquireFormData.mobile && enquireFormData.address;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Back Button */}
-      <div className="mb-8">
-        <Link
-          href="/"
-          className="inline-flex items-center text-green-600 hover:text-green-800 transition-colors font-medium group"
-        >
-          <ChevronLeft className="h-5 w-5 mr-1 transition-transform group-hover:-translate-x-1" />
-          Back to Home
-        </Link>
+    <div className="w-full">
+      {/* Green Sub Header */}
+      <div className="w-full bg-green-700 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Link
+            href="/"
+            className="flex items-center gap-2 py-3 hover:text-white/90 transition-colors"
+          >
+            <ChevronLeft className="h-5 w-5" />
+            <span className="text-sm md:text-base">Back to Home</span>
+          </Link>
+        </div>
       </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid md:grid-cols-2 gap-12">
         {/* Left Column - Images and Enquiry Section */}
         <div className="space-y-8">
@@ -670,6 +674,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
       />
       
 
+      </div>
     </div>
   );
 }

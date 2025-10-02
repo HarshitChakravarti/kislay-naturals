@@ -302,7 +302,7 @@ export default function CheckoutPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          amount: Math.round((orderResult.order?.total_price || orderResult.data?.total_price || orderResult.data?.total) * 100), // Convert to paise
+          amount: Math.round((orderResult.order?.total_price || orderResult.data?.total_price || orderResult.data?.total) * 100),
           currency: 'INR',
           orderId: orderResult.order?.id || orderResult.data?.id
         }),

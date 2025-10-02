@@ -94,12 +94,6 @@ export default function Footer() {
               <h3 className="text-lg font-semibold text-gray-900 uppercase tracking-wide">Follow Us On:</h3>
               <div className="flex space-x-3">
                 <a
-                  href="#"
-                  className="w-10 h-10 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center transition-colors"
-                >
-                  <Youtube className="w-5 h-5" />
-                </a>
-                <a
                   href="https://www.facebook.com/share/179ALHJvH6/"
                   target="_blank"
                   rel="noopener noreferrer"
