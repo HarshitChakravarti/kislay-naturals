@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 
     console.log('📥 Fetching notification status for order:', orderId);
 
-    // Fetch order with notification status
+    // Fetch order with notification status and minimal delivery details
     const { data: order, error } = await supabase
       .from('orders')
       .select(`
@@ -33,7 +33,14 @@ export async function GET(request: NextRequest) {
         whatsapp_message_id,
         notification_sent_at,
         user_email,
-        user_mobile
+        user_mobile,
+        user_name,
+        shipping_street,
+        shipping_city,
+        shipping_state,
+        shipping_zip,
+        paid_at,
+        created_at
       `)
       .eq('id', orderId)
       .single();
@@ -72,7 +79,16 @@ export async function GET(request: NextRequest) {
         messageId: order.whatsapp_message_id || null,
         phone: order.user_mobile
       },
-      sentAt: order.notification_sent_at || null
+      sentAt: order.notification_sent_at || null,
+      userName: order.user_name || null,
+      shippingAddress: {
+        street: order.shipping_street || null,
+        city: order.shipping_city || null,
+        state: order.shipping_state || null,
+        zip: order.shipping_zip || null,
+      },
+      paidAt: order.paid_at || null,
+      createdAt: order.created_at || null
     };
 
     return NextResponse.json({

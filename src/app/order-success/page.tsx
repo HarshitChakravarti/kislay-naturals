@@ -29,6 +29,15 @@ interface NotificationStatus {
     phone: string;
   };
   sentAt: string | null;
+  userName?: string | null;
+  shippingAddress?: {
+    street: string | null;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+  };
+  paidAt?: string | null;
+  createdAt?: string | null;
 }
 
 export default function OrderSuccessPage() {
@@ -101,7 +110,7 @@ export default function OrderSuccessPage() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Order Summary Card */}
+          {/* Delivery Details Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -112,45 +121,74 @@ export default function OrderSuccessPage() {
               {/* Card Header */}
               <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4">
                 <h2 className={`text-2xl font-bold text-white ${yeseva_One.className}`}>
-                  Order Summary
+                  Delivery Details
                 </h2>
-                <p className="text-green-100">Your order is being prepared</p>
+                <p className="text-green-100">Your order has been confirmed</p>
               </div>
 
-              {/* Order Timeline */}
+              {/* Delivery details content */}
               <div className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Order Confirmed</h3>
-                      <p className="text-sm text-gray-600">Payment received and order verified</p>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">Recipient</p>
+                    <p className="text-lg font-semibold text-gray-900">{notificationStatus?.userName || '—'}</p>
                   </div>
-                  
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">Processing</h3>
-                      <p className="text-sm text-gray-600">Your order is being prepared for shipment</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                      <Truck className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-500">Shipping</h3>
-                      <p className="text-sm text-gray-500">Will be dispatched within 24-48 hours</p>
-                    </div>
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">Expected Delivery</p>
+                    <p className="text-lg font-semibold text-gray-900">
+                      {(() => {
+                        const baseDate = notificationStatus?.paidAt || notificationStatus?.createdAt || null;
+                        if (!baseDate) return '—';
+                        const d = new Date(baseDate);
+                        d.setDate(d.getDate() + 7);
+                        return d.toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+                      })()}
+                    </p>
+                    {/* removed helper line per design request */}
                   </div>
                 </div>
 
+                <div className="mt-6">
+                  <p className="text-sm text-gray-500 mb-2">Delivery Address</p>
+                  <div className="rounded-xl border border-gray-200 p-4 bg-gray-50">
+                    <p className="text-gray-900 font-medium">
+                      {notificationStatus?.shippingAddress?.street || '—'}
+                    </p>
+                    <p className="text-gray-700">
+                      {[notificationStatus?.shippingAddress?.city, notificationStatus?.shippingAddress?.state]
+                        .filter(Boolean)
+                        .join(', ') || '—'}
+                    </p>
+                    <p className="text-gray-700">{notificationStatus?.shippingAddress?.zip || ''}</p>
+                  </div>
+                </div>
+
+                {/* Key order progress items (compact) */}
+                <div className="mt-8 border-t border-gray-200 pt-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div className="flex items-start space-x-3">
+                      <CheckCircle className="w-7 h-7 text-green-600 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Order Confirmed</h3>
+                        <p className="text-sm text-gray-600">Payment received and verified</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Clock className="w-7 h-7 text-blue-600 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Processing</h3>
+                        <p className="text-sm text-gray-600">Preparing your order for shipment</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <Truck className="w-7 h-7 text-gray-500 mt-1" />
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Shipping</h3>
+                        <p className="text-sm text-gray-600">Dispatch in 24–48 hours</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
