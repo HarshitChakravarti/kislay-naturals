@@ -39,14 +39,13 @@ export async function sendOrderConfirmationEmail(data: OrderConfirmationEmailDat
 
     const resend = getResend();
     const { data: emailData, error } = await resend.emails.send({
-      from: 'Kislay Naturals <noreply@kislaynaturals.com>',
+      from: 'Kislay Naturals <orders@kislaynaturals.com>',
       to: [data.customerEmail],
       subject: `Your Order ${data.orderId} - Kislay Naturals`,
       html: generateOrderConfirmationEmailHTML(data),
       text: generateOrderConfirmationEmailText(data),
-      replyTo: 'naturalskislay@gmail.com',
+      replyTo: 'support@kislaynaturals.com',
       headers: {
-        'List-Unsubscribe': `<mailto:naturalskislay@gmail.com>, <https://kislaynaturals.com/account/preferences>`,
         'X-Mailer': 'Kislay Naturals',
         'X-Priority': '3'
       }
@@ -266,7 +265,7 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
         <div class="footer">
           <div class="contact-info">
             <p><strong>Customer Support</strong></p>
-            <p>Email: <a href="mailto:naturalskislay@gmail.com">naturalskislay@gmail.com</a></p>
+            <p>Email: <a href="mailto:support@kislaynaturals.com">support@kislaynaturals.com</a></p>
             <p>Phone: +91 7043630938</p>
           </div>
           <p style="margin-top: 15px;">
@@ -303,7 +302,7 @@ function generateOrderConfirmationEmailText(data: OrderConfirmationEmailData): s
     `- Estimated delivery: 3-5 business days`,
     '',
     `Customer Support:`,
-    `Email: naturalskislay@gmail.com`,
+    `Email: support@kislaynaturals.com`,
     `Phone: +91 7043630938`,
     '',
     `This is an automated receipt for your order. Please keep this email for your records.`,
