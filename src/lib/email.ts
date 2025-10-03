@@ -219,9 +219,14 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
     </head>
     <body>
       <div class="container">
-        <div class="header">
-          <div class="logo">Kislay Naturals</div>
-          <div class="order-id">Order Number: ${data.orderId}</div>
+        <div class="header" style="text-align: center;">
+          <img 
+            src="https://www.kislaynaturals.com/logo.png" 
+            alt="Kislay Naturals Logo" 
+            width="150" 
+            style="max-width: 150px; width: 100%; height: auto; margin-bottom: 15px;"
+          >
+        <p style="color: #666; font-size: 14px; margin: 0;">Order #${data.orderId}</p>
         </div>
 
         <div class="greeting">
