@@ -35,6 +35,9 @@ export default function AdminOrdersPage() {
   const [error, setError] = useState<string | null>(null);
   const [total, setTotal] = useState(0);
   const [pagination, setPagination] = useState<any>({});
+  const [csvExporting, setCsvExporting] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -102,6 +105,44 @@ export default function AdminOrdersPage() {
     router.push(`/admin/orders?${params.toString()}`);
   };
 
+  const handleCSVExport = async () => {
+    try {
+      setCsvExporting(true);
+      
+      const params = new URLSearchParams();
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
+      if (status) params.append('status', status);
+      
+      const response = await fetch(`/api/admin/orders/export-csv?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to export CSV');
+      }
+      
+      // Get the filename from Content-Disposition header
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+      const filename = filenameMatch ? filenameMatch[1] : 'orders_export.csv';
+      
+      // Create blob and download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('CSV export error:', err);
+      setError('Failed to export CSV');
+    } finally {
+      setCsvExporting(false);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       created: { color: 'bg-gray-100 text-gray-800', label: 'Created' },
@@ -150,32 +191,103 @@ export default function AdminOrdersPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-4 lg:p-6">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
-          <div className="w-full lg:w-auto">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Status</label>
-            <select
-              value={status}
-              onChange={(e) => handleStatusFilter(e.target.value)}
-              className="block w-full lg:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-            >
-              <option value="">All Statuses</option>
-              <option value="created">Created</option>
-              <option value="paid">Paid</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+        <div className="space-y-4">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+            {/* Status Filter */}
+            <div className="w-full lg:w-auto">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Status</label>
+              <select
+                value={status}
+                onChange={(e) => handleStatusFilter(e.target.value)}
+                className="block w-full lg:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              >
+                <option value="">All Statuses</option>
+                <option value="created">Created</option>
+                <option value="paid">Paid</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            {/* Date Range Filters */}
+            <div className="w-full lg:w-auto">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="block w-full lg:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              />
+            </div>
+
+            <div className="w-full lg:w-auto">
+              <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="block w-full lg:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              />
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex gap-2 w-full lg:w-auto">
+              <button
+                onClick={() => {
+                  handleStatusFilter('');
+                  setStartDate('');
+                  setEndDate('');
+                }}
+                className="flex-1 lg:flex-none px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Clear Filters
+              </button>
+              
+              <button
+                onClick={handleCSVExport}
+                disabled={csvExporting}
+                className="flex-1 lg:flex-none px-4 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {csvExporting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export CSV
+                  </>
+                )}
+              </button>
+            </div>
           </div>
           
-          <div className="flex items-end w-full lg:w-auto">
-            <button
-              onClick={() => handleStatusFilter('')}
-              className="w-full lg:w-auto px-4 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Clear Filters
-            </button>
-          </div>
+          {/* Filter Summary */}
+          {(status || startDate || endDate) && (
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
+              <span className="text-sm text-gray-600">Active filters:</span>
+              {status && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                  Status: {status}
+                </span>
+              )}
+              {startDate && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  From: {startDate}
+                </span>
+              )}
+              {endDate && (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Until: {endDate}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

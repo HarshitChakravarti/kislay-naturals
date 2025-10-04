@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Yeseva_One } from 'next/font/google';
+
+const yeseva_One = Yeseva_One({
+  weight: '400',
+  subsets: ['latin'],
+});
 
 interface DashboardStats {
   totalOrders: number;
@@ -73,13 +79,15 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-4 lg:space-y-6">
       <div>
+        <div className="mb-3">
+          <h2 className={`text-xl lg:text-2xl font-medium text-green-600 ${yeseva_One.className}`}>Hello, Nishchoy Gupta 👋</h2>
+        </div>
         <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="mt-1 lg:mt-2 text-sm lg:text-base text-gray-600">Manage your e-commerce store</p>
       </div>
 
       {/* Controls */}
       <div className="flex items-center justify-between">
-        <div></div>
         <div className="flex items-center space-x-2">
           <label className="text-sm text-gray-600">Time range</label>
           <select
@@ -95,6 +103,7 @@ export default function AdminDashboard() {
             <option value="1y">Last year</option>
           </select>
         </div>
+        <div></div>
       </div>
 
       {/* Stats Cards */}
