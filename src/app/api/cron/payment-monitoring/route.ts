@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+// Force dynamic rendering for this API route
+export const dynamic = 'force-dynamic';
+
 // This endpoint can be called by a cron service like Vercel Cron or external cron
 export async function GET(request: NextRequest) {
   try {
