@@ -16,6 +16,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
+  order_number?: string;
   user_name: string;
   user_email: string;
   user_mobile: string;
@@ -204,7 +205,7 @@ export default function OrdersPage() {
                         </span>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-gray-900">Order #{order.id.slice(-8)}</p>
+                        <p className="text-sm font-medium text-gray-900">Order #{order.order_number || order.id.slice(-8)}</p>
                         <p className="text-sm text-gray-500">Placed on {formatDate(order.created_at)}</p>
                       </div>
                     </div>

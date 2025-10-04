@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
         message: 'Order ID is required' 
       }, { status: 400 });
     }
-
     console.log('📥 Fetching notification status for order:', orderId);
 
     // Fetch order with notification status and minimal delivery details
@@ -23,6 +22,7 @@ export async function GET(request: NextRequest) {
       .from('orders')
       .select(`
         id,
+        order_number,
         email_sent,
         email_error,
         email_error_type,
@@ -65,6 +65,7 @@ export async function GET(request: NextRequest) {
     // Format the response
     const notificationStatus = {
       orderId: order.id,
+      orderNumber: order.order_number || null,
       email: {
         sent: order.email_sent || false,
         error: order.email_error || null,

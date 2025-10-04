@@ -6,6 +6,8 @@ export interface OrderNotificationData {
   customerEmail: string;
   customerPhone: string;
   orderId: string;
+  // Prefer displaying human-friendly order number when available
+  orderNumber?: string;
   productName: string;
   quantity: number;
   unitPrice: number;
@@ -37,6 +39,7 @@ export async function sendOrderConfirmationNotifications(data: OrderNotification
       customerName: data.customerName,
       customerEmail: data.customerEmail,
       orderId: data.orderId,
+      orderNumber: data.orderNumber,
       productName: data.productName,
       quantity: data.quantity,
       unitPrice: data.unitPrice,

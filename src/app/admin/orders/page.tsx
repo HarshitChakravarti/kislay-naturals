@@ -6,6 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 
 interface Order {
   id: string;
+  order_number?: string;
   user_name: string;
   user_email: string;
   total_price: number;
@@ -207,7 +208,7 @@ export default function AdminOrdersPage() {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Number</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
@@ -218,7 +219,7 @@ export default function AdminOrdersPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {orders.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{formatShortOrderId(order.id)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.order_number || formatShortOrderId(order.id)}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{order.user_name || order.user_profiles?.full_name || 'N/A'}</div>
                         <div className="text-sm text-gray-500">{order.user_email}</div>

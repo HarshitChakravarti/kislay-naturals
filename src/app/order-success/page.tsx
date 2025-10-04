@@ -14,6 +14,7 @@ const yeseva_One = Yeseva_One({
 
 interface NotificationStatus {
   orderId: string;
+  orderNumber?: string | null;
   email: {
     sent: boolean;
     error: string | null;

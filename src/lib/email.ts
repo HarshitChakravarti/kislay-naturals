@@ -4,6 +4,8 @@ export interface OrderConfirmationEmailData {
   customerName: string;
   customerEmail: string;
   orderId: string;
+  // Prefer displaying human-friendly order number when available
+  orderNumber?: string;
   productName: string;
   quantity: number;
   unitPrice: number;
@@ -41,7 +43,7 @@ export async function sendOrderConfirmationEmail(data: OrderConfirmationEmailDat
     const { data: emailData, error } = await resend.emails.send({
       from: 'Kislay Naturals <orders@kislaynaturals.com>',
       to: [data.customerEmail],
-      subject: `Your Order ${data.orderId} - Kislay Naturals`,
+      subject: `Your Order ${data.orderNumber || data.orderId} - Kislay Naturals`,
       html: generateOrderConfirmationEmailHTML(data),
       text: generateOrderConfirmationEmailText(data),
       replyTo: 'support@kislaynaturals.com',
@@ -226,7 +228,7 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
             width="150" 
             style="max-width: 150px; width: 100%; height: auto; margin-bottom: 15px;"
           >
-        <p style="color: #666; font-size: 14px; margin: 0;">Order #${data.orderId}</p>
+        <p style="color: #666; font-size: 14px; margin: 0;">Order #${data.orderNumber || data.orderId}</p>
         </div>
 
         <div class="greeting">
@@ -286,7 +288,7 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
 function generateOrderConfirmationEmailText(data: OrderConfirmationEmailData): string {
   return [
     `Kislay Naturals - Order Receipt`,
-    `Order Number: ${data.orderId}`,
+    `Order Number: ${data.orderNumber || data.orderId}`,
     '',
     `Hello ${data.customerName},`,
     `Your order has been received and payment has been processed successfully.`,

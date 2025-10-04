@@ -59,13 +59,13 @@ export default function AboutPage() {
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="order-2 md:order-1">
                   <div className="space-y-6 text-gray-700">
-                    <p className="text-lg leading-relaxed">
+                    <p className="text-lg leading-relaxed text-justify">
                       At Kislay Naturals, we believe that wellness should be simple, honest, and rooted in nature. Born from a passion for clean living and mindful nutrition, our brand is dedicated to delivering 100% natural, low-carb products that nourish your body and fuel your lifestyle - without compromise.
                     </p>
-                    <p className="text-lg leading-relaxed">
+                    <p className="text-lg leading-relaxed text-justify">
                       Each of our products is crafted with purpose, powered by nature's best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you're striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
                     </p>
-                    <p className="text-lg leading-relaxed">
+                    <p className="text-lg leading-relaxed text-justify">
                       With the guiding philosophy "Naturally Trusted | Deeply Connected | Truly Healthy," we're not just offering products - we're building a community around conscious choices and lasting well-being.
                     </p>
                   </div>
@@ -111,7 +111,7 @@ export default function AboutPage() {
                 <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
                   Naturally Trusted
                 </h3>
-                <p className="text-gray-600 text-center leading-relaxed">
+                <p className="text-gray-600 text-center leading-relaxed text-justify">
                   We believe in the power of nature and use only the purest, most natural ingredients in our products. Every ingredient is carefully selected and ethically sourced.
                 </p>
               </div>
@@ -124,7 +124,7 @@ export default function AboutPage() {
                 <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
                   Deeply Connected
                 </h3>
-                <p className="text-gray-600 text-center leading-relaxed">
+                <p className="text-gray-600 text-center leading-relaxed text-justify">
                   We're building a community of health-conscious individuals who share our passion for wellness. Together, we create a supportive network for better health.
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function AboutPage() {
                 <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
                   Truly Healthy
                 </h3>
-                <p className="text-gray-600 text-center leading-relaxed">
+                <p className="text-gray-600 text-center leading-relaxed text-justify">
                   Our products are designed to support your overall well-being, with no artificial additives or preservatives. Pure nutrition for a healthier life.
                 </p>
               </div>
@@ -180,13 +180,13 @@ export default function AboutPage() {
               {/* Founder Info */}
               <div className="order-1 lg:order-2">
                 <div className="space-y-6 text-gray-700">
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-lg leading-relaxed text-justify">
                     Nishchoy Gupta, the visionary behind Kislay Naturals, is a dynamic entrepreneur with a profound passion for health, wellness, and sustainable living. His journey began with a simple yet powerful realization: that modern lifestyles often compromise on nutrition, leading to a host of health challenges. This insight fueled his mission to create a brand that offers clean, natural, and effective solutions for everyday wellness.
                   </p>
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-lg leading-relaxed text-justify">
                     Beyond business, Nishchoy is a sportsman at heart. A dedicated cricketer and fitness enthusiast, he lives by the same values he brings to his brand - discipline, resilience, and performance with integrity. His sporting spirit reflects in the way he builds his company: with teamwork, commitment, and a relentless pursuit of excellence.
                   </p>
-                  <p className="text-lg leading-relaxed">
+                  <p className="text-lg leading-relaxed text-justify">
                     Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy's mission is to empower individuals to live better, more balanced lives through nature-backed solutions.
                   </p>
             

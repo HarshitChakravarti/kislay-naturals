@@ -30,7 +30,7 @@ const FeatureCard = ({ emoji, title, description, iconBg, iconColor }: { emoji: 
     </div>
     <div className="space-y-1">
       <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{title}</h4>
-      <p className="text-xs md:text-sm text-gray-600 leading-relaxed">{description}</p>
+      <p className="text-xs md:text-sm text-gray-600 leading-relaxed text-justify">{description}</p>
     </div>
   </div>
 );
@@ -238,7 +238,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <MessageSquare className="h-6 w-6 text-green-600" />
                   <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-justify">
                   Get personalized assistance about this product.<br/> We are here to help!
                 </p>
                 <motion.button
@@ -374,7 +374,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
 
                   {/* Info Text */}
                   <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
-                    <p className="text-sm text-green-700 text-center">
+                    <p className="text-sm text-green-700 text-center text-justify">
                       Your enquiry will be sent directly to our WhatsApp for quick response
                     </p>
                   </div>
@@ -452,7 +452,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <div className="prose prose-green max-w-none text-gray-600 space-y-4">
                 {product.description?.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className={index === 0 ? "text-lg font-semibold text-gray-900" : ""}>
+                  <p key={index} className={`${index === 0 ? "text-lg font-semibold text-gray-900" : ""} text-justify`}>
                     {paragraph}
                   </p>
                 ))}
@@ -519,7 +519,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <MessageSquare className="h-6 w-6 text-green-600" />
                   <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-justify">
                   Get personalized assistance about this product.<br/> We are here to help!
                 </p>
                 <motion.button
@@ -655,7 +655,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
 
                   {/* Info Text */}
                   <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
-                    <p className="text-sm text-green-700 text-center">
+                    <p className="text-sm text-green-700 text-center text-justify">
                       Your enquiry will be sent directly to our WhatsApp for quick response
                     </p>
                   </div>

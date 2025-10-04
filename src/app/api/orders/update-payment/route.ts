@@ -85,7 +85,7 @@ export async function PUT(request: NextRequest) {
       .from('orders')
       .update(updateData)
       .eq('id', orderId)
-      .select('id, order_status, total_price, user_name, user_email, user_mobile, product_name, unit_price, quantity, shipping_street, shipping_city, shipping_state, shipping_zip, created_at')
+      .select('id, order_number, order_status, total_price, user_name, user_email, user_mobile, product_name, unit_price, quantity, shipping_street, shipping_city, shipping_state, shipping_zip, created_at')
       .single();
 
     if (error) {
@@ -109,6 +109,7 @@ export async function PUT(request: NextRequest) {
         customerEmail: data.user_email,
         customerPhone: data.user_mobile,
         orderId: data.id.toString(),
+        orderNumber: data.order_number ? String(data.order_number) : undefined,
         productName: data.product_name,
         quantity: data.quantity,
         unitPrice: data.unit_price,

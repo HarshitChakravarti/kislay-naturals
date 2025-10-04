@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
       customerName: 'Kislay Test User',
       customerEmail: to,
       orderId: `TEST-${now.getTime()}`,
+      orderNumber: `KN-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${now.getTime()}`,
       productName: 'Monk Fruit Sweetener (Test)',
       quantity: 1,
       unitPrice: 299,

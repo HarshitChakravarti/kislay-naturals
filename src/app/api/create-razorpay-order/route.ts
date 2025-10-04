@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Check if order exists and get current state
     const { data: existingOrder, error: orderError } = await supabaseAdmin
       .from('orders')
-      .select('id, status, order_status, payment_attempts, expires_at, razorpay_order_id')
+      .select('id, status, order_status, payment_attempts, expires_at, razorpay_order_id, order_number')
       .eq('id', orderId)
       .single();
 
@@ -121,8 +121,15 @@ export async function POST(request: NextRequest) {
     const options = {
       amount: Math.round(amount),
       currency: cur,
-      receipt: String(orderId || `receipt_order_${Date.now()}`),
-      notes: orderId ? { internal_order_id: String(orderId) } : undefined,
+      receipt: String(existingOrder?.order_number || orderId || `receipt_order_${Date.now()}`),
+      notes: (orderId || existingOrder?.order_number)
+        ? {
+            ...(orderId ? { internal_order_id: String(orderId) } : {}),
+            ...(existingOrder?.order_number
+              ? { order_number: String(existingOrder.order_number) }
+              : {}),
+          }
+        : undefined,
     } as const;
 
     const razorpayOrder = await razorpay.orders.create(options as any);
