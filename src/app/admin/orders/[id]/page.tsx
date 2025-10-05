@@ -296,20 +296,7 @@ export default function OrderDetailPage() {
               {order.order_items?.map((item) => (
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      {item.image && (
-                        <Image
-                          className="h-10 w-10 rounded-lg object-cover"
-                          src={item.image}
-                          alt={item.name}
-                          width={40}
-                          height={40}
-                        />
-                      )}
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                      </div>
-                    </div>
+                    <div className="text-sm font-medium text-gray-900">{item.name}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹{item.price.toFixed(2)}
@@ -330,9 +317,6 @@ export default function OrderDetailPage() {
           {order.order_items?.map((item) => (
             <div key={item.id} className="p-4">
               <div className="flex items-center gap-3">
-                {item.image && (
-                  <Image className="h-12 w-12 rounded-lg object-cover" src={item.image} alt={item.name} width={48} height={48} />
-                )}
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
                   <div className="mt-1 text-xs text-gray-500">Qty: {item.quantity}</div>

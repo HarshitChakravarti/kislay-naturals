@@ -104,15 +104,15 @@ export async function sendOrderConfirmationEmail(data: OrderConfirmationEmailDat
 function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): string {
   return `
     <!DOCTYPE html>
-    <html lang="en">
+    <html>
     <head>
-      <meta charset="UTF-8">
+      <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Order Receipt - Kislay Naturals</title>
+      <title>Order Confirmation - Kislay Naturals</title>
       <style>
         body {
           font-family: Arial, sans-serif;
-          line-height: 1.4;
+          line-height: 1.6;
           color: #333;
           max-width: 600px;
           margin: 0 auto;
@@ -122,162 +122,115 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
         .container {
           background: white;
           border: 1px solid #ddd;
+          border-radius: 8px;
           padding: 30px;
-        }
-        .header {
-          text-align: left;
-          margin-bottom: 20px;
-          border-bottom: 1px solid #eee;
-          padding-bottom: 15px;
-        }
-        .logo {
-          font-size: 18px;
-          font-weight: bold;
-          color: #333;
-          margin-bottom: 5px;
-        }
-        .order-id {
-          color: #666;
-          font-size: 14px;
         }
         .greeting {
           font-size: 16px;
-          margin-bottom: 15px;
-          color: #333;
+          margin-bottom: 20px;
         }
-        .order-details {
-          background: #f8f9fa;
-          padding: 15px;
-          margin: 15px 0;
-          border: 1px solid #e9ecef;
+        .order-summary {
+          margin: 20px 0;
         }
-        .product-info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 10px 0;
-          border-bottom: 1px solid #dee2e6;
+        .order-summary h3 {
+          font-size: 16px;
+          margin-bottom: 10px;
+          text-decoration: underline;
         }
-        .product-info:last-child {
-          border-bottom: none;
+        .product-details {
+          margin: 10px 0;
         }
         .product-name {
-          font-weight: 500;
-          color: #333;
-        }
-        .product-quantity {
-          color: #666;
-          font-size: 14px;
-        }
-        .price {
-          font-weight: 500;
-          color: #333;
-        }
-        .total {
-          background: #f8f9fa;
-          padding: 12px;
-          text-align: center;
-          font-size: 16px;
           font-weight: bold;
-          margin: 15px 0;
-          border: 1px solid #dee2e6;
+          margin-bottom: 5px;
+        }
+        .quantity {
+          margin-bottom: 5px;
+        }
+        .payment-received {
+          font-weight: bold;
+          text-decoration: underline;
+        }
+        .delivery-address {
+          margin: 20px 0;
+          border-top: 1px solid #ddd;
+          padding-top: 20px;
+        }
+        .delivery-address h3 {
+          font-size: 16px;
+          margin-bottom: 10px;
+          text-decoration: underline;
         }
         .shipping-info {
-          background: #f8f9fa;
-          padding: 12px;
-          margin: 15px 0;
-          border: 1px solid #dee2e6;
+          margin: 10px 0;
         }
-        .shipping-title {
-          font-weight: 500;
-          color: #333;
-          margin-bottom: 8px;
+        .estimated-delivery {
+          margin: 10px 0;
         }
-        .address {
-          color: #666;
-          line-height: 1.4;
+        .customer-support {
+          margin: 20px 0;
+          border-top: 1px solid #ddd;
+          padding-top: 20px;
         }
-        .next-steps {
-          background: #f8f9fa;
-          padding: 12px;
-          margin: 15px 0;
-          border: 1px solid #dee2e6;
-        }
-        .footer {
-          margin-top: 20px;
-          padding-top: 15px;
-          border-top: 1px solid #eee;
-          color: #666;
-          font-size: 13px;
+        .customer-support h3 {
+          font-size: 16px;
+          margin-bottom: 10px;
         }
         .contact-info {
           margin: 10px 0;
         }
         .contact-info a {
           color: #0066cc;
-          text-decoration: none;
+          text-decoration: underline;
+        }
+        .footer {
+          margin-top: 20px;
+          font-size: 14px;
+          color: #666;
+        }
+        .underline {
+          text-decoration: underline;
         }
       </style>
     </head>
     <body>
       <div class="container">
-        <div class="header" style="text-align: center;">
-          <img 
-            src="https://www.kislaynaturals.com/logo.png" 
-            alt="Kislay Naturals Logo" 
-            width="150" 
-            style="max-width: 150px; width: 100%; height: auto; margin-bottom: 15px;"
-          >
-        <p style="color: #666; font-size: 14px; margin: 0;">Order #${data.orderNumber || data.orderId}</p>
-        </div>
-
         <div class="greeting">
-          Hello ${data.customerName},
+          <strong>Dear ${data.customerName},</strong>
         </div>
 
-        <p>Your order has been received and payment has been processed successfully.</p>
+        <p>Thank you for your order. Your payment is processed successfully and our team has started processing your order.</p>
 
-        <div class="order-details">
-          <h3 style="margin-top: 0; color: #333; font-size: 16px;">Order Summary</h3>
-          <div class="product-info">
-            <div>
-              <div class="product-name">${data.productName}</div>
-              <div class="product-quantity">Quantity: ${data.quantity}</div>
-            </div>
-            <div class="price">INR ${data.unitPrice.toFixed(2)}</div>
+        <div class="order-summary">
+          <h3>Here is order <span class="underline">summary</span> :</h3>
+          <div class="product-details">
+            <div class="product-name">${data.productName}</div>
+            <div class="quantity">Quantity: ${data.quantity}</div>
+            <div class="payment-received">Payment <span class="underline">Received</span> : ₹ ${(data.totalAmount || 0).toFixed(2)}</div>
           </div>
         </div>
 
-        <div class="total">
-          Total Amount: INR ${data.totalAmount.toFixed(2)}
-        </div>
-
-        <div class="shipping-info">
-          <div class="shipping-title">Delivery Address</div>
-          <div class="address">
-            ${data.shippingAddress.street}<br>
-            ${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}
+        <div class="delivery-address">
+          <h3><span class="underline">Delivery Address</span> :</h3>
+          <div class="shipping-info">
+            <p>You will receive shipping and tracking information via email / WhatsApp</p>
+          </div>
+          <div class="estimated-delivery">
+            <strong>Estimated <span class="underline">delivery</span>: 7 – 10 business days</strong>
           </div>
         </div>
 
-        <div class="next-steps">
-          <h3 style="margin-top: 0; color: #333; font-size: 14px;">Next Steps</h3>
-          <ul style="color: #666; margin: 8px 0; padding-left: 20px; font-size: 14px;">
-            <li>Your order is being processed</li>
-            <li>You will receive tracking information via email</li>
-            <li>Estimated delivery: 3-5 business days</li>
-          </ul>
-        </div>
-
-        <div class="footer">
+        <div class="customer-support">
+          <h3><strong>Customer Support</strong></h3>
           <div class="contact-info">
-            <p><strong>Customer Support</strong></p>
             <p>Email: <a href="mailto:support@kislaynaturals.com">support@kislaynaturals.com</a></p>
             <p>Phone: +91 7043630938</p>
           </div>
-          <p style="margin-top: 15px;">
-            This is an automated receipt for your order. Please keep this email for your records.
-          </p>
+        </div>
+
+        <div class="footer">
+          <p>This is an automated receipt for your order.</p>
+          <p>Please keep this email for your records.</p>
         </div>
       </div>
     </body>
@@ -287,31 +240,24 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
 
 function generateOrderConfirmationEmailText(data: OrderConfirmationEmailData): string {
   return [
-    `Kislay Naturals - Order Receipt`,
-    `Order Number: ${data.orderNumber || data.orderId}`,
+    `Dear ${data.customerName},`,
     '',
-    `Hello ${data.customerName},`,
-    `Your order has been received and payment has been processed successfully.`,
+    `Thank you for your order. Your payment is processed successfully and our team has started processing your order.`,
     '',
-    `Order Summary:`,
-    `Item: ${data.productName}`,
+    `Here is order summary:`,
+    `${data.productName}`,
     `Quantity: ${data.quantity}`,
-    `Unit Price: INR ${data.unitPrice.toFixed(2)}`,
-    `Total: INR ${data.totalAmount.toFixed(2)}`,
+    `Payment Received: ₹ ${(data.totalAmount || 0).toFixed(2)}`,
     '',
     `Delivery Address:`,
-    `${data.shippingAddress.street}`,
-    `${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}`,
+    `You will receive shipping and tracking information via email / WhatsApp`,
+    `Estimated delivery: 7 – 10 business days`,
     '',
-    `Next Steps:`,
-    `- Your order is being processed`,
-    `- You will receive tracking information via email`,
-    `- Estimated delivery: 3-5 business days`,
-    '',
-    `Customer Support:`,
+    `Customer Support`,
     `Email: support@kislaynaturals.com`,
     `Phone: +91 7043630938`,
     '',
-    `This is an automated receipt for your order. Please keep this email for your records.`,
+    `This is an automated receipt for your order.`,
+    `Please keep this email for your records.`,
   ].join('\n');
 }

@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     const razorpay = new Razorpay({ key_id, key_secret });
 
-    const options: Razorpay.OrderCreateRequest = {
+    const options = {
       amount: Math.round(amount),
       currency: cur,
       receipt: String(existingOrder?.order_number || orderId || `receipt_order_${Date.now()}`),
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
         : undefined,
     };
 
-    const razorpayOrder = await razorpay.orders.create(options);
+    const razorpayOrder = await razorpay.orders.create(options as any);
     
     // Set expiry time (15 minutes from now)
     const expiresAt = new Date();

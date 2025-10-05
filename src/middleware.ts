@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyToken } from './lib/jwt';
+import { supabase } from './lib/supabase';
 
 // Define the routes that require authentication
 const protectedRoutes = ['/account', '/admin'];
@@ -19,9 +19,12 @@ export async function middleware(request: NextRequest) {
       return redirectToLogin(request);
     }
 
-    // Verify the token on the server
+    // Verify the token using Supabase (Edge Runtime compatible)
     try {
-      await verifyToken(token);
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      if (error || !user) {
+        return redirectToLogin(request);
+      }
       // If token is valid, proceed
       return NextResponse.next();
     } catch (error) {

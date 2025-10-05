@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import ClientOnly from '@/components/ClientOnly';
 
 interface SignupFormData {
   username: string;
@@ -23,7 +24,7 @@ interface ValidationErrors {
   confirmPassword?: string;
 }
 
-export default function SignupForm() {
+function SignupForm() {
   const { register, isLoading, error } = useAuth();
   const [formData, setFormData] = useState<SignupFormData>({
     username: '',
@@ -269,5 +270,13 @@ export default function SignupForm() {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+export default function SignupFormWrapper() {
+  return (
+    <ClientOnly>
+      <SignupForm />
+    </ClientOnly>
   );
 } 

@@ -29,3 +29,19 @@ export const supabaseAdmin = createClient(
   }
 )
 
+export async function getUserBypassRLS(token: string) {
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      console.error('Error getting user from token:', error);
+      return null;
+    }
+
+    // Return the user data directly from auth.users
+    return user;
+  } catch (error) {
+    console.error('Error in getUserBypassRLS:', error);
+    return null;
+  }
+}
+

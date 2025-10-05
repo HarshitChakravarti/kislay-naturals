@@ -3,12 +3,13 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import ClientOnly from '@/components/ClientOnly';
 
 interface PendingOrderHandlerProps {
   onOpenCheckout: (productId: string, quantity: number) => void;
 }
 
-export default function PendingOrderHandler({ onOpenCheckout }: PendingOrderHandlerProps) {
+function PendingOrderHandler({ onOpenCheckout }: PendingOrderHandlerProps) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
 
@@ -47,4 +48,12 @@ export default function PendingOrderHandler({ onOpenCheckout }: PendingOrderHand
 
   // This component doesn't render anything
   return null;
+}
+
+export default function PendingOrderHandlerWrapper({ onOpenCheckout }: PendingOrderHandlerProps) {
+  return (
+    <ClientOnly>
+      <PendingOrderHandler onOpenCheckout={onOpenCheckout} />
+    </ClientOnly>
+  );
 }

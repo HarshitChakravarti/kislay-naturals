@@ -12,6 +12,22 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
+    // First, get order details to include user information
+    const { data: orderData, error: orderError } = await supabaseAdmin
+      .from('orders')
+      .select('user_name, user_email, user_mobile, total_price')
+      .eq('id', orderId)
+      .single();
+
+    if (orderError) {
+      console.error('Error fetching order details:', orderError);
+      return NextResponse.json({
+        success: false,
+        message: 'Failed to fetch order details',
+        error: orderError.message
+      }, { status: 500 });
+    }
+
     // Update the order with failure details
     const { error } = await supabaseAdmin
       .from('orders')
@@ -34,10 +50,33 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
+    // Record the payment issue in the recent_payment_issues table
+    const { error: issueError } = await supabaseAdmin
+      .from('recent_payment_issues')
+      .insert({
+        order_id: orderId,
+        user_name: orderData.user_name,
+        user_email: orderData.user_email,
+        user_mobile: orderData.user_mobile,
+        failure_code: failureCode || 'CLIENT_SIDE_FAILURE',
+        failure_message: failureMessage || 'Payment failed on client side',
+        failure_reason: failureReason || 'client_side_failure',
+        error_type: 'client_side',
+        payment_gateway: 'razorpay',
+        amount: orderData.total_price,
+        currency: 'INR'
+      });
+
+    if (issueError) {
+      console.error('Error recording payment issue:', issueError);
+      // Don't fail the entire request if issue recording fails
+    }
+
     console.log(`Payment failure recorded for order ${orderId}:`, {
       code: failureCode,
       reason: failureReason,
-      message: failureMessage
+      message: failureMessage,
+      user_name: orderData.user_name
     });
 
     return NextResponse.json({

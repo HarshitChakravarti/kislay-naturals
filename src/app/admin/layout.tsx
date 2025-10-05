@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { Menu, X } from 'lucide-react';
+import ClientOnly from '@/components/ClientOnly';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
+function AdminLayout({ children }: AdminLayoutProps) {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
@@ -175,5 +176,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function AdminLayoutWrapper({ children }: AdminLayoutProps) {
+  return (
+    <ClientOnly>
+      <AdminLayout>{children}</AdminLayout>
+    </ClientOnly>
   );
 }

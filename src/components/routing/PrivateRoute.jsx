@@ -1,5 +1,6 @@
 import { Navigate } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import ClientOnly from '@/components/ClientOnly';
 
 const PrivateRoute = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -11,4 +12,10 @@ const PrivateRoute = ({ children }) => {
   return children;
 };
 
-export default PrivateRoute;
+export default function PrivateRouteWrapper({ children }) {
+  return (
+    <ClientOnly>
+      <PrivateRoute>{children}</PrivateRoute>
+    </ClientOnly>
+  );
+}

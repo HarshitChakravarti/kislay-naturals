@@ -219,31 +219,33 @@ export default function OrderSuccessPage() {
             </div>
 
             {/* Support Card */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-200 p-6">
-              <div className="text-center mb-4">
-                <Phone className="w-10 h-10 text-blue-600 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-900">Need Help?</h3>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+              <div className="text-center mb-6">
+                <Phone className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
+                  Need Help?
+                </h3>
                 <p className="text-gray-600 text-sm">We&apos;re here to assist you</p>
               </div>
               
               <div className="space-y-3">
                 <a 
                   href="mailto:naturalskislay@gmail.com"
-                  className="flex items-center space-x-3 p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors"
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  <Mail className="w-5 h-5 text-blue-600" />
-                  <span className="text-sm font-medium">Email Support</span>
+                  <Mail className="w-5 h-5" />
+                  <span className="flex-grow text-center">Email Support</span>
                 </a>
                 
                 <a 
                   href="https://wa.me/917043630938"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-3 p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors"
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  <MessageCircle className="w-5 h-5 text-green-600" />
-                  <span className="text-sm font-medium">WhatsApp Chat</span>
-                  <ExternalLink className="w-4 h-4 text-gray-400" />
+                  <MessageCircle className="w-5 h-5" />
+                  <span className="flex-grow text-center">WhatsApp</span>
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             </div>

@@ -6,6 +6,8 @@ export const dynamic = 'force-dynamic';
 
 export const GET = withAdminAuth(async (request: AdminRequest) => {
   try {
+    console.log('Admin orders API called by user:', request.user);
+    
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '20', 10);
@@ -30,11 +32,15 @@ export const GET = withAdminAuth(async (request: AdminRequest) => {
     const { data: orders, count, error } = await query;
 
     if (error) {
+      console.error('Error fetching orders:', error);
       return NextResponse.json({ 
         success: false, 
-        message: error.message || 'Failed to fetch orders' 
+        message: error.message || 'Failed to fetch orders',
+        error: error
       }, { status: 500 });
     }
+
+    console.log('Orders fetched successfully:', { count: orders?.length, total: count });
 
     // Fetch user profiles for the orders if needed
     let ordersWithProfiles = orders || [];

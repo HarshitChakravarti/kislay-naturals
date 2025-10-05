@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '../supabase'
+import { supabaseAdmin, getUserBypassRLS } from '../supabase'
 
 export interface AdminRequest extends NextRequest {
   user?: { id: string; email: string | null | undefined; role?: string; [key: string]: unknown }
@@ -10,11 +10,8 @@ export async function authenticateAdmin(request: NextRequest) {
     const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
     if (!token || typeof token !== 'string' || token.trim() === '') return null
 
-    // Use admin client to bypass RLS and get user with role information
-    const { data, error } = await supabaseAdmin.auth.getUser(token)
-    if (error || !data?.user) return null
-
-    const user = data.user
+    const user = await getUserBypassRLS(token);
+    if (!user) return null;
     const role = (user.user_metadata as any)?.role
 
     // Check if user has admin role

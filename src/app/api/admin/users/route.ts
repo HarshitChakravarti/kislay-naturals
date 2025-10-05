@@ -22,10 +22,10 @@ export async function GET(request: NextRequest) {
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit - 1;
 
-    // Get users from Supabase Auth
+    // Get users from auth.users using service role
     const { data: users, error } = await supabaseAdmin.auth.admin.listUsers({
       page: page,
-      perPage: limit,
+      perPage: limit
     });
 
     if (error) {
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      count: transformedUsers.length,
+      count: users.total,
       data: transformedUsers,
     });
   } catch (error) {

@@ -30,7 +30,7 @@ const FeatureCard = ({ emoji, title, description, iconBg, iconColor }: { emoji: 
     </div>
     <div className="space-y-1">
       <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{title}</h4>
-      <p className="text-xs md:text-sm text-gray-600 leading-relaxed text-justify">{description}</p>
+      <p className="text-xs md:text-sm text-gray-600 leading-relaxed text-center hyphens-auto">{description}</p>
     </div>
   </div>
 );
@@ -238,8 +238,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <MessageSquare className="h-6 w-6 text-green-600" />
                   <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600 text-justify">
-                  Get personalized assistance about this product.<br/> We are here to help!
+                <p className="text-gray-600 text-center leading-relaxed">
+                  Get personalized assistance about this product. We are here to help!
                 </p>
                 <motion.button
                   onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}
@@ -465,7 +465,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" iconBg="bg-white" iconColor="text-green-600" />
               <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" iconBg="bg-white" iconColor="text-red-600" />
               <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" iconBg="bg-white" iconColor="text-green-600" />
-              <FeatureCard emoji="💧" title="Easy Use" description="Convenient Drop Format – Easy to Mix" iconBg="bg-white" iconColor="text-blue-600" />
+              <FeatureCard emoji="💧" title="Easy Use" description="Convenient Drop Format - Easy to Mix" iconBg="bg-white" iconColor="text-blue-600" />
               <FeatureCard emoji="☕" title="Versatile" description="Perfect for Tea, Coffee, Smoothies & More" iconBg="bg-white" iconColor="text-yellow-600" />
               <FeatureCard emoji="✨" title="Pure & Clean" description="No Artificial Flavors, Colors or Preservatives" iconBg="bg-white" iconColor="text-red-600" />
             </div>
@@ -517,8 +517,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   <MessageSquare className="h-6 w-6 text-green-600" />
                   <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600 text-justify">
-                  Get personalized assistance about this product.<br/> We are here to help!
+                <p className="text-gray-600 text-center leading-relaxed">
+                  Get personalized assistance about this product. We are here to help!
                 </p>
                 <motion.button
                   onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}

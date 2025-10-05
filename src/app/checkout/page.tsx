@@ -391,8 +391,8 @@ export default function CheckoutPage() {
             console.log('Payment update result:', updateResult);
 
             if (updateResult.success) {
-              // Redirect to success page
-              router.push(`/order-success?orderId=${orderId}`);
+              // Redirect to fast payment success page
+              router.push(`/payment-success?orderId=${orderId}`);
             } else {
               throw new Error(updateResult.message || 'Failed to update payment');
             }

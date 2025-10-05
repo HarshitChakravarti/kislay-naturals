@@ -1,5 +1,6 @@
 import { Navigate } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import ClientOnly from '@/components/ClientOnly';
 
 const AdminRoute = ({ children }) => {
   const { user, isLoading, showToast } = useAuth();
@@ -16,4 +17,10 @@ const AdminRoute = ({ children }) => {
   return children;
 };
 
-export default AdminRoute;
+export default function AdminRouteWrapper({ children }) {
+  return (
+    <ClientOnly>
+      <AdminRoute>{children}</AdminRoute>
+    </ClientOnly>
+  );
+}

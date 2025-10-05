@@ -4,8 +4,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import ClientOnly from '@/components/ClientOnly';
 
-export default function AccountPage() {
+function AccountPage() {
   const { user, logout, isLoading } = useAuth();
   const router = useRouter();
 
@@ -76,5 +77,13 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AccountPageWrapper() {
+  return (
+    <ClientOnly>
+      <AccountPage />
+    </ClientOnly>
   );
 }

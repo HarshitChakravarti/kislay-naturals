@@ -93,6 +93,29 @@ export async function POST(request: NextRequest) {
         } else {
           console.log('Order marked as failed:', found.id);
         }
+
+        // Record the payment issue in the recent_payment_issues table
+        const { error: issueError } = await supabase
+          .from('recent_payment_issues')
+          .insert({
+            order_id: found.id,
+            user_name: found.user_name,
+            user_email: found.user_email,
+            user_mobile: found.user_mobile,
+            failure_code: errorCode,
+            failure_message: `${errorReason}: ${errorDescription}`,
+            failure_reason: errorReason,
+            error_type: 'payment_gateway',
+            payment_gateway: 'razorpay',
+            amount: found.total_price,
+            currency: 'INR'
+          });
+
+        if (issueError) {
+          console.error('Error recording payment issue:', issueError);
+        } else {
+          console.log('Payment issue recorded:', found.id);
+        }
       }
     } else if (eventType === 'refund.processed') {
       // optional: mark refunded/cancelled or store refund info

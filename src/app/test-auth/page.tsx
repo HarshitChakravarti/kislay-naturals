@@ -3,8 +3,9 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import ClientOnly from '@/components/ClientOnly';
 
-export default function TestAuthPage() {
+function TestAuthPage() {
   const { user, isLoading, logout, showToast } = useAuth();
 
   const handleTestToast = () => {
@@ -106,5 +107,13 @@ export default function TestAuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TestAuthPageWrapper() {
+  return (
+    <ClientOnly>
+      <TestAuthPage />
+    </ClientOnly>
   );
 } 

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import ClientOnly from '@/components/ClientOnly';
 
 interface LoginFormData {
   emailOrUsername: string;
@@ -19,7 +20,7 @@ interface ValidationErrors {
   password?: string;
 }
 
-export default function LoginForm() {
+function LoginForm() {
   const { login, isLoading, error } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     emailOrUsername: '',
@@ -192,5 +193,13 @@ export default function LoginForm() {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+export default function LoginFormWrapper() {
+  return (
+    <ClientOnly>
+      <LoginForm />
+    </ClientOnly>
   );
 } 

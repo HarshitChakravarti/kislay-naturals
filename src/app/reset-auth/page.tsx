@@ -3,8 +3,9 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import ClientOnly from '@/components/ClientOnly';
 
-export default function ResetAuthPage() {
+function ResetAuthPage() {
   const { logout } = useAuth();
   const router = useRouter();
 
@@ -38,5 +39,13 @@ export default function ResetAuthPage() {
         <p className="text-gray-600">Resetting authentication state...</p>
       </div>
     </div>
+  );
+}
+
+export default function ResetAuthPageWrapper() {
+  return (
+    <ClientOnly>
+      <ResetAuthPage />
+    </ClientOnly>
   );
 } 

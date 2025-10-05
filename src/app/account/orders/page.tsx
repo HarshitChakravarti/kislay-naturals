@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Package, Calendar, MapPin, CreditCard, Truck, CheckCircle, XCircle, Clock } from 'lucide-react';
+import ClientOnly from '@/components/ClientOnly';
 
 interface OrderItem {
   id: string;
@@ -50,7 +51,7 @@ interface Order {
   items?: OrderItem[];
 }
 
-export default function OrdersPage() {
+function OrdersPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -234,9 +235,9 @@ export default function OrdersPage() {
                                 <Image
                                   src={item.image}
                                   alt={item.name}
-                                  width={40}
-                                  height={40}
-                                  className="rounded-md object-cover"
+                                  width={80}
+                                  height={80}
+                                  className="rounded-md object-contain"
                                 />
                               )}
                               <div>
@@ -335,5 +336,13 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function OrdersPageWrapper() {
+  return (
+    <ClientOnly>
+      <OrdersPage />
+    </ClientOnly>
   );
 }
