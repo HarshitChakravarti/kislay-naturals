@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { authenticateUser } from '@/lib/middleware/auth';
 
 export const dynamic = 'force-dynamic';
@@ -63,39 +63,39 @@ export async function GET(request: NextRequest) {
       recentOrdersResult
     ] = await Promise.all([
       // Total products
-      supabase
+      supabaseAdmin
         .from('products')
         .select('id', { count: 'exact' }),
       
       // Total orders
       (shouldFilter
-        ? supabase
+        ? supabaseAdmin
             .from('orders')
             .select('id', { count: 'exact' })
             .gte('created_at', startIso as string)
-        : supabase
+        : supabaseAdmin
             .from('orders')
             .select('id', { count: 'exact' })),
       
       // Total reviews
-      supabase
+      supabaseAdmin
         .from('reviews')
         .select('id', { count: 'exact' }),
       
       // Total revenue
       (shouldFilter
-        ? supabase
+        ? supabaseAdmin
             .from('orders')
             .select('total_price, created_at')
             .eq('order_status', 'paid')
             .gte('created_at', startIso as string)
-        : supabase
+        : supabaseAdmin
             .from('orders')
             .select('total_price')
             .eq('order_status', 'paid')),
       
       // Recent orders (last 7 days)
-      supabase
+      supabaseAdmin
         .from('orders')
         .select('*')
         .gte('created_at', (shouldFilter ? (startIso as string) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()))
@@ -109,11 +109,11 @@ export async function GET(request: NextRequest) {
 
     // Calculate orders by status
     const ordersByStatus = await (shouldFilter
-      ? supabase
+      ? supabaseAdmin
           .from('orders')
           .select('order_status, created_at')
           .gte('created_at', startIso as string)
-      : supabase
+      : supabaseAdmin
           .from('orders')
           .select('order_status'))
       .then(result => {

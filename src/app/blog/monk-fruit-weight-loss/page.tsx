@@ -2,6 +2,7 @@ import { Calendar, Clock, User, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Metadata } from 'next'
+import Image from "next/image"
 
 export const metadata: Metadata = {
   title: 'Monk Fruit Sweetener for Weight Loss – Does It Really Work?',
@@ -45,10 +46,12 @@ export default function MonkFruitWeightLossBlog() {
 
       {/* Featured Image */}
       <div className="mb-8 md:mb-12">
-        <img
+        <Image
           src="/herophoto2.png"
           alt="Monk fruit and natural sweetener granules supporting weight loss"
-          className="w-full h-48 sm:h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg"
+          width={1200}
+          height={600}
+          className="w-full h-auto object-cover rounded-xl md:rounded-2xl shadow-lg"
         />
       </div>
 
@@ -56,7 +59,7 @@ export default function MonkFruitWeightLossBlog() {
       <div className="prose prose-base sm:prose-lg max-w-none">
         <div className="mb-6 md:mb-8">
           <p className="text-base sm:text-lg leading-relaxed text-foreground">
-            Trying to lose weight but struggling with sugar cravings? You're not alone. One of the easiest lifestyle changes is switching from sugar to monk fruit sweetener.
+            Trying to lose weight but struggling with sugar cravings? You&apos;re not alone. One of the easiest lifestyle changes is switching from sugar to monk fruit sweetener.
           </p>
         </div>
 
@@ -93,7 +96,7 @@ export default function MonkFruitWeightLossBlog() {
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">Reduces cravings → prevents overeating</h3>
                 <p className="text-base sm:text-lg leading-relaxed text-foreground">
-                  Monk fruit doesn't trigger the same addictive response as sugar. It provides consistent sweetness without the blood sugar spikes that lead to cravings and overeating. Many people find that switching to monk fruit helps them naturally reduce their overall desire for sweet foods.
+                  Monk fruit doesn&apos;t trigger the same addictive response as sugar. It provides consistent sweetness without the blood sugar spikes that lead to cravings and overeating. Many people find that switching to monk fruit helps them naturally reduce their overall desire for sweet foods.
                 </p>
               </div>
             </div>
@@ -103,7 +106,7 @@ export default function MonkFruitWeightLossBlog() {
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2 text-foreground">Supports stable energy → no sugar highs & lows</h3>
                 <p className="text-base sm:text-lg leading-relaxed text-foreground">
-                  Because monk fruit doesn't affect blood glucose levels, it won't cause the energy crashes associated with sugar consumption. This stable energy helps you maintain consistent physical activity and prevents the fatigue that often leads to poor food choices.
+                  Because monk fruit doesn&apos;t affect blood glucose levels, it won&apos;t cause the energy crashes associated with sugar consumption. This stable energy helps you maintain consistent physical activity and prevents the fatigue that often leads to poor food choices.
                 </p>
               </div>
             </div>
@@ -136,7 +139,7 @@ export default function MonkFruitWeightLossBlog() {
             <div>
               <h3 className="text-lg sm:text-xl font-semibold mb-3 text-foreground">Use in baking and smoothies</h3>
               <p className="text-base sm:text-lg leading-relaxed text-foreground">
-                Monk fruit works excellently in baked goods and smoothies. You can reduce the caloric content of your favorite treats significantly while maintaining the sweetness you love. It's heat-stable, making it perfect for cooking and baking.
+                Monk fruit works excellently in baked goods and smoothies. You can reduce the caloric content of your favorite treats significantly while maintaining the sweetness you love. It&apos;s heat-stable, making it perfect for cooking and baking.
               </p>
             </div>
 
@@ -173,7 +176,7 @@ export default function MonkFruitWeightLossBlog() {
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 md:p-8 rounded-xl md:rounded-2xl text-center">
         <h3 className="text-xl sm:text-2xl font-bold mb-4">Ready to Start Your Weight Loss Journey?</h3>
         <p className="text-base sm:text-lg mb-6 opacity-90">
-          Try Kislay's premium monk fruit sweetener and experience the difference natural sweetness can make.
+          Try Kislay&apos;s premium monk fruit sweetener and experience the difference natural sweetness can make.
         </p>
         <Link href="/products">
           <Button className="bg-white text-green-600 hover:bg-gray-100 font-semibold px-6 py-3 text-base">

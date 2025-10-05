@@ -131,7 +131,7 @@ export default function PrivacyPolicyPage() {
             <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-orange-100 dark:border-orange-800/30">
               <h3 className="font-semibold text-orange-900 dark:text-orange-100 mb-2 text-base md:text-lg">What are Cookies?</h3>
               <p className="text-orange-800 dark:text-orange-200 text-sm md:text-base">
-                A cookie is a small file which asks permission to be placed on your computer's hard drive. Once you agree, the file is added and the cookie helps analyze web traffic or lets you know when you visit a particular site.
+                A cookie is a small file which asks permission to be placed on your computer&apos;s hard drive. Once you agree, the file is added and the cookie helps analyze web traffic or lets you know when you visit a particular site.
               </p>
             </div>
             
@@ -139,7 +139,7 @@ export default function PrivacyPolicyPage() {
               Cookies allow web applications to respond to you as an individual. The web application can tailor its operations to your needs, likes and dislikes by gathering and remembering information about your preferences.
             </p>
             
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-blue-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
               <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 text-base md:text-lg">Traffic Analysis</h3>
               <p className="text-blue-800 dark:text-blue-200 text-sm md:text-base">
                 We use traffic log cookies to identify which pages are being used. This helps us analyze data about webpage traffic and improve our website in order to tailor it to customer needs. We only use this information for statistical analysis purposes and then the data is removed from the system.

@@ -1,6 +1,7 @@
 import { Calendar, Clock, User, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function BlogDetailPage() {
   return (
@@ -33,10 +34,12 @@ export default function BlogDetailPage() {
 
       {/* Featured Image */}
       <div className="mb-8 md:mb-12">
-        <img
+        <Image
           src="/cover.jpg"
           alt="Monk fruit sweetener for diabetics"
-          className="w-full h-48 sm:h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg"
+          width={1200}
+          height={600}
+          className="w-full h-auto object-cover rounded-xl md:rounded-2xl shadow-lg"
         />
       </div>
 

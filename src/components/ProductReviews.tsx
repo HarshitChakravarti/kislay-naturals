@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ThumbsUp, User, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 
@@ -47,28 +47,6 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
   });
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5);
 
-  // Fetch reviews on component mount
-  useEffect(() => {
-    fetchReviews();
-  }, [productId]);
-
-  const fetchReviews = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(`/api/reviews?productId=${productId}&limit=100`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setReviews(data.data);
-        calculateReviewStats(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const calculateReviewStats = (reviewsData: Review[]) => {
     const totalReviews = reviewsData.length;
     const sumRatings = reviewsData.reduce((sum, review) => sum + review.rating, 0);
@@ -85,6 +63,28 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
       ratingDistribution: distribution.reverse() // Show 5-star to 1-star
     });
   };
+
+  const fetchReviews = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`/api/reviews?productId=${productId}&limit=100`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setReviews(data.data);
+        calculateReviewStats(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [productId]);
+
+  // Fetch reviews on component mount
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

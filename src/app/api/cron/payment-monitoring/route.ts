@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic';
@@ -12,11 +12,6 @@ export async function GET(request: NextRequest) {
     if (cronSecret !== `Bearer ${process.env.CRON_SECRET}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // 1. Check failure rate alert
     const { data: failureRateData } = await supabaseAdmin

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { rateLimit } from '@/lib/middleware/rateLimit';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,12 +29,6 @@ export async function POST(request: NextRequest) {
         message: 'Invalid amount' 
       }, { status: 400 });
     }
-
-    // Initialize Supabase client
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
 
     // Check if order exists and get current state
     const { data: existingOrder, error: orderError } = await supabaseAdmin
@@ -118,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     const razorpay = new Razorpay({ key_id, key_secret });
 
-    const options = {
+    const options: Razorpay.OrderCreateRequest = {
       amount: Math.round(amount),
       currency: cur,
       receipt: String(existingOrder?.order_number || orderId || `receipt_order_${Date.now()}`),
@@ -130,9 +124,9 @@ export async function POST(request: NextRequest) {
               : {}),
           }
         : undefined,
-    } as const;
+    };
 
-    const razorpayOrder = await razorpay.orders.create(options as any);
+    const razorpayOrder = await razorpay.orders.create(options);
     
     // Set expiry time (15 minutes from now)
     const expiresAt = new Date();

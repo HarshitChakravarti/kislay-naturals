@@ -1,6 +1,7 @@
 import { Calendar, Clock, User, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function BlogDetailPage() {
   return (
@@ -35,10 +36,12 @@ export default function BlogDetailPage() {
 
       {/* Featured Image Placeholder */}
       <div className="mb-8 md:mb-12">
-        <img
+        <Image
           src="/cover333.jpg"
           alt="Monk fruit sweetener in a bowl with fresh monk fruits"
-          className="w-full h-48 sm:h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg"
+          width={1200}
+          height={600}
+          className="w-full h-auto object-cover rounded-xl md:rounded-2xl shadow-lg"
         />
       </div>
 
@@ -46,7 +49,7 @@ export default function BlogDetailPage() {
       <div className="prose prose-base sm:prose-lg max-w-none">
         <div className="mb-6 md:mb-8">
           <p className="text-base sm:text-lg leading-relaxed text-foreground">
-            If you're looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
+            If you&apos;re looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
             health-conscious individuals in India. Unlike artificial sweeteners or refined sugar, monk fruit extract is
             100% natural, zero-calorie, and diabetic-friendly.
           </p>
@@ -114,7 +117,7 @@ export default function BlogDetailPage() {
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-blue-100 dark:border-blue-800/30">
             <p className="text-base sm:text-lg leading-relaxed">
               Compared to stevia or artificial sweeteners, monk fruit has a{" "}
-              <strong>clean, natural taste with no bitter aftertaste</strong>. It's perfect for tea, coffee, desserts,
+              <strong>clean, natural taste with no bitter aftertaste</strong>. It&apos;s perfect for tea, coffee, desserts,
               and everyday cooking.
             </p>
           </div>

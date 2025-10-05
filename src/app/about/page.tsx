@@ -63,10 +63,10 @@ export default function AboutPage() {
                       At Kislay Naturals, we believe that wellness should be simple, honest, and rooted in nature. Born from a passion for clean living and mindful nutrition, our brand is dedicated to delivering 100% natural, low-carb products that nourish your body and fuel your lifestyle - without compromise.
                     </p>
                     <p className="text-lg leading-relaxed text-justify">
-                      Each of our products is crafted with purpose, powered by nature's best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you're striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
+                      Each of our products is crafted with purpose, powered by nature&apos;s best ingredients, and backed by our promise of zero additives, zero shortcuts, and zero guilt. Whether you&apos;re striving for better energy, balanced nutrition, or overall vitality, Kislay Naturals is your trusted partner on the journey to holistic health.
                     </p>
                     <p className="text-lg leading-relaxed text-justify">
-                      With the guiding philosophy "Naturally Trusted | Deeply Connected | Truly Healthy," we're not just offering products - we're building a community around conscious choices and lasting well-being.
+                      With the guiding philosophy &quot;Naturally Trusted | Deeply Connected | Truly Healthy,&quot; we&apos;re not just offering products - we&apos;re building a community around conscious choices and lasting well-being.
                     </p>
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export default function AboutPage() {
                   Deeply Connected
                 </h3>
                 <p className="text-gray-600 text-center leading-relaxed text-justify">
-                  We're building a community of health-conscious individuals who share our passion for wellness. Together, we create a supportive network for better health.
+                  We&apos;re building a community of health-conscious individuals who share our passion for wellness. Together, we create a supportive network for better health.
                 </p>
               </div>
 
@@ -187,7 +187,7 @@ export default function AboutPage() {
                     Beyond business, Nishchoy is a sportsman at heart. A dedicated cricketer and fitness enthusiast, he lives by the same values he brings to his brand - discipline, resilience, and performance with integrity. His sporting spirit reflects in the way he builds his company: with teamwork, commitment, and a relentless pursuit of excellence.
                   </p>
                   <p className="text-lg leading-relaxed text-justify">
-                    Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy's mission is to empower individuals to live better, more balanced lives through nature-backed solutions.
+                    Under his dynamic leadership, Kislay Naturals is evolving into a trusted name in the natural wellness space, known for its transparency, ethical sourcing, and quality-driven formulations. Nishchoy&apos;s mission is to empower individuals to live better, more balanced lives through nature-backed solutions.
                   </p>
             
                 </div>

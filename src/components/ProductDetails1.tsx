@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -64,7 +64,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
   ];
 
   // Fetch reviews for the product
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const response = await fetch(`/api/reviews?productId=${product.id}&limit=100`);
       const data = await response.json();
@@ -83,13 +83,13 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
     } catch (error) {
       console.error('Error fetching reviews:', error);
     }
-  };
+  }, [product.id]);
 
   useEffect(() => {
     if (product.id) {
       fetchReviews();
     }
-  }, [product.id]);
+  }, [product.id, fetchReviews]);
 
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % productImages.length);
@@ -353,8 +353,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                       disabled={!isEnquireFormValid || isSubmitting}
                       whileHover={{ scale: isEnquireFormValid ? 1.02 : 1 }}
                       whileTap={{ scale: isEnquireFormValid ? 0.98 : 1 }}
-                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
-                        isEnquireFormValid
+                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
                           ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
@@ -402,8 +401,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    className={`h-5 w-5 ${
-                      star <= Math.floor(reviewStats.averageRating || 0)
+                    className={`h-5 w-5 ${star <= Math.floor(reviewStats.averageRating || 0)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-200'
                     }`}
@@ -448,7 +446,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
 
           {/* Description */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-900">What's in the box?</h3>
+            <h3 className="text-xl font-bold text-gray-900">What&apos;s in the box?</h3>
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
               <div className="prose prose-green max-w-none text-gray-600 space-y-4">
                 {product.description?.split('\n\n').map((paragraph, index) => (
@@ -462,7 +460,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
 
           {/* Key Features Grid */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-900">Why it's different?</h3>
+            <h3 className="text-xl font-bold text-gray-900">Why it&apos;s different?</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
               <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" iconBg="bg-white" iconColor="text-green-600" />
               <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" iconBg="bg-white" iconColor="text-red-600" />
@@ -634,8 +632,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                       disabled={!isEnquireFormValid || isSubmitting}
                       whileHover={{ scale: isEnquireFormValid ? 1.02 : 1 }}
                       whileTap={{ scale: isEnquireFormValid ? 0.98 : 1 }}
-                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${
-                        isEnquireFormValid
+                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
                           ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}

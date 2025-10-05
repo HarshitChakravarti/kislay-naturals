@@ -145,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (shouldValidateWithServer) {
       checkAuth();
     }
-  }, []); // Run only once on mount
+  }, [user, checkAuth]);
 
   const login = async (emailOrUsername: string, password: string, callbackUrl = '/') => {
     setIsLoading(true);
@@ -390,7 +390,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     </p>
                     {isWelcomeMessage && (
                       <p className="text-xs text-green-700 mt-1 font-medium">
-                        You're all set! 🎉
+                        You&apos;re all set! 🎉
                       </p>
                     )}
                   </div>

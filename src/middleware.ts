@@ -1,28 +1,49 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { verifyToken } from './lib/jwt';
 
 // Define the routes that require authentication
-const protectedRoutes: string[] = []; // No routes require authentication for checkout
+const protectedRoutes = ['/account', '/admin'];
 const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
-  // Check if this is a protected route
+  const token = request.cookies.get('token')?.value;
+
+  // Check if the route is protected
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-  
+
   if (isProtectedRoute) {
-    // Check for token cookie - let client-side handle actual validation
-    const token = request.cookies.get('token')?.value;
-    
+    // If there's no token, redirect to login
     if (!token) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(loginUrl);
+      return redirectToLogin(request);
+    }
+
+    // Verify the token on the server
+    try {
+      await verifyToken(token);
+      // If token is valid, proceed
+      return NextResponse.next();
+    } catch (error) {
+      // If token is invalid, redirect to login
+      console.error('Middleware token verification failed:', error);
+      return redirectToLogin(request);
     }
   }
 
   return NextResponse.next();
+}
+
+function redirectToLogin(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const loginUrl = new URL('/login', request.url);
+  loginUrl.searchParams.set('callbackUrl', pathname);
+  
+  // Clear the invalid cookie if it exists
+  const response = NextResponse.redirect(loginUrl);
+  response.cookies.delete('token');
+  
+  return response;
 }
 
 export const config = {

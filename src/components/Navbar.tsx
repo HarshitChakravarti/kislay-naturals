@@ -154,7 +154,7 @@ export default function Header() {
         </Link>
       </div>
     );
-  }, [user, closeDropdown, handleLogout]);
+  }, [user, closeDropdown, handleLogout, isLoggingOut]);
 
   // Memoize the user icon to prevent flickering
   const userIcon = useMemo(() => {

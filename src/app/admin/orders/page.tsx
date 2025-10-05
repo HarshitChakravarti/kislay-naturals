@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -46,11 +46,7 @@ export default function AdminOrdersPage() {
   const limit = parseInt(searchParams.get('limit') || '20', 10);
   const status = searchParams.get('status') || '';
 
-  useEffect(() => {
-    fetchOrders();
-  }, [page, limit, status]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -80,7 +76,11 @@ export default function AdminOrdersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, status]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const formatShortOrderId = (id: string) => {
     if (!id) return '#—';
@@ -191,7 +191,7 @@ export default function AdminOrdersPage() {
 
       {/* Filters */}
       <div className="bg-white rounded-lg shadow p-4 lg:p-6">
-        <div className="space-y-4">
+        <div className={`space-y-4`}>
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
             {/* Status Filter */}
             <div className="w-full lg:w-auto">
@@ -316,7 +316,7 @@ export default function AdminOrdersPage() {
         ) : (
           <>
             {/* Desktop Table Layout */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto hidden md:block">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -347,13 +347,37 @@ export default function AdminOrdersPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile Cards Layout */}
+            <div className="md:hidden divide-y divide-gray-200">
+              {orders.map((order) => (
+                <div key={order.id} className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="text-sm font-semibold text-gray-900">{order.order_number || formatShortOrderId(order.id)}</div>
+                      <div className="mt-1 text-sm text-gray-700">{order.user_name || order.user_profiles?.full_name || 'N/A'}</div>
+                      <div className="text-xs text-gray-500 break-words">{order.user_email}</div>
+                    </div>
+                    <div className="shrink-0">{getStatusBadge(order.order_status)}</div>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between text-sm text-gray-700">
+                    <div>{formatDate(order.created_at)}</div>
+                    <div className="font-medium text-gray-900">₹{order.total_price.toFixed(2)}</div>
+                  </div>
+                  <div className="mt-3 flex gap-2">
+                    <Link href={`/admin/orders/${order.id}`} className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">View Details</Link>
+                  </div>
+                </div>
+              ))}
+            </div>
           </>
         )}
 
         {/* Pagination */}
         {orders.length > 0 && (pagination.next || pagination.prev) && (
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div className="bg-white px-4 py-3 border-t border-gray-200">
+            {/* Desktop pagination */}
+            <div className="hidden md:flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-700">
                   Showing page <span className="font-medium">{page}</span> of{' '}
@@ -363,13 +387,23 @@ export default function AdminOrdersPage() {
               <div>
                 <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                   {pagination.prev && (
-                    <button onClick={() => handlePageChange(pagination.prev.page)} className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Previous</button>
+                    <button onClick={() => handlePageChange(pagination.prev.page)} className="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-600 hover:bg-gray-50">Previous</button>
                   )}
                   {pagination.next && (
-                    <button onClick={() => handlePageChange(pagination.next.page)} className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Next</button>
+                    <button onClick={() => handlePageChange(pagination.next.page)} className="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-600 hover:bg-gray-50">Next</button>
                   )}
                 </nav>
               </div>
+            </div>
+            {/* Mobile pagination */}
+            <div className="md:hidden flex items-center justify-between gap-2">
+              {pagination.prev ? (
+                <button onClick={() => handlePageChange(pagination.prev.page)} className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</button>
+              ) : <span />}
+              <span className="text-xs text-gray-600">Page {page} of {Math.ceil(total / limit)}</span>
+              {pagination.next ? (
+                <button onClick={() => handlePageChange(pagination.next.page)} className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Next</button>
+              ) : <span />}
             </div>
           </div>
         )}

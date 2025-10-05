@@ -121,9 +121,9 @@ export default function PaymentTestingPage() {
               <ol className="list-decimal list-inside space-y-1 mt-2">
                 <li>Go to checkout page and create an order</li>
                 <li>Copy the Order ID from the console or database</li>
-                <li>Paste it above and click "Expire Order"</li>
+                <li>Paste it above and click &quot;Expire Order&quot;</li>
                 <li>Go back to checkout and try to pay</li>
-                <li>Should get "Order expired" message and reset</li>
+                <li>Should get &quot;Order expired&quot; message and reset</li>
               </ol>
             </div>
             
@@ -132,9 +132,9 @@ export default function PaymentTestingPage() {
               <ol className="list-decimal list-inside space-y-1 mt-2">
                 <li>Go to checkout page and create an order</li>
                 <li>Copy the Order ID</li>
-                <li>Paste it above and click "Set Max Attempts"</li>
+                <li>Paste it above and click &quot;Set Max Attempts&quot;</li>
                 <li>Go back to checkout and try to pay</li>
-                <li>Should get "Maximum attempts exceeded" error</li>
+                <li>Should get &quot;Maximum attempts exceeded&quot; error</li>
               </ol>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { Calendar, Clock, User, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function BlogDetailPage() {
   return (
@@ -33,10 +34,12 @@ export default function BlogDetailPage() {
 
       {/* Featured Image */}
       <div className="mb-8 md:mb-12">
-        <img
+        <Image
           src="/cover333.jpg"
           alt="Monk fruit sweetener in a bowl with fresh monk fruits"
-          className="w-full h-48 sm:h-64 md:h-96 object-cover rounded-xl md:rounded-2xl shadow-lg"
+          width={1200}
+          height={600}
+          className="w-full h-auto object-cover rounded-xl md:rounded-2xl shadow-lg"
         />
       </div>
 
@@ -44,7 +47,7 @@ export default function BlogDetailPage() {
       <div className="prose prose-base sm:prose-lg max-w-none">
         <div className="mb-6 md:mb-8">
           <p className="text-base sm:text-lg leading-relaxed text-foreground">
-            Sugar is one of the biggest contributors to obesity, diabetes, and heart disease. If you're planning to quit sugar, monk fruit sweetener is your best option. Here's why:
+            Sugar is one of the biggest contributors to obesity, diabetes, and heart disease. If you&apos;re planning to quit sugar, monk fruit sweetener is your best option. Here&apos;s why:
           </p>
         </div>
 
@@ -79,7 +82,7 @@ export default function BlogDetailPage() {
           </h2>
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-purple-100 dark:border-purple-800/30">
             <p className="text-base sm:text-lg leading-relaxed">
-              Safe for people with Type 1 and Type 2 diabetes. Monk fruit sweetener has a <strong>zero glycemic index</strong>, meaning it doesn't raise blood sugar levels, making it the perfect choice for diabetics.
+              Safe for people with Type 1 and Type 2 diabetes. Monk fruit sweetener has a <strong>zero glycemic index</strong>, meaning it doesn&apos;t raise blood sugar levels, making it the perfect choice for diabetics.
             </p>
           </div>
         </section>
@@ -89,7 +92,7 @@ export default function BlogDetailPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">
             4. 100% Natural
           </h2>
-          <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-950/20 dark:to-yellow-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-orange-100 dark:border-orange-800/30">
+          <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-950/20 dark:to-yellow-950/20">
             <p className="text-base sm:text-lg leading-relaxed">
               No chemicals, no artificial additives. Monk fruit sweetener is extracted from the natural fruit, making it a clean, pure alternative to artificial sweeteners like aspartame or sucralose.
             </p>
@@ -103,7 +106,7 @@ export default function BlogDetailPage() {
           </h2>
           <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/20 dark:to-cyan-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-teal-100 dark:border-teal-800/30">
             <p className="text-base sm:text-lg leading-relaxed">
-              Sweet, clean taste with no bitter aftertaste. Unlike stevia which can have a bitter aftertaste, monk fruit sweetener provides a clean, natural sweetness that's closest to sugar.
+              Sweet, clean taste with no bitter aftertaste. Unlike stevia which can have a bitter aftertaste, monk fruit sweetener provides a clean, natural sweetness that&apos;s closest to sugar.
             </p>
           </div>
         </section>
@@ -158,7 +161,7 @@ export default function BlogDetailPage() {
           <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 md:p-8 lg:p-12 rounded-xl md:rounded-2xl text-white text-center">
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Make the Switch?</h3>
             <p className="text-base sm:text-lg mb-6 md:mb-8 opacity-90">
-              👉 Whether you're on a weight-loss journey, diabetic, or simply health-conscious, Kislay Monk Fruit Sweetener is your perfect sugar replacement.
+              👉 Whether you&apos;re on a weight-loss journey, diabetic, or simply health-conscious, Kislay Monk Fruit Sweetener is your perfect sugar replacement.
             </p>
             <Link href="/products">
               <Button

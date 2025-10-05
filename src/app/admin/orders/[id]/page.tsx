@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface OrderItem {
   id: string;
@@ -62,13 +63,7 @@ export default function OrderDetailPage() {
   const [updating, setUpdating] = useState(false);
   const [newStatus, setNewStatus] = useState('');
 
-  useEffect(() => {
-    if (orderId) {
-      fetchOrderDetails();
-    }
-  }, [orderId]);
-
-  const fetchOrderDetails = async () => {
+  const fetchOrderDetails = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -88,7 +83,13 @@ export default function OrderDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [orderId]);
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrderDetails();
+    }
+  }, [orderId, fetchOrderDetails]);
 
   const formatShortOrderId = (id: string) => {
     if (!id) return '#—';
@@ -180,7 +181,7 @@ export default function OrderDetailPage() {
     return (
       <div className="text-center py-12">
         <h3 className="text-lg font-medium text-gray-900">Order not found</h3>
-        <p className="mt-2 text-gray-500">The order you're looking for doesn't exist.</p>
+        <p className="mt-2 text-gray-500">The order you&apos;re looking for doesn&apos;t exist.</p>
         <Link href="/admin/orders" className="mt-4 inline-block text-sm text-green-600 hover:text-green-800">
           ← Back to Orders
         </Link>
@@ -272,7 +273,8 @@ export default function OrderDetailPage() {
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-medium text-gray-900">Order Items</h2>
         </div>
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -296,10 +298,12 @@ export default function OrderDetailPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {item.image && (
-                        <img
+                        <Image
                           className="h-10 w-10 rounded-lg object-cover"
                           src={item.image}
                           alt={item.name}
+                          width={40}
+                          height={40}
                         />
                       )}
                       <div className="ml-4">
@@ -320,6 +324,26 @@ export default function OrderDetailPage() {
               ))}
             </tbody>
           </table>
+        </div>
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {order.order_items?.map((item) => (
+            <div key={item.id} className="p-4">
+              <div className="flex items-center gap-3">
+                {item.image && (
+                  <Image className="h-12 w-12 rounded-lg object-cover" src={item.image} alt={item.name} width={48} height={48} />
+                )}
+                <div className="min-w-0">
+                  <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
+                  <div className="mt-1 text-xs text-gray-500">Qty: {item.quantity}</div>
+                </div>
+                <div className="ml-auto text-right">
+                  <div className="text-sm text-gray-700">₹{item.price.toFixed(2)}</div>
+                  <div className="text-sm font-semibold text-gray-900">₹{(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -353,11 +377,11 @@ export default function OrderDetailPage() {
           <dl className="space-y-3">
             <div>
               <dt className="text-sm font-medium text-gray-500">Payment ID</dt>
-              <dd className="text-sm text-gray-900 font-mono">{order.razorpay_payment_id}</dd>
+              <dd className="text-sm text-gray-900 font-mono break-all">{order.razorpay_payment_id}</dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Order ID</dt>
-              <dd className="text-sm text-gray-900 font-mono">{order.razorpay_order_id}</dd>
+              <dd className="text-sm text-gray-900 font-mono break-all">{order.razorpay_order_id}</dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Paid At</dt>

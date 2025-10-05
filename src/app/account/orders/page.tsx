@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Package, Calendar, MapPin, CreditCard, Truck, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 interface OrderItem {
@@ -182,7 +183,7 @@ export default function OrdersPage() {
           <div className="text-center py-12">
             <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
-            <p className="text-gray-500 mb-6">You haven't placed any orders yet.</p>
+            <p className="text-gray-500 mb-6">You haven&apos;t placed any orders yet.</p>
             <Link
               href="/products"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -230,10 +231,12 @@ export default function OrdersPage() {
                           order.items.map((item, index) => (
                             <div key={index} className="flex items-center space-x-3">
                               {item.image && (
-                                <img
+                                <Image
                                   src={item.image}
                                   alt={item.name}
-                                  className="w-10 h-10 rounded-md object-cover"
+                                  width={40}
+                                  height={40}
+                                  className="rounded-md object-cover"
                                 />
                               )}
                               <div>

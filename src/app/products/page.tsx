@@ -101,7 +101,7 @@ const ProductsPage = async () => {
             More Products Coming Soon! 🚀
           </h2>
           <p className="text-lg md:text-xl text-green-700 mb-8 max-w-2xl mx-auto leading-relaxed">
-            We're constantly working on expanding our range of natural, sugar-free products. 
+            We&apos;re constantly working on expanding our range of natural, sugar-free products. 
             Stay tuned for exciting new additions to our collection!
           </p>
           

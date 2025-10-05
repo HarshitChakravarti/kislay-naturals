@@ -20,7 +20,7 @@ export default function ContactUsPage() {
         </h1>
 
         <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
-          You may contact us using the information below. We're here to help and would love to hear from you.
+          You may contact us using the information below. We&apos;re here to help and would love to hear from you.
         </p>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mt-4 md:mt-6">

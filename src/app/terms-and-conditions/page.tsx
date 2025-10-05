@@ -60,13 +60,13 @@ export default function TermsAndConditionsPage() {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
                 <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2 text-base md:text-lg">Our Company</h3>
                 <p className="text-blue-800 dark:text-blue-200 text-sm md:text-base">
-                  <strong>"We"</strong>, <strong>"us"</strong>, <strong>"our"</strong> refers to <strong>KISLAY NATURALS</strong>, with registered office at D904, Samanvay Residency, Opposite Auda Garden, South Bopal Ahmedabad, GUJARAT 380058.
+                  <strong>&quot;We&quot;</strong>, <strong>&quot;us&quot;</strong>, <strong>&quot;our&quot;</strong> refers to <strong>KISLAY NATURALS</strong>, with registered office at D904, Samanvay Residency, Opposite Auda Garden, South Bopal Ahmedabad, GUJARAT 380058.
                 </p>
               </div>
               <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-purple-100 dark:border-purple-800/30">
                 <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2 text-base md:text-lg">Your Information</h3>
                 <p className="text-purple-800 dark:text-purple-200 text-sm md:text-base">
-                  <strong>"You"</strong>, <strong>"your"</strong>, <strong>"user"</strong>, <strong>"visitor"</strong> means any natural or legal person who is visiting our website and/or has agreed to purchase from us.
+                  <strong>&quot;You&quot;</strong>, <strong>&quot;your&quot;</strong>, <strong>&quot;user&quot;</strong>, <strong>&quot;visitor&quot;</strong> means any natural or legal person who is visiting our website and/or has agreed to purchase from us.
                 </p>
               </div>
             </div>
@@ -172,7 +172,7 @@ export default function TermsAndConditionsPage() {
               <h3 className="text-lg sm:text-xl font-semibold text-foreground">8. Linking to Our Website</h3>
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-yellow-100 dark:border-yellow-800/30">
                 <p className="text-base text-foreground">
-                  You may not create a link to our website from another website or document without KISLAY NATURALS's prior written consent.
+                  You may not create a link to our website from another website or document without KISLAY NATURALS&apos;s prior written consent.
                 </p>
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function TermsAndConditionsPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Questions About These Terms?</h2>
           <div className="space-y-4">
             <p className="text-base sm:text-lg text-foreground">
-              If you have any questions about these Terms and Conditions, please don't hesitate to contact us.
+              If you have any questions about these Terms and Conditions, please don&apos;t hesitate to contact us.
             </p>
             <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-gray-100 dark:border-gray-800/30">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">

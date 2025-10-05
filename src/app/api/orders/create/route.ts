@@ -1,5 +1,5 @@
+import { supabaseAdmin } from '@/lib/supabase';
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
 import { authenticateUser } from '@/lib/middleware/auth';
 import type { OrderDetails } from '@/types';
 
@@ -8,13 +8,13 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('📥 Create order endpoint called');
+    console.log(' Create order endpoint called');
     
     const body: OrderDetails = await request.json();
-    console.log('📦 Request body received:', JSON.stringify(body, null, 2));
+    console.log(' Request body received:', JSON.stringify(body, null, 2));
 
     if (!body || !body.user || !body.product || !body.quantity || !body.totalAmount || !body.shippingAddress) {
-      console.log('❌ Invalid payload - missing required fields');
+      console.log(' Invalid payload - missing required fields');
       return NextResponse.json({ success: false, message: 'Invalid order payload.' }, { status: 400 });
     }
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     try {
       authenticatedUser = await authenticateUser(request);
     } catch (error) {
-      console.log('⚠️ No authenticated user, creating guest order');
+      console.log(' No authenticated user, creating guest order');
     }
 
     const payload = body;
@@ -56,21 +56,21 @@ export async function POST(request: NextRequest) {
       payload, // store full JSON for flexibility
     };
 
-    console.log('💾 Attempting to insert order:', JSON.stringify(insertRow, null, 2));
+    console.log(' Attempting to insert order:', JSON.stringify(insertRow, null, 2));
 
     // Insert into orders table
-    const { data: orderData, error: orderError } = await supabase
+    const { data: orderData, error: orderError } = await supabaseAdmin
       .from('orders')
       .insert([insertRow])
       .select('id, total_price, order_status')
       .single();
 
     if (orderError) {
-      console.error('❌ Supabase order insert error:', orderError);
+      console.error('Supabase order insert error:', JSON.stringify(orderError, null, 2));
       throw orderError;
     }
 
-    console.log('✅ Order created successfully:', orderData);
+    console.log(' Order created successfully:', orderData);
 
     // Insert into order_items table
     const itemTotalPrice = payload.product.price * payload.quantity;
@@ -91,21 +91,21 @@ export async function POST(request: NextRequest) {
       tax_amount: 0, // No tax
     };
 
-    console.log('💾 Attempting to insert order item:', JSON.stringify(orderItem, null, 2));
+    console.log(' Attempting to insert order item:', JSON.stringify(orderItem, null, 2));
 
-    const { data: itemData, error: itemError } = await supabase
+    const { data: itemData, error: itemError } = await supabaseAdmin
       .from('order_items')
       .insert([orderItem])
       .select('id')
       .single();
 
     if (itemError) {
-      console.error('❌ Supabase order item insert error:', itemError);
+      console.error(' Supabase order item insert error:', itemError);
       // Note: We don't throw here to avoid breaking the order creation
       // The order is already created, we just log the item error
-      console.warn('⚠️ Order created but item details not saved:', itemError);
+      console.warn(' Order created but item details not saved:', itemError);
     } else {
-      console.log('✅ Order item created successfully:', itemData);
+      console.log(' Order item created successfully:', itemData);
     }
 
     return NextResponse.json({
@@ -119,8 +119,8 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
 
   } catch (error) {
-    console.error('❌ Failed to create order:', error);
-    console.error('❌ Error details:', {
+    console.error(' Failed to create order:', error);
+    console.error(' Error details:', {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       name: error instanceof Error ? error.name : undefined

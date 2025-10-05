@@ -223,7 +223,7 @@ export default function OrderSuccessPage() {
               <div className="text-center mb-4">
                 <Phone className="w-10 h-10 text-blue-600 mx-auto mb-3" />
                 <h3 className="font-bold text-gray-900">Need Help?</h3>
-                <p className="text-gray-600 text-sm">We're here to assist you</p>
+                <p className="text-gray-600 text-sm">We&apos;re here to assist you</p>
               </div>
               
               <div className="space-y-3">
@@ -262,7 +262,7 @@ export default function OrderSuccessPage() {
               <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
                 Confirmation Status
               </h3>
-              <p className="text-gray-600 text-sm">We've sent you order confirmations via multiple channels</p>
+              <p className="text-gray-600 text-sm">We&apos;ve sent you order confirmations via multiple channels</p>
             </div>
 
             <div className="p-6">
@@ -368,7 +368,7 @@ export default function OrderSuccessPage() {
                   </div>
                   <h4 className="font-semibold text-gray-700 mb-2">Notification Status Unknown</h4>
                   <p className="text-gray-600 text-sm">
-                    Unable to check notification status. Please contact support if you don't receive confirmation.
+                    Unable to check notification status. Please contact support if you don&apos;t receive confirmation.
                   </p>
                 </div>
               )}
@@ -380,9 +380,9 @@ export default function OrderSuccessPage() {
                     <Clock className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">What's Next?</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">What&apos;s Next?</h4>
                     <ul className="text-sm text-gray-700 space-y-1">
-                      <li>• You'll receive detailed order information via email</li>
+                      <li>• You&apos;ll receive detailed order information via email</li>
                       <li>• Tracking updates will be sent as your order progresses</li>
                       <li>• Our team will contact you if any clarification is needed</li>
                       <li>• Expected delivery: 3-5 business days</li>

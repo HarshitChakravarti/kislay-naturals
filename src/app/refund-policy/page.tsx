@@ -44,7 +44,7 @@ export default function RefundPolicyPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Refund Policy Overview</h2>
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-green-100 dark:border-green-800/30">
             <p className="text-base sm:text-lg leading-relaxed text-foreground">
-              At KISLAY NATURALS, we want you to be completely satisfied with your purchase. If you're not satisfied, we're here to help with our customer-friendly refund and cancellation policy.
+              At KISLAY NATURALS, we want you to be completely satisfied with your purchase. If you&apos;re not satisfied, we&apos;re here to help with our customer-friendly refund and cancellation policy.
             </p>
           </div>
         </section>
@@ -161,7 +161,7 @@ export default function RefundPolicyPage() {
               <div className="flex items-start gap-3">
                 <Shield className="w-5 h-5 text-purple-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1 text-base md:text-lg">Manufacturer's Warranty</h3>
+                  <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-1 text-base md:text-lg">Manufacturer&apos;s Warranty</h3>
                   <p className="text-purple-800 dark:text-purple-200 text-sm md:text-base">
                     For products that come with a warranty from manufacturers, please refer warranty-related issues directly to the manufacturer. 
                     We can assist you in contacting the manufacturer if needed.
@@ -190,7 +190,7 @@ export default function RefundPolicyPage() {
               </div>
             </div>
             
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-blue-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <Package className="h-5 w-5 text-blue-400" />
@@ -211,7 +211,7 @@ export default function RefundPolicyPage() {
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Need Help With Returns or Refunds?</h2>
           <div className="space-y-4">
             <p className="text-base sm:text-lg leading-relaxed text-foreground">
-              If you have any questions about our refund and cancellation policy or need assistance with a return, please don't hesitate to contact our customer service team.
+              If you have any questions about our refund and cancellation policy or need assistance with a return, please don&apos;t hesitate to contact our customer service team.
             </p>
             
             <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-gray-100 dark:border-gray-800/30">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { Yeseva_One } from 'next/font/google';
 
@@ -23,11 +23,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [range, setRange] = useState<'today' | '7d' | '15d' | '30d' | '6m' | '1y'>('7d');
 
-  useEffect(() => {
-    fetchDashboardStats();
-  }, [range]);
-
-  const fetchDashboardStats = async () => {
+  const fetchDashboardStats = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/stats?range=${range}`);
@@ -52,7 +48,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [range]);
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, [fetchDashboardStats]);
 
   const formatShortOrderId = (id: string) => {
     if (!id) return '#—';
@@ -178,11 +178,12 @@ export default function AdminDashboard() {
         <div className="px-4 py-3 lg:px-6 lg:py-4 border-b border-gray-200 flex items-center justify-between">
           <div>
             <h2 className="text-base lg:text-lg font-medium text-gray-900">Recent Orders</h2>
-            <p className="text-xs lg:text-sm text-gray-500">Latest 5 orders within selected range</p>
+            <p className="text-xs lg:text-sm text-gray-500">Latest 3 orders within selected range</p>
           </div>
           <a href="/admin/orders" className="text-sm font-medium text-green-600 hover:text-green-700">View All</a>
         </div>
-        <div className="overflow-x-auto">
+        {/* Desktop table */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -233,6 +234,46 @@ export default function AdminDashboard() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile cards */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {(stats?.recentOrders || []).map((order: any) => (
+            <div key={order.id} className="p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="text-sm font-semibold text-gray-900">{order.order_number || formatShortOrderId(order.id)}</div>
+                  <div className="mt-1 text-sm text-gray-700">{order.user_name || '—'}</div>
+                  <div className="text-xs text-gray-500 break-words">{order.user_email || '—'}</div>
+                </div>
+                <div className="shrink-0">
+                  <span className={
+                    `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      (order.order_status || '').toLowerCase() === 'paid'
+                        ? 'bg-blue-100 text-blue-800'
+                        : (order.order_status || '').toLowerCase() === 'processing'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : (order.order_status || '').toLowerCase() === 'delivered'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-800'
+                    }`
+                  }>
+                    {(order.order_status || order.status || '—').charAt(0).toUpperCase() + (order.order_status || order.status || '—').slice(1)}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-3 flex items-center justify-between text-sm text-gray-700">
+                <div>{order.created_at ? new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}</div>
+                <div className="font-medium text-gray-900">₹{(order.total_price ?? order.total_amount ?? 0).toFixed(2)}</div>
+              </div>
+              <div className="mt-3">
+                <a href={`/admin/orders/${order.id}`} className="inline-flex w-full items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">View Details</a>
+              </div>
+            </div>
+          ))}
+          {stats && stats.recentOrders.length === 0 && (
+            <div className="p-6 text-center text-sm text-gray-500">No orders in this range.</div>
+          )}
         </div>
       </div>
 
