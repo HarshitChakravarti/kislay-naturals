@@ -21,3 +21,4 @@ export const GET = withAdminAuth(async (request: AdminRequest) => {
     }, { status: 500 });
   }
 });
+
