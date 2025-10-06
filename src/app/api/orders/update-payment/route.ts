@@ -104,23 +104,22 @@ export async function PUT(request: NextRequest) {
     .then(result => {
       console.log('✅ Notifications triggered successfully:', result);
     })
-    .catch(error => {
+    .catch(async (error) => {
       console.error('❌ Failed to trigger background notifications:', error);
       // Log to database for monitoring
-      supabase
-        .from('orders')
-        .update({
-          email_error: `Notification trigger failed: ${error.message}`,
-          email_error_type: 'notification_trigger_failed',
-          email_should_retry: true
-        })
-        .eq('id', data.id)
-        .then(() => {
-          console.log('📝 Logged notification trigger failure to database');
-        })
-        .catch(dbError => {
-          console.error('❌ Failed to log notification trigger failure:', dbError);
-        });
+      try {
+        await supabase
+          .from('orders')
+          .update({
+            email_error: `Notification trigger failed: ${error.message}`,
+            email_error_type: 'notification_trigger_failed',
+            email_should_retry: true
+          })
+          .eq('id', data.id);
+        console.log('📝 Logged notification trigger failure to database');
+      } catch (dbError) {
+        console.error('❌ Failed to log notification trigger failure:', dbError);
+      }
     });
 
     // Return immediately without waiting for notifications

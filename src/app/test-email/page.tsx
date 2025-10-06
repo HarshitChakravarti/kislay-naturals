@@ -145,7 +145,7 @@ export default function TestEmailPage() {
                 <h3 className="font-semibold text-blue-800 mb-2">How to Test:</h3>
                 <ul className="text-sm text-blue-700 space-y-1">
                   <li>• Enter your email address above</li>
-                  <li>• Click "Send Test Email"</li>
+                  <li>• Click &quot;Send Test Email&quot;</li>
                   <li>• Check your inbox (and spam folder)</li>
                   <li>• You should receive a test order confirmation email</li>
                 </ul>

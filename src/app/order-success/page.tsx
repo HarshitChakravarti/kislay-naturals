@@ -320,9 +320,9 @@ export default function OrderSuccessPage() {
                             <MessageCircle className="w-3 h-3 text-blue-600" />
                           </div>
                           <div>
-                            <p className="text-sm text-blue-800 font-medium">Don't worry!</p>
+                            <p className="text-sm text-blue-800 font-medium">Don&apos;t worry!</p>
                             <p className="text-xs text-blue-700 mt-1">
-                              If you didn't receive the email, we'll contact you soon through WhatsApp or phone to confirm your order details.
+                              If you didn&apos;t receive the email, we&apos;ll contact you soon through WhatsApp or phone to confirm your order details.
                             </p>
                           </div>
                         </div>
@@ -408,7 +408,7 @@ export default function OrderSuccessPage() {
                     
                     <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
                       <p className="text-sm text-green-800">
-                        <span className="font-medium">💬 Don't worry if you don't receive the email!</span> We'll reach out to you via WhatsApp or phone to confirm your order details and keep you updated.
+                        <span className="font-medium">💬 Don&apos;t worry if you don&apos;t receive the email!</span> We&apos;ll reach out to you via WhatsApp or phone to confirm your order details and keep you updated.
                       </p>
                     </div>
                   </div>
