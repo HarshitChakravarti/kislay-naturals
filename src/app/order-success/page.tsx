@@ -312,6 +312,22 @@ export default function OrderSuccessPage() {
                         )}
                       </div>
                     )}
+                    
+                    {!notificationStatus.email.sent && (
+                      <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 mt-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <MessageCircle className="w-3 h-3 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-blue-800 font-medium">Don't worry!</p>
+                            <p className="text-xs text-blue-700 mt-1">
+                              If you didn't receive the email, we'll contact you soon through WhatsApp or phone to confirm your order details.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* WhatsApp Status */}
@@ -389,6 +405,12 @@ export default function OrderSuccessPage() {
                       <li>• Our team will contact you if any clarification is needed</li>
                       <li>• Expected delivery: 3-5 business days</li>
                     </ul>
+                    
+                    <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                      <p className="text-sm text-green-800">
+                        <span className="font-medium">💬 Don't worry if you don't receive the email!</span> We'll reach out to you via WhatsApp or phone to confirm your order details and keep you updated.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
