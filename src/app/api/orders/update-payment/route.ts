@@ -83,14 +83,44 @@ export async function PUT(request: NextRequest) {
     console.log('✅ Order updated successfully:', data);
 
     // Trigger background notification processing (non-blocking)
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/orders/process-notifications`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+    const notificationUrl = `${baseUrl}/api/orders/process-notifications`;
+    
+    console.log('📧 Triggering notifications for order:', data.id, 'URL:', notificationUrl);
+    
+    fetch(notificationUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ orderId: data.id }),
-    }).catch(error => {
-      console.error('Failed to trigger background notifications:', error);
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Notification API returned ${response.status}: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(result => {
+      console.log('✅ Notifications triggered successfully:', result);
+    })
+    .catch(error => {
+      console.error('❌ Failed to trigger background notifications:', error);
+      // Log to database for monitoring
+      supabase
+        .from('orders')
+        .update({
+          email_error: `Notification trigger failed: ${error.message}`,
+          email_error_type: 'notification_trigger_failed',
+          email_should_retry: true
+        })
+        .eq('id', data.id)
+        .then(() => {
+          console.log('📝 Logged notification trigger failure to database');
+        })
+        .catch(dbError => {
+          console.error('❌ Failed to log notification trigger failure:', dbError);
+        });
     });
 
     // Return immediately without waiting for notifications
