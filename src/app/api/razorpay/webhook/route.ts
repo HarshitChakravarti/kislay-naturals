@@ -8,19 +8,38 @@ export async function POST(request: NextRequest) {
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || ''
     if (!webhookSecret) {
+      console.error('❌ RAZORPAY_WEBHOOK_SECRET not configured')
       return NextResponse.json({ success: false, message: 'Webhook not configured' }, { status: 500 })
     }
 
     const rawBody = await request.text()
     const signature = request.headers.get('x-razorpay-signature') || ''
+    
+    console.log('🔍 Webhook received:', {
+      hasSignature: !!signature,
+      bodyLength: rawBody.length,
+      timestamp: new Date().toISOString()
+    })
+    
     const valid = verifyWebhookSignature(rawBody, signature, webhookSecret)
     if (!valid) {
-      return NextResponse.json({ success: false, message: 'Invalid signature' }, { status: 400 })
+      console.error('❌ Invalid webhook signature:', {
+        signature: signature.substring(0, 20) + '...',
+        bodyPreview: rawBody.substring(0, 100) + '...'
+      })
+      // Return 200 to prevent webhook deactivation, but log the issue
+      return NextResponse.json({ success: false, message: 'Invalid signature' }, { status: 200 })
     }
 
     const evt = JSON.parse(rawBody)
     const eventType: string = evt.event
     const payload = evt.payload || {}
+
+    console.log('📨 Processing webhook event:', {
+      eventType,
+      hasPayload: !!payload,
+      payloadKeys: Object.keys(payload || {})
+    })
 
     // Try to extract identifiers
     const rpOrderId: string | undefined = payload?.payment?.entity?.order_id || payload?.order?.entity?.id
@@ -30,6 +49,15 @@ export async function POST(request: NextRequest) {
     const receipt: string | undefined = payload?.order?.entity?.receipt
     const notes = (payload?.order?.entity?.notes || payload?.payment?.entity?.notes) as Record<string, any> | undefined
     const internalOrderId: string | undefined = (notes && (notes['internal_order_id'] as string)) || (receipt && /^[0-9a-fA-F-]{36}$/.test(receipt) ? receipt : undefined)
+
+    console.log('🔍 Extracted identifiers:', {
+      rpOrderId,
+      rpPaymentId,
+      amount,
+      currency,
+      receipt,
+      internalOrderId
+    })
 
     // Resolve our order by linkage
     let query = supabase.from('orders').select('*').limit(1)

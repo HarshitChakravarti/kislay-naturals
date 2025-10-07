@@ -11,9 +11,36 @@ export async function POST(request: NextRequest) {
     const body: OrderDetails = await request.json();
     console.log('📦 Request body received:', JSON.stringify(body, null, 2));
 
-    if (!body || !body.user || !body.product || !body.quantity || !body.totalAmount || !body.shippingAddress || !body.paymentDetails) {
-      console.log('❌ Invalid payload - missing required fields');
-      return NextResponse.json({ success: false, message: 'Invalid order payload.' }, { status: 400 });
+    // Detailed validation with specific field checking
+    const missingFields = [];
+    if (!body) missingFields.push('body');
+    if (!body?.user) missingFields.push('user');
+    if (!body?.user?.name) missingFields.push('user.name');
+    if (!body?.user?.email) missingFields.push('user.email');
+    if (!body?.user?.mobile) missingFields.push('user.mobile');
+    if (!body?.product) missingFields.push('product');
+    if (!body?.product?.id) missingFields.push('product.id');
+    if (!body?.product?.name) missingFields.push('product.name');
+    if (!body?.product?.price) missingFields.push('product.price');
+    if (!body?.quantity) missingFields.push('quantity');
+    if (!body?.totalAmount) missingFields.push('totalAmount');
+    if (!body?.shippingAddress) missingFields.push('shippingAddress');
+    if (!body?.shippingAddress?.street) missingFields.push('shippingAddress.street');
+    if (!body?.shippingAddress?.city) missingFields.push('shippingAddress.city');
+    if (!body?.shippingAddress?.state) missingFields.push('shippingAddress.state');
+    if (!body?.shippingAddress?.zip) missingFields.push('shippingAddress.zip');
+    if (!body?.paymentDetails) missingFields.push('paymentDetails');
+    if (!body?.paymentDetails?.razorpay_payment_id) missingFields.push('paymentDetails.razorpay_payment_id');
+    if (!body?.paymentDetails?.razorpay_order_id) missingFields.push('paymentDetails.razorpay_order_id');
+    if (!body?.paymentDetails?.razorpay_signature) missingFields.push('paymentDetails.razorpay_signature');
+
+    if (missingFields.length > 0) {
+      console.log('❌ Invalid payload - missing required fields:', missingFields);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Invalid order payload - missing required fields.',
+        missingFields 
+      }, { status: 400 });
     }
 
     const payload = body;

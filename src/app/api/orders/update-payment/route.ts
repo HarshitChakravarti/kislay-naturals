@@ -88,30 +88,32 @@ export async function PUT(request: NextRequest) {
     
     console.log('📧 Triggering notifications for order:', data.id, 'URL:', notificationUrl);
     
-    fetch(notificationUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ orderId: data.id }),
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Notification API returned ${response.status}: ${response.statusText}`);
+    // Use a more robust fetch implementation with proper error handling
+    try {
+      const notificationResponse = await fetch(notificationUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderId: data.id }),
+        // Add timeout to prevent hanging requests
+        signal: AbortSignal.timeout(30000) // 30 second timeout
+      });
+
+      if (!notificationResponse.ok) {
+        throw new Error(`Notification API returned ${notificationResponse.status}: ${notificationResponse.statusText}`);
       }
-      return response.json();
-    })
-    .then(result => {
+
+      const result = await notificationResponse.json();
       console.log('✅ Notifications triggered successfully:', result);
-    })
-    .catch(async (error) => {
+    } catch (error) {
       console.error('❌ Failed to trigger background notifications:', error);
       // Log to database for monitoring
       try {
         await supabase
           .from('orders')
           .update({
-            email_error: `Notification trigger failed: ${error.message}`,
+            email_error: `Notification trigger failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
             email_error_type: 'notification_trigger_failed',
             email_should_retry: true
           })
@@ -120,7 +122,7 @@ export async function PUT(request: NextRequest) {
       } catch (dbError) {
         console.error('❌ Failed to log notification trigger failure:', dbError);
       }
-    });
+    }
 
     // Return immediately without waiting for notifications
     return NextResponse.json({
