@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     console.log('📦 Request body received:', JSON.stringify(body, null, 2));
 
     // Detailed validation with specific field checking
-    const missingFields = [];
+    const missingFields: string[] = [];
     if (!body) missingFields.push('body');
     if (!body?.user) missingFields.push('user');
     if (!body?.user?.name) missingFields.push('user.name');
