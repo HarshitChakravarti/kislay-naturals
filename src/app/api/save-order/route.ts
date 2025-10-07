@@ -8,31 +8,51 @@ export async function POST(request: NextRequest) {
   try {
     console.log('📥 Save-order endpoint called');
     
-    const body: OrderDetails = await request.json();
+    const body = await request.json();
     console.log('📦 Request body received:', JSON.stringify(body, null, 2));
+    
+    // Check if this is a Razorpay webhook payload
+    if (body.event && body.payload) {
+      console.log('🔄 Detected Razorpay webhook payload, redirecting to webhook handler');
+      // This is a webhook payload, redirect to the proper webhook handler
+      const webhookResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || 'http://localhost:3000'}/api/razorpay/webhook`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-razorpay-signature': request.headers.get('x-razorpay-signature') || ''
+        },
+        body: JSON.stringify(body)
+      });
+      
+      const webhookResult = await webhookResponse.json();
+      return NextResponse.json(webhookResult, { status: webhookResponse.status });
+    }
+    
+    // Otherwise, treat as OrderDetails payload
+    const orderDetails: OrderDetails = body;
 
     // Detailed validation with specific field checking
     const missingFields: string[] = [];
-    if (!body) missingFields.push('body');
-    if (!body?.user) missingFields.push('user');
-    if (!body?.user?.name) missingFields.push('user.name');
-    if (!body?.user?.email) missingFields.push('user.email');
-    if (!body?.user?.mobile) missingFields.push('user.mobile');
-    if (!body?.product) missingFields.push('product');
-    if (!body?.product?.id) missingFields.push('product.id');
-    if (!body?.product?.name) missingFields.push('product.name');
-    if (!body?.product?.price) missingFields.push('product.price');
-    if (!body?.quantity) missingFields.push('quantity');
-    if (!body?.totalAmount) missingFields.push('totalAmount');
-    if (!body?.shippingAddress) missingFields.push('shippingAddress');
-    if (!body?.shippingAddress?.street) missingFields.push('shippingAddress.street');
-    if (!body?.shippingAddress?.city) missingFields.push('shippingAddress.city');
-    if (!body?.shippingAddress?.state) missingFields.push('shippingAddress.state');
-    if (!body?.shippingAddress?.zip) missingFields.push('shippingAddress.zip');
-    if (!body?.paymentDetails) missingFields.push('paymentDetails');
-    if (!body?.paymentDetails?.razorpay_payment_id) missingFields.push('paymentDetails.razorpay_payment_id');
-    if (!body?.paymentDetails?.razorpay_order_id) missingFields.push('paymentDetails.razorpay_order_id');
-    if (!body?.paymentDetails?.razorpay_signature) missingFields.push('paymentDetails.razorpay_signature');
+    if (!orderDetails) missingFields.push('body');
+    if (!orderDetails?.user) missingFields.push('user');
+    if (!orderDetails?.user?.name) missingFields.push('user.name');
+    if (!orderDetails?.user?.email) missingFields.push('user.email');
+    if (!orderDetails?.user?.mobile) missingFields.push('user.mobile');
+    if (!orderDetails?.product) missingFields.push('product');
+    if (!orderDetails?.product?.id) missingFields.push('product.id');
+    if (!orderDetails?.product?.name) missingFields.push('product.name');
+    if (!orderDetails?.product?.price) missingFields.push('product.price');
+    if (!orderDetails?.quantity) missingFields.push('quantity');
+    if (!orderDetails?.totalAmount) missingFields.push('totalAmount');
+    if (!orderDetails?.shippingAddress) missingFields.push('shippingAddress');
+    if (!orderDetails?.shippingAddress?.street) missingFields.push('shippingAddress.street');
+    if (!orderDetails?.shippingAddress?.city) missingFields.push('shippingAddress.city');
+    if (!orderDetails?.shippingAddress?.state) missingFields.push('shippingAddress.state');
+    if (!orderDetails?.shippingAddress?.zip) missingFields.push('shippingAddress.zip');
+    if (!orderDetails?.paymentDetails) missingFields.push('paymentDetails');
+    if (!orderDetails?.paymentDetails?.razorpay_payment_id) missingFields.push('paymentDetails.razorpay_payment_id');
+    if (!orderDetails?.paymentDetails?.razorpay_order_id) missingFields.push('paymentDetails.razorpay_order_id');
+    if (!orderDetails?.paymentDetails?.razorpay_signature) missingFields.push('paymentDetails.razorpay_signature');
 
     if (missingFields.length > 0) {
       console.log('❌ Invalid payload - missing required fields:', missingFields);
@@ -43,17 +63,15 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    const payload = body;
-
     // Ensure paymentDetails exists after validation
-    if (!payload.paymentDetails) {
+    if (!orderDetails.paymentDetails) {
       console.log('❌ Payment details missing after validation');
       return NextResponse.json({ success: false, message: 'Payment details are required.' }, { status: 400 });
     }
 
     // 1) If an order already exists with this Razorpay order/payment id, update it or return it
-    const razorpayOrderId = payload.paymentDetails.razorpay_order_id;
-    const razorpayPaymentId = payload.paymentDetails.razorpay_payment_id;
+    const razorpayOrderId = orderDetails.paymentDetails.razorpay_order_id;
+    const razorpayPaymentId = orderDetails.paymentDetails.razorpay_payment_id;
 
     // Try to find by Razorpay IDs first
     const { data: existingByRazorpay } = await supabaseAdmin
@@ -75,12 +93,12 @@ export async function POST(request: NextRequest) {
         .update({
           razorpay_payment_id: razorpayPaymentId,
           razorpay_order_id: razorpayOrderId,
-          razorpay_signature: payload.paymentDetails.razorpay_signature,
+          razorpay_signature: orderDetails.paymentDetails.razorpay_signature,
           status: 'paid',
           order_status: 'paid',
           paid_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          payload
+          payload: orderDetails
         })
         .eq('id', existingByRazorpay.id)
         .select('*')
@@ -102,9 +120,9 @@ export async function POST(request: NextRequest) {
     const { data: existingCreated, error: findCreatedErr } = await supabaseAdmin
       .from('orders')
       .select('*')
-      .eq('user_email', payload.user.email)
-      .eq('product_id', payload.product.id)
-      .eq('quantity', payload.quantity)
+      .eq('user_email', orderDetails.user.email)
+      .eq('product_id', orderDetails.product.id)
+      .eq('quantity', orderDetails.quantity)
       .or('order_status.eq.created,status.eq.created')
       .gte('created_at', thirtyMinutesAgoIso)
       .order('created_at', { ascending: false })
@@ -121,19 +139,19 @@ export async function POST(request: NextRequest) {
         .update({
           razorpay_payment_id: razorpayPaymentId,
           razorpay_order_id: razorpayOrderId,
-          razorpay_signature: payload.paymentDetails.razorpay_signature,
+          razorpay_signature: orderDetails.paymentDetails.razorpay_signature,
           status: 'paid',
           order_status: 'paid',
           paid_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          total_amount: payload.totalAmount,
-          unit_price: payload.product.price,
-          product_name: payload.product.name,
-          shipping_street: payload.shippingAddress.street,
-          shipping_city: payload.shippingAddress.city,
-          shipping_state: payload.shippingAddress.state,
-          shipping_zip: payload.shippingAddress.zip,
-          payload
+          total_amount: orderDetails.totalAmount,
+          unit_price: orderDetails.product.price,
+          product_name: orderDetails.product.name,
+          shipping_street: orderDetails.shippingAddress.street,
+          shipping_city: orderDetails.shippingAddress.city,
+          shipping_state: orderDetails.shippingAddress.state,
+          shipping_zip: orderDetails.shippingAddress.zip,
+          payload: orderDetails
         })
         .eq('id', existingCreated.id)
         .select('*')
@@ -150,25 +168,25 @@ export async function POST(request: NextRequest) {
 
     // 3) No matching order found — create a fresh paid order (idempotent by unique Razorpay indexes)
     const insertRow = {
-      user_name: payload.user.name,
-      user_email: payload.user.email,
-      user_mobile: payload.user.mobile,
-      product_id: payload.product.id,
-      product_name: payload.product.name,
-      unit_price: payload.product.price,
-      quantity: payload.quantity,
-      total_amount: payload.totalAmount,
-      shipping_street: payload.shippingAddress.street,
-      shipping_city: payload.shippingAddress.city,
-      shipping_state: payload.shippingAddress.state,
-      shipping_zip: payload.shippingAddress.zip,
+      user_name: orderDetails.user.name,
+      user_email: orderDetails.user.email,
+      user_mobile: orderDetails.user.mobile,
+      product_id: orderDetails.product.id,
+      product_name: orderDetails.product.name,
+      unit_price: orderDetails.product.price,
+      quantity: orderDetails.quantity,
+      total_amount: orderDetails.totalAmount,
+      shipping_street: orderDetails.shippingAddress.street,
+      shipping_city: orderDetails.shippingAddress.city,
+      shipping_state: orderDetails.shippingAddress.state,
+      shipping_zip: orderDetails.shippingAddress.zip,
       razorpay_payment_id: razorpayPaymentId,
       razorpay_order_id: razorpayOrderId,
-      razorpay_signature: payload.paymentDetails.razorpay_signature,
+      razorpay_signature: orderDetails.paymentDetails.razorpay_signature,
       status: 'paid' as const,
       order_status: 'paid' as const,
       paid_at: new Date().toISOString(),
-      payload,
+      payload: orderDetails,
     } as const;
 
     console.log('💾 Attempting to insert paid order (no existing match found):', JSON.stringify(insertRow, null, 2));
