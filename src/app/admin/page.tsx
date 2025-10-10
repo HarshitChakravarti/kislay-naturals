@@ -34,8 +34,8 @@ export default function AdminDashboard() {
         const byStatus = s?.orders?.byStatus || {};
         setStats({
           totalOrders: s?.orders?.total || 0,
-          pendingOrders: (byStatus.processing || 0) + (byStatus.created || 0),
-          completedOrders: (byStatus.paid || 0) + (byStatus.delivered || 0),
+          pendingOrders: (byStatus.created || 0),
+          completedOrders: (byStatus.paid || 0) + (byStatus.delivered || 0) + (byStatus.processing || 0) + (byStatus.shipped || 0),
           totalRevenue: s?.revenue?.total || 0,
           recentOrders: s?.recentOrders || []
         });
@@ -78,96 +78,115 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-4 lg:space-y-6">
-      <div>
-        <div className="mb-3">
-          <h2 className={`text-xl lg:text-2xl font-medium text-green-600 ${yeseva_One.className}`}>Hello, Nishchoy Gupta 👋</h2>
+      {/* Compact Header Section */}
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 lg:p-6 border border-green-100">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex-1">
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-md">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className={`text-xl lg:text-2xl font-bold text-green-700 ${yeseva_One.className}`}>
+                  Welcome back, Nishchoy! 👋
+                </h1>
+                <p className="text-sm text-green-600 font-medium">Ready to manage your store</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Compact Time Range Selector */}
+          <div className="lg:ml-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-2">
+              <label className="block text-xs font-semibold text-gray-700 mb-1 uppercase tracking-wide">Time Range</label>
+              <div className="relative">
+                <select
+                  value={range}
+                  onChange={(e) => setRange(e.target.value as any)}
+                  className="w-full bg-white border border-gray-300 rounded-md text-sm font-medium px-3 py-1 pr-8 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 appearance-none cursor-pointer"
+                >
+                  <option value="today">Today</option>
+                  <option value="7d">Last 7 days</option>
+                  <option value="15d">Last 15 days</option>
+                  <option value="30d">Last 30 days</option>
+                  <option value="6m">Last 6 months</option>
+                  <option value="1y">Last year</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="mt-1 lg:mt-2 text-sm lg:text-base text-gray-600">Manage your e-commerce store</p>
       </div>
 
-      {/* Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <label className="text-sm text-gray-600">Time range</label>
-          <select
-            value={range}
-            onChange={(e) => setRange(e.target.value as any)}
-            className="border border-gray-300 rounded-md text-sm px-2 py-1 focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            <option value="today">Today</option>
-            <option value="7d">Last 7 days</option>
-            <option value="15d">Last 15 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="6m">Last 6 months</option>
-            <option value="1y">Last year</option>
-          </select>
-        </div>
-        <div></div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
-        <div className="bg-white rounded-lg shadow p-4 lg:p-6">
+      {/* Compact Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+        <div className="bg-white rounded-lg shadow border border-gray-100 p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
             </div>
-            <div className="ml-3 lg:ml-4">
-              <p className="text-xs lg:text-sm font-medium text-gray-500">Total Orders</p>
-              <p className="text-lg lg:text-2xl font-semibold text-gray-900">{stats?.totalOrders || 0}</p>
+            <div className="ml-3">
+              <p className="text-xs font-medium text-gray-600">Total Orders</p>
+              <p className="text-lg font-bold text-gray-900">{stats?.totalOrders || 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow border border-gray-100 p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-yellow-500 rounded-lg flex items-center justify-center">
-                <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center shadow-sm">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
-            <div className="ml-3 lg:ml-4">
-              <p className="text-xs lg:text-sm font-medium text-gray-500">Pending Orders</p>
-              <p className="text-lg lg:text-2xl font-semibold text-gray-900">{stats?.pendingOrders || 0}</p>
+            <div className="ml-3">
+              <p className="text-xs font-medium text-gray-600">Pending Orders</p>
+              <p className="text-lg font-bold text-gray-900">{stats?.pendingOrders || 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow border border-gray-100 p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center shadow-sm">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
             </div>
-            <div className="ml-3 lg:ml-4">
-              <p className="text-xs lg:text-sm font-medium text-gray-500">Completed Orders</p>
-              <p className="text-lg lg:text-2xl font-semibold text-gray-900">{stats?.completedOrders || 0}</p>
+            <div className="ml-3">
+              <p className="text-xs font-medium text-gray-600">Completed Orders</p>
+              <p className="text-lg font-bold text-gray-900">{stats?.completedOrders || 0}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-4 lg:p-6">
+        <div className="bg-white rounded-lg shadow border border-gray-100 p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="w-6 h-6 lg:w-8 lg:h-8 bg-purple-500 rounded-lg flex items-center justify-center">
-                <svg className="w-3 h-3 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                 </svg>
               </div>
             </div>
-            <div className="ml-3 lg:ml-4">
-              <p className="text-xs lg:text-sm font-medium text-gray-500">Total Revenue</p>
-              <p className="text-lg lg:text-2xl font-semibold text-gray-900">₹{stats?.totalRevenue || 0}</p>
+            <div className="ml-3">
+              <p className="text-xs font-medium text-gray-600">Total Revenue</p>
+              <p className="text-lg font-bold text-gray-900">₹{stats?.totalRevenue || 0}</p>
             </div>
           </div>
         </div>
@@ -177,8 +196,7 @@ export default function AdminDashboard() {
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="px-4 py-3 lg:px-6 lg:py-4 border-b border-gray-200 flex items-center justify-between">
           <div>
-            <h2 className="text-base lg:text-lg font-medium text-gray-900">Recent Orders</h2>
-            <p className="text-xs lg:text-sm text-gray-500">Latest 3 orders within selected range</p>
+            <h2 className="text-base lg:text-lg font-medium text-gray-900">Orders</h2>
           </div>
           <a href="/admin/orders" className="text-sm font-medium text-green-600 hover:text-green-700">View All</a>
         </div>
@@ -206,17 +224,23 @@ export default function AdminDashboard() {
                   <td className="px-6 py-4 text-sm text-gray-700">
                     {order.created_at ? new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">₹{(order.total_price ?? order.total_amount ?? 0).toFixed(2)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">₹{(order.total_amount ?? 0).toFixed(2)}</td>
                   <td className="px-6 py-4 text-sm">
                     <span className={
                       `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        (order.order_status || '').toLowerCase() === 'paid'
+                        (order.order_status || '').toLowerCase() === 'created'
+                          ? 'bg-gray-100 text-gray-700'
+                          : (order.order_status || '').toLowerCase() === 'paid'
                           ? 'bg-blue-100 text-blue-800'
                           : (order.order_status || '').toLowerCase() === 'processing'
                           ? 'bg-yellow-100 text-yellow-800'
+                          : (order.order_status || '').toLowerCase() === 'shipped'
+                          ? 'bg-purple-100 text-purple-800'
                           : (order.order_status || '').toLowerCase() === 'delivered'
                           ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
+                          : (order.order_status || '').toLowerCase() === 'cancelled'
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-gray-100 text-gray-700'
                       }`
                     }>
                       {(order.order_status || order.status || '—').charAt(0).toUpperCase() + (order.order_status || order.status || '—').slice(1)}
@@ -249,13 +273,19 @@ export default function AdminDashboard() {
                 <div className="shrink-0">
                   <span className={
                     `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      (order.order_status || '').toLowerCase() === 'paid'
+                      (order.order_status || '').toLowerCase() === 'created'
+                        ? 'bg-gray-100 text-gray-700'
+                        : (order.order_status || '').toLowerCase() === 'paid'
                         ? 'bg-blue-100 text-blue-800'
                         : (order.order_status || '').toLowerCase() === 'processing'
                         ? 'bg-yellow-100 text-yellow-800'
+                        : (order.order_status || '').toLowerCase() === 'shipped'
+                        ? 'bg-purple-100 text-purple-800'
                         : (order.order_status || '').toLowerCase() === 'delivered'
                         ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        : (order.order_status || '').toLowerCase() === 'cancelled'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-gray-100 text-gray-700'
                     }`
                   }>
                     {(order.order_status || order.status || '—').charAt(0).toUpperCase() + (order.order_status || order.status || '—').slice(1)}
@@ -264,7 +294,7 @@ export default function AdminDashboard() {
               </div>
               <div className="mt-3 flex items-center justify-between text-sm text-gray-700">
                 <div>{order.created_at ? new Date(order.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—'}</div>
-                <div className="font-medium text-gray-900">₹{(order.total_price ?? order.total_amount ?? 0).toFixed(2)}</div>
+                <div className="font-medium text-gray-900">₹{(order.total_amount ?? 0).toFixed(2)}</div>
               </div>
               <div className="mt-3">
                 <a href={`/admin/orders/${order.id}`} className="inline-flex w-full items-center justify-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">View Details</a>

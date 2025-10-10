@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     // First, get order details to include user information
     const { data: orderData, error: orderError } = await supabaseAdmin
       .from('orders')
-      .select('user_name, user_email, user_mobile, total_price')
+      .select('user_name, user_email, user_mobile, total_amount')
       .eq('id', orderId)
       .single();
 
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         failure_reason: failureReason || 'client_side_failure',
         error_type: 'client_side',
         payment_gateway: 'razorpay',
-        amount: orderData.total_price,
+        amount: orderData.total_amount,
         currency: 'INR'
       });
 

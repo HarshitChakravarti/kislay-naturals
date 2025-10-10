@@ -13,7 +13,7 @@ export async function GET(
     // Get only the order number and basic info (public endpoint)
     const { data: order, error } = await supabase
       .from('orders')
-      .select('id, order_number, order_status, total_price')
+      .select('id, order_number, order_status, total_amount')
       .eq('id', id)
       .single();
 
@@ -27,7 +27,7 @@ export async function GET(
         id: order.id,
         order_number: order.order_number,
         order_status: order.order_status,
-        total_price: order.total_price
+        total_amount: order.total_amount
       } 
     }, { status: 200 });
   } catch (error) {

@@ -7,6 +7,9 @@ import ReduxProvider from "@/store/ReduxProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { AuthProvider } from '@/contexts/AuthContext';
+import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
+import AuthErrorBoundary from '@/components/AuthErrorBoundary';
+import SessionManager from '@/components/SessionManager';
 
 // Load fonts
 const dancingScript = Dancing_Script({
@@ -72,12 +75,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
         <AuthProvider>
-          <ReduxProvider>
-            <Navbar />
-            {children}
-                        <Footer />
-            <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-          </ReduxProvider>
+          <AuthErrorBoundary>
+            <ReduxProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              <AdminAccessDeniedWrapper />
+              <SessionManager />
+              <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+            </ReduxProvider>
+          </AuthErrorBoundary>
         </AuthProvider>
       </body>
     </html>

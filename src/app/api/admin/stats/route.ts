@@ -86,26 +86,26 @@ export async function GET(request: NextRequest) {
       (shouldFilter
         ? supabaseAdmin
             .from('orders')
-            .select('total_price, created_at')
-            .eq('order_status', 'paid')
+            .select('total_amount, created_at')
+            .in('order_status', ['paid', 'delivered', 'processing', 'shipped'])
             .gte('created_at', startIso as string)
         : supabaseAdmin
             .from('orders')
-            .select('total_price')
-            .eq('order_status', 'paid')),
+            .select('total_amount')
+            .in('order_status', ['paid', 'delivered', 'processing', 'shipped'])),
       
-      // Recent orders (last 7 days)
+      // Recent orders (filtered by time range)
       supabaseAdmin
         .from('orders')
         .select('*')
-        .gte('created_at', (shouldFilter ? (startIso as string) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()))
+        .gte('created_at', shouldFilter ? (startIso as string) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: false })
-        .limit(3)
+        .limit(10)
     ]);
 
     // Calculate total revenue
     const totalRevenue = totalRevenueResult.data?.reduce((sum: number, order: any) => 
-      sum + (order.total_price || 0), 0) || 0;
+      sum + (order.total_amount || 0), 0) || 0;
 
     // Calculate orders by status
     const ordersByStatus = await (shouldFilter

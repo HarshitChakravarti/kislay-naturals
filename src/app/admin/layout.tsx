@@ -6,13 +6,14 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { Menu, X } from 'lucide-react';
 import ClientOnly from '@/components/ClientOnly';
+import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
 function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, checkAuth, validateAdminAccess, isAdmin, getUserRole, validateServerAuth } = useAuth();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -21,20 +22,42 @@ function AdminLayout({ children }: AdminLayoutProps) {
     if (!isLoading) {
       if (!user) {
         // User not authenticated, redirect to login
+        console.log('Admin layout: User not authenticated, redirecting to login');
         router.push('/login?redirect=/admin');
         return;
       }
       
-      if (user.role !== 'admin') {
-        // User not admin, redirect to home
-        router.push('/');
+      // Enhanced admin role validation
+      const adminValidation = validateAdminAccess();
+      if (!adminValidation.isValid) {
+        console.log(`Admin layout: ${adminValidation.error}`);
+        // Redirect non-admin users to home with error message
+        router.push('/?error=admin_access_denied');
         return;
       }
       
       // User is admin, allow access
+      console.log('Admin layout: Admin access granted');
       setIsChecking(false);
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, validateAdminAccess]);
+
+  // Add periodic server-side validation for admin users
+  useEffect(() => {
+    if (user && isAdmin()) {
+      // Force server validation every 2 minutes for admin users
+      const interval = setInterval(async () => {
+        console.log('Admin layout: Periodic server validation');
+        const result = await validateServerAuth();
+        if (!result.success) {
+          console.log('Admin layout: Server validation failed, redirecting to login');
+          router.push('/login?redirect=/admin');
+        }
+      }, 2 * 60 * 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [user, isAdmin, validateServerAuth, router]);
 
   // Show loading while checking authentication
   if (isLoading || isChecking) {
@@ -50,7 +73,8 @@ function AdminLayout({ children }: AdminLayoutProps) {
 
   // If we reach here, user is authenticated and is admin
   return (
-    <div className="min-h-screen bg-gray-50">
+    <AuthErrorBoundary>
+      <div className="min-h-screen bg-gray-50">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -176,6 +200,7 @@ function AdminLayout({ children }: AdminLayoutProps) {
         </main>
       </div>
     </div>
+    </AuthErrorBoundary>
   );
 }
 

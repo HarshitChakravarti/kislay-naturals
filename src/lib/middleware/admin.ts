@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin, getUserBypassRLS } from '../supabase'
+import { validateToken, extractTokenFromRequest, isAdminUser, createAuthErrorResponse } from '../auth/tokenValidation'
 
 export interface AdminRequest extends NextRequest {
   user?: { id: string; email: string | null | undefined; role?: string; [key: string]: unknown }
@@ -7,24 +7,31 @@ export interface AdminRequest extends NextRequest {
 
 export async function authenticateAdmin(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token || typeof token !== 'string' || token.trim() === '') return null
+    const token = extractTokenFromRequest(request);
+    if (!token) return null;
 
-    const user = await getUserBypassRLS(token);
-    if (!user) return null;
-    const role = (user.user_metadata as any)?.role
+    // Use standardized token validation
+    const validationResult = await validateToken(token);
+    
+    if (!validationResult.isValid) {
+      console.log('Admin authentication failed:', validationResult.error);
+      return null;
+    }
 
-    // Check if user has admin role
-    if (role !== 'admin') return null
+    // Check if user exists and has admin role using standardized function
+    if (!validationResult.user || !isAdminUser(validationResult.user)) {
+      console.log('User does not have admin role');
+      return null;
+    }
 
     return { 
-      id: user.id, 
-      email: user.email, 
-      role: role 
-    }
+      id: validationResult.user.id, 
+      email: validationResult.user.email, 
+      role: validationResult.user.role 
+    };
   } catch (error) {
-    console.error('Admin authentication error:', error)
-    return null
+    console.error('Admin authentication error:', error);
+    return null;
   }
 }
 
@@ -32,10 +39,11 @@ export function withAdminAuth(handler: (request: AdminRequest) => Promise<NextRe
   return async (request: NextRequest): Promise<NextResponse> => {
     const user = await authenticateAdmin(request)
     if (!user) {
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Admin authentication required' 
-      }, { status: 401 })
+      const errorResponse = createAuthErrorResponse('Admin authentication required');
+      return NextResponse.json(errorResponse, { 
+        status: 401,
+        headers: errorResponse.headers
+      });
     }
     
     const adminRequest = request as AdminRequest
@@ -48,10 +56,11 @@ export function withAdminAuthDynamic(handler: (request: AdminRequest, context: a
   return async (request: NextRequest, context: any): Promise<NextResponse> => {
     const user = await authenticateAdmin(request)
     if (!user) {
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Admin authentication required' 
-      }, { status: 401 })
+      const errorResponse = createAuthErrorResponse('Admin authentication required');
+      return NextResponse.json(errorResponse, { 
+        status: 401,
+        headers: errorResponse.headers
+      });
     }
     
     const adminRequest = request as AdminRequest

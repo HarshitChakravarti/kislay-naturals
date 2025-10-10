@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
     // Get internal order details
     const { data: internalOrder } = await supabase
       .from('orders')
-      .select('id, total_price, order_status, status')
+      .select('id, total_amount, order_status, status')
       .eq('id', orderId)
       .single();
 
@@ -46,7 +46,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 });
     }
 
-    const expectedAmountPaise = Math.round((internalOrder.total_price as number) * 100);
+    const expectedAmountPaise = Math.round((internalOrder.total_amount as number) * 100);
     if (rpOrder.currency !== 'INR' || rpOrder.amount !== expectedAmountPaise) {
       console.warn('❌ Amount/currency mismatch', { rpAmount: rpOrder.amount, rpCurrency: rpOrder.currency, expectedAmountPaise });
       return NextResponse.json({ success: false, message: 'Amount or currency mismatch' }, { status: 400 });
@@ -72,7 +72,7 @@ export async function PUT(request: NextRequest) {
       .from('orders')
       .update(updateData)
       .eq('id', orderId)
-      .select('id, order_number, order_status, total_price, user_name, user_email, user_mobile, product_name, unit_price, quantity, shipping_street, shipping_city, shipping_state, shipping_zip, created_at')
+      .select('id, order_number, order_status, total_amount, user_name, user_email, user_mobile, product_name, unit_price, quantity, shipping_street, shipping_city, shipping_state, shipping_zip, created_at')
       .single();
 
     if (error) {
@@ -132,7 +132,7 @@ export async function PUT(request: NextRequest) {
         id: data.id,
         order_number: data.order_number,
         status: data.order_status,
-        total_price: data.total_price
+        total_amount: data.total_amount
       }
     }, { status: 200 });
 

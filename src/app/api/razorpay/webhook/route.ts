@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
             failure_reason: errorReason,
             error_type: 'payment_gateway',
             payment_gateway: 'razorpay',
-            amount: found.total_price,
+            amount: found.total_amount,
             currency: 'INR'
           });
 

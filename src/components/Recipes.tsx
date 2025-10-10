@@ -18,11 +18,11 @@ const recipes = [
     prepTime: "5 mins",
     servings: 2,
     image: "/recipe1.jpg",
-    description: "Refreshing lemonade sweetened naturally with KislayNaturals",
+    description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener",
     ingredients: [
       "2 cups water",
       "4 tbsp lemon juice",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "Ice cubes",
       "Mint leaves for garnish"
     ]
@@ -37,7 +37,7 @@ const recipes = [
     ingredients: [
       "1/2 cup rolled oats",
       "1 cup almond milk",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "1/2 tsp cinnamon",
       "Handful of berries"
     ]
@@ -53,7 +53,7 @@ const recipes = [
       "1 banana",
       "1/2 cup Greek yogurt",
       "1/2 cup mixed berries",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "1/2 cup almond milk"
     ]
   },
@@ -67,7 +67,7 @@ const recipes = [
     ingredients: [
       "1/4 cup chia seeds",
       "1 cup almond milk",
-      "3 drops KislayNaturals sweetener",
+      "3 drops Kislay Monk Fruit Sweetener",
       "1/2 tsp vanilla extract",
       "Fresh fruits for topping"
     ]
@@ -82,7 +82,7 @@ const recipes = [
     ingredients: [
       "4 cups water",
       "4 tea bags (black or green)",
-      "3 drops KislayNaturals sweetener",
+      "3 drops Kislay Monk Fruit Sweetener",
       "Lemon slices and mint for garnish",
       "Ice cubes"
     ]
@@ -99,7 +99,7 @@ const recipes = [
       "2 eggs",
       "1/2 cup oats",
       "1 scoop protein powder",
-      "2 drops KislayNaturals sweetener"
+      "2 drops Kislay Monk Fruit Sweetener"
     ]
   }
 ];

@@ -16,7 +16,7 @@ const recipes = [
     servings: 2,
     difficulty: "Easy",
     image: "/recipe1.jpg",
-    description: "Refreshing lemonade sweetened naturally with KislayNaturals"
+    description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener"
   },
   {
     id: 2,
@@ -157,7 +157,7 @@ export default function RecipesPage() {
             Ready to Start Cooking?
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Get your hands on KislayNaturals monk fruit sweetener and start creating these delicious, 
+            Get your hands on Kislay Monk Fruit Sweetener monk fruit sweetener and start creating these delicious, 
             sugar-free recipes in your own kitchen today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -166,7 +166,7 @@ export default function RecipesPage() {
               className="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
             >
               <ChefHat className="w-5 h-5 mr-2" />
-              Shop KislayNaturals
+              Shop Kislay Monk Fruit Sweetener
             </Link>
             <Link 
               href="/"

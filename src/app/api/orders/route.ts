@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
       items_price: finalItemsPrice,
       tax_price: finalTaxPrice,
       shipping_price: finalShippingPrice,
-      total_price: finalTotalPrice,
+      total_amount: finalTotalPrice,
       paid_at: new Date().toISOString(),
       order_status: 'Processing',
       // Optionally store items snapshot as JSON if your schema supports it

@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
         orderNumber: order.order_number || order.id,
         productName: order.product_name,
         quantity: order.quantity || 1,
-        unitPrice: order.unit_price || order.total_price,
-        totalAmount: order.total_price,
+        unitPrice: order.unit_price || order.total_amount,
+        totalAmount: order.total_amount,
         orderDate: new Date(order.created_at).toLocaleDateString('en-IN'),
         shippingAddress: {
           street: order.shipping_street,
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         customerPhone: order.user_mobile,
         orderId: order.id,
         productName: order.product_name,
-        totalAmount: order.total_price,
+        totalAmount: order.total_amount,
         orderDate: new Date(order.created_at).toLocaleDateString('en-IN'),
         shippingAddress: {
           street: order.shipping_street,

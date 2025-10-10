@@ -46,7 +46,6 @@ export async function POST(request: NextRequest) {
       items_price: itemsPrice,
       tax_price: 0, // No tax
       shipping_price: 0, // No shipping
-      total_price: totalPrice,
       shipping_street: payload.shippingAddress.street,
       shipping_city: payload.shippingAddress.city,
       shipping_state: payload.shippingAddress.state,
@@ -62,7 +61,7 @@ export async function POST(request: NextRequest) {
     const { data: orderData, error: orderError } = await supabaseAdmin
       .from('orders')
       .insert([insertRow])
-      .select('id, total_price, order_status')
+      .select('id, total_amount, order_status')
       .single();
 
     if (orderError) {
@@ -85,7 +84,7 @@ export async function POST(request: NextRequest) {
       description: payload.product.description || null,
       category: payload.product.category || null,
       sku: payload.product.sku || null,
-      total_price: itemTotalPrice,
+      total_amount: itemTotalPrice,
       discount_amount: 0, // No discount for now
       tax_rate: 0, // No tax
       tax_amount: 0, // No tax
@@ -113,7 +112,7 @@ export async function POST(request: NextRequest) {
       message: 'Order created successfully.',
       order: {
         id: orderData.id,
-        total_price: orderData.total_price,
+        total_amount: orderData.total_amount,
         order_status: orderData.order_status
       },
     }, { status: 201 });

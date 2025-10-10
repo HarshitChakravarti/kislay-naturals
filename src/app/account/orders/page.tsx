@@ -28,8 +28,7 @@ interface Order {
   items_price: number;
   tax_price: number;
   shipping_price: number;
-  total_price: number;
-  total_amount?: number;
+  total_amount: number;
   shipping_street?: string;
   shipping_city?: string;
   shipping_state?: string;
@@ -212,7 +211,7 @@ function OrdersPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-semibold text-gray-900">{formatPrice(order.total_price)}</p>
+                      <p className="text-lg font-semibold text-gray-900">{formatPrice(order.total_amount)}</p>
                       <p className="text-sm text-gray-500">{order.quantity || 1} item{(order.quantity || 1) > 1 ? 's' : ''}</p>
                     </div>
                   </div>
@@ -293,7 +292,7 @@ function OrdersPage() {
                         <p className="text-gray-600">Shipping: {formatPrice(order.shipping_price)}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-semibold text-gray-900">Total: {formatPrice(order.total_price)}</p>
+                        <p className="text-lg font-semibold text-gray-900">Total: {formatPrice(order.total_amount)}</p>
                       </div>
                     </div>
                   </div>

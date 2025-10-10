@@ -49,44 +49,9 @@ export default function RefundPolicyPage() {
           </div>
         </section>
 
-        {/* Cancellation Policy Section */}
-        <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">1. Cancellation Policy</h2>
-          
-          <div className="space-y-4">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-blue-100 dark:border-blue-800/30">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <CheckCircle className="h-5 w-5 text-blue-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-1 text-base md:text-lg">7-Day Cancellation Window</h3>
-                  <p className="text-blue-800 dark:text-blue-200 text-sm md:text-base">
-                    Cancellations will be considered only if the request is made within 7 days of placing the order.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-yellow-100 dark:border-yellow-800/30">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <AlertTriangle className="h-5 w-5 text-yellow-400" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="font-semibold text-yellow-900 dark:text-yellow-100 mb-1 text-base md:text-lg">Important Notice</h3>
-                  <p className="text-yellow-800 dark:text-yellow-200 text-sm md:text-base">
-                    Cancellation requests may not be entertained if orders have been communicated to vendors/merchants and they have initiated the shipping process.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Perishable Items Section */}
         <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">2. Perishable Items</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">1. Perishable Items</h2>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-red-100 dark:border-red-800/30">
               <div className="flex items-start gap-3">
@@ -105,7 +70,7 @@ export default function RefundPolicyPage() {
 
         {/* Damaged or Defective Items Section */}
         <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">3. Damaged or Defective Items</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">2. Damaged or Defective Items</h2>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-orange-100 dark:border-orange-800/30">
               <div className="flex">
@@ -130,7 +95,7 @@ export default function RefundPolicyPage() {
 
         {/* Product Quality Issues Section */}
         <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">4. Product Quality Issues</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">3. Product Quality Issues</h2>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-green-100 dark:border-green-800/30">
               <div className="flex">
@@ -155,7 +120,7 @@ export default function RefundPolicyPage() {
 
         {/* Warranty Items Section */}
         <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">5. Warranty Items</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">4. Warranty Items</h2>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-purple-100 dark:border-purple-800/30">
               <div className="flex items-start gap-3">
@@ -174,7 +139,7 @@ export default function RefundPolicyPage() {
 
         {/* Refund Processing Section */}
         <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">6. Refund Processing</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">5. Refund Processing</h2>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-950/20 dark:to-blue-950/20 p-3 sm:p-4 rounded-lg md:rounded-xl border border-indigo-100 dark:border-indigo-800/30">
               <div className="flex">

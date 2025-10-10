@@ -20,18 +20,18 @@ const recipes = [
     servings: 2,
     difficulty: "Easy",
     image: "/recipe1.jpg",
-    description: "Refreshing lemonade sweetened naturally with KislayNaturals",
+    description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener",
     ingredients: [
       "2 cups water",
       "4 tbsp lemon juice",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "Ice cubes",
       "Mint leaves for garnish"
     ],
     instructions: [
       "Fill a large pitcher with 2 cups of cold water",
       "Add 4 tablespoons of fresh lemon juice to the water",
-      "Add 2 drops of KislayNaturals sweetener and stir well",
+      "Add 2 drops of Kislay Monk Fruit Sweetener and stir well",
       "Taste and adjust sweetness if needed",
       "Add ice cubes to serving glasses",
       "Pour the lemonade over ice and garnish with fresh mint leaves",
@@ -46,7 +46,7 @@ const recipes = [
     },
     tips: [
       "Use fresh lemon juice for the best flavor",
-      "Adjust the amount of KislayNaturals based on your sweetness preference",
+      "Adjust the amount of Kislay Monk Fruit Sweetener based on your sweetness preference",
       "Add a pinch of salt to enhance the lemon flavor",
       "For a sparkling version, use sparkling water instead of still water"
     ]
@@ -64,7 +64,7 @@ const recipes = [
     ingredients: [
       "1/2 cup rolled oats",
       "1 cup almond milk",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "1/2 tsp cinnamon",
       "Handful of berries"
     ],
@@ -72,7 +72,7 @@ const recipes = [
       "In a small saucepan, combine rolled oats and almond milk",
       "Bring to a gentle boil over medium heat, stirring occasionally",
       "Reduce heat to low and simmer for 3-4 minutes until oats are tender",
-      "Remove from heat and add KislayNaturals sweetener",
+      "Remove from heat and add Kislay Monk Fruit Sweetener",
       "Stir in cinnamon and mix well",
       "Transfer to a bowl and top with fresh berries",
       "Serve warm and enjoy!"
@@ -105,13 +105,13 @@ const recipes = [
       "1 banana",
       "1/2 cup Greek yogurt",
       "1/2 cup mixed berries",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "1/2 cup almond milk"
     ],
     instructions: [
       "Peel and slice the banana into chunks",
       "Add banana, Greek yogurt, and mixed berries to a blender",
-      "Pour in almond milk and add KislayNaturals sweetener",
+      "Pour in almond milk and add Kislay Monk Fruit Sweetener",
       "Blend on high speed for 30-45 seconds until smooth",
       "Taste and adjust sweetness if needed",
       "Pour into glasses and serve immediately",
@@ -144,13 +144,13 @@ const recipes = [
     ingredients: [
       "1/4 cup chia seeds",
       "1 cup almond milk",
-      "3 drops KislayNaturals sweetener",
+      "3 drops Kislay Monk Fruit Sweetener",
       "1/2 tsp vanilla extract",
       "Fresh fruits for topping"
     ],
     instructions: [
       "In a bowl, combine chia seeds and almond milk",
-      "Add KislayNaturals sweetener and vanilla extract",
+      "Add Kislay Monk Fruit Sweetener and vanilla extract",
       "Whisk vigorously for 2-3 minutes to prevent clumping",
       "Let the mixture sit for 5 minutes, then whisk again",
       "Cover and refrigerate for at least 2 hours or overnight",
@@ -184,7 +184,7 @@ const recipes = [
     ingredients: [
       "4 cups water",
       "4 tea bags (black or green)",
-      "3 drops KislayNaturals sweetener",
+      "3 drops Kislay Monk Fruit Sweetener",
       "Lemon slices and mint for garnish",
       "Ice cubes"
     ],
@@ -193,7 +193,7 @@ const recipes = [
       "Remove from heat and add tea bags",
       "Let steep for 5-7 minutes depending on desired strength",
       "Remove tea bags and let cool to room temperature",
-      "Add KislayNaturals sweetener and stir well",
+      "Add Kislay Monk Fruit Sweetener and stir well",
       "Refrigerate for at least 1 hour to chill",
       "Serve over ice with lemon slices and mint garnish"
     ],
@@ -226,7 +226,7 @@ const recipes = [
       "2 eggs",
       "1/2 cup oats",
       "1 scoop protein powder",
-      "2 drops KislayNaturals sweetener",
+      "2 drops Kislay Monk Fruit Sweetener",
       "1/2 tsp baking powder",
       "1/4 tsp vanilla extract"
     ],
@@ -234,7 +234,7 @@ const recipes = [
       "In a large bowl, mash the banana until smooth",
       "Add eggs and whisk until well combined",
       "Add oats, protein powder, and baking powder",
-      "Mix in KislayNaturals sweetener and vanilla extract",
+      "Mix in Kislay Monk Fruit Sweetener and vanilla extract",
       "Let the batter rest for 5 minutes",
       "Heat a non-stick pan over medium heat",
       "Pour 1/4 cup batter for each pancake",
@@ -467,7 +467,7 @@ export default function RecipePage({ params }: PageProps) {
             {/* Call to Action */}
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
               <h3 className={`text-2xl font-bold text-gray-900 mb-4 ${yeseva_One.className}`}>
-                Made with KislayNaturals
+                Made with Kislay Monk Fruit Sweetener
               </h3>
               <p className="text-gray-600 mb-6">
                 Get the same natural sweetness in your own kitchen with our monk fruit sweetener drops.
@@ -476,7 +476,7 @@ export default function RecipePage({ params }: PageProps) {
                 href="/products"
                 className="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
               >
-                Shop KislayNaturals
+                Shop Kislay Monk Fruit Sweetener
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

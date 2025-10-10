@@ -25,7 +25,7 @@ interface Order {
   user_name: string;
   user_email: string;
   user_mobile: string;
-  total_price: number;
+  total_amount: number;
   items_price: number;
   tax_price: number;
   shipping_price: number;
@@ -349,7 +349,7 @@ export default function OrderDetailPage() {
           </div>
           <div className="flex justify-between border-t border-gray-200 pt-3">
             <dt className="text-base font-medium text-gray-900">Total</dt>
-            <dd className="text-base font-medium text-gray-900">₹{order.total_price.toFixed(2)}</dd>
+            <dd className="text-base font-medium text-gray-900">₹{order.total_amount.toFixed(2)}</dd>
           </div>
         </dl>
       </div>

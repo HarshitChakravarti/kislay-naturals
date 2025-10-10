@@ -1,54 +1,98 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { validateToken, extractTokenFromRequest, standardizeUserData, createAuthErrorResponse, createAuthSuccessResponse } from '@/lib/auth/tokenValidation'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    let token = request.cookies.get('token')?.value
-    if (!token && request.headers.get('authorization')?.startsWith('Bearer ')) {
-      token = request.headers.get('authorization')?.split(' ')[1]
-    }
+    const token = extractTokenFromRequest(request);
 
     if (!token) {
-      return NextResponse.json({ success: false, message: 'Not authorized to access this route' }, { status: 401 })
+      console.log('No token found in request');
+      const errorResponse = createAuthErrorResponse('Not authorized to access this route');
+      return NextResponse.json(errorResponse, { 
+        status: 401,
+        headers: errorResponse.headers
+      });
     }
 
-    const { data, error } = await supabase.auth.getUser(token)
-    if (error || !data?.user) {
-      const response = NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 401 })
+    console.log('Token found, validating...');
+
+    // Temporary development bypass - remove in production
+    if (process.env.NODE_ENV === 'development' && process.env.BYPASS_AUTH === 'true') {
+      console.log('Development mode: Bypassing authentication');
+      const mockUser = {
+        _id: 'dev-user-123',
+        username: 'dev-admin',
+        name: 'Development Admin',
+        email: 'admin@example.com',
+        role: 'admin',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      return NextResponse.json(
+        { success: true, user: mockUser }, 
+        { 
+          status: 200, 
+          headers: { 'Cache-Control': 'no-store, max-age=0' }
+        }
+      );
+    }
+
+    // Use standardized token validation
+    const validationResult = await validateToken(token);
+    
+    if (!validationResult.isValid) {
+      console.log('Token validation failed in /api/auth/me:', validationResult.error);
+      console.log('Token provided:', token ? `${token.substring(0, 20)}...` : 'none');
+      
+      // Clear invalid token cookie
+      const response = NextResponse.json(
+        createAuthErrorResponse('Invalid or expired token'), 
+        { status: 401, headers: createAuthErrorResponse('Invalid or expired token').headers }
+      );
+      
       response.cookies.set('token', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         expires: new Date(0),
         path: '/',
-      })
-      return response
+      });
+      
+      return response;
     }
 
-    // Map Supabase user to our UserData format
-    const user = {
-      _id: data.user.id,
-      username: data.user.user_metadata?.username || data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'User',
-      name: data.user.user_metadata?.full_name || data.user.user_metadata?.name || data.user.email?.split('@')[0] || 'User',
-      email: data.user.email,
-      role: data.user.user_metadata?.role || 'user',
-      createdAt: data.user.created_at,
-      updatedAt: data.user.updated_at
-    }
+    // Standardize user data format
+    const standardizedUser = standardizeUserData(validationResult.user);
+    const successResponse = createAuthSuccessResponse(standardizedUser);
 
-    return NextResponse.json({ success: true, data: user }, { status: 200, headers: { 'Cache-Control': 'no-store, max-age=0' } })
+    return NextResponse.json(
+      { success: true, user: standardizedUser }, 
+      { 
+        status: 200, 
+        headers: successResponse.headers 
+      }
+    );
   } catch (error) {
-    console.error('Error in /api/auth/me:', error)
-    const response = NextResponse.json({ success: false, message: 'Not authorized to access this route' }, { status: 401, headers: { 'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate', 'Pragma': 'no-cache', 'Expires': '0' } })
+    console.error('Error in /api/auth/me:', error);
+    
+    const errorResponse = createAuthErrorResponse('Authentication service unavailable');
+    const response = NextResponse.json(errorResponse, { 
+      status: 401, 
+      headers: errorResponse.headers 
+    });
+    
+    // Clear token on error
     response.cookies.set('token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       expires: new Date(0),
       path: '/',
-    })
-    return response
+    });
+    
+    return response;
   }
 }
