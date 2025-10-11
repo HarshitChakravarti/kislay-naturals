@@ -184,10 +184,14 @@ export class SessionManager {
       this.state.consecutiveFailures++;
       
       // Handle timeout and network errors gracefully
-      if (error.name === 'AbortError') {
-        this.callbacks.onSessionError('Session refresh timed out');
-      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        this.callbacks.onSessionError('Network error during session refresh');
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          this.callbacks.onSessionError('Session refresh timed out');
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          this.callbacks.onSessionError('Network error during session refresh');
+        } else {
+          this.callbacks.onSessionError('Failed to refresh session');
+        }
       } else {
         this.callbacks.onSessionError('Failed to refresh session');
       }

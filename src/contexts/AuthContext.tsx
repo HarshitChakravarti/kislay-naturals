@@ -163,12 +163,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Error checking auth status:', error);
       
       // Handle timeout and network errors gracefully
-      if (error.name === 'AbortError') {
-        console.log('Auth check timed out');
-        setError('Authentication check timed out. Please try again.');
-      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
-        console.log('Network error during auth check');
-        setError('Network error. Please check your connection.');
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          console.log('Auth check timed out');
+          setError('Authentication check timed out. Please try again.');
+        } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          console.log('Network error during auth check');
+          setError('Network error. Please check your connection.');
+        } else {
+          setError('Failed to check authentication status');
+        }
       } else {
         setError('Failed to check authentication status');
       }
@@ -200,7 +204,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Always validate with server on mount for accurate state
       checkAuth(true);
     }
-  }, []); // Remove checkAuth from dependencies to prevent infinite loop
+  }, []); // Remove checkAuth to prevent infinite loop
 
   // Add periodic token validation for admin users (reduced frequency)
   useEffect(() => {
@@ -212,7 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return () => clearInterval(interval);
     }
-  }, [user?.role]); // Only depend on user role, not the entire user object or checkAuth
+  }, [user?.role]); // Only depend on user role to prevent infinite loops
 
   const login = async (emailOrUsername: string, password: string, callbackUrl = '/') => {
     setIsLoading(true);
