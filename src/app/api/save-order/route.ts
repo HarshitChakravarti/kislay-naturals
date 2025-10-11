@@ -176,6 +176,7 @@ export async function POST(request: NextRequest) {
       unit_price: orderDetails.product.price,
       quantity: orderDetails.quantity,
       total_amount: orderDetails.totalAmount,
+      total_price: orderDetails.totalAmount, // Add the missing total_price field that the database expects
       shipping_street: orderDetails.shippingAddress.street,
       shipping_city: orderDetails.shippingAddress.city,
       shipping_state: orderDetails.shippingAddress.state,

@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
       unit_price: payload.product.price,
       quantity: payload.quantity,
       total_amount: totalPrice,
+      total_price: totalPrice, // Add the missing total_price field that the database expects
       items_price: itemsPrice,
       tax_price: 0, // No tax
       shipping_price: 0, // No shipping

@@ -103,6 +103,7 @@ export async function POST(request: NextRequest) {
       tax_price: finalTaxPrice,
       shipping_price: finalShippingPrice,
       total_amount: finalTotalPrice,
+      total_price: finalTotalPrice, // Add the missing total_price field that the database expects
       paid_at: new Date().toISOString(),
       order_status: 'Processing',
       // Optionally store items snapshot as JSON if your schema supports it
