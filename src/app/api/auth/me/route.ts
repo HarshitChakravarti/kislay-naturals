@@ -1,10 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { validateToken, extractTokenFromRequest, standardizeUserData, createAuthErrorResponse, createAuthSuccessResponse } from '@/lib/auth/tokenValidation'
+import { rateLimit } from '@/lib/middleware/rateLimit'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
+    // Only apply rate limiting in production to prevent resource exhaustion
+    if (process.env.NODE_ENV === 'production') {
+      const rateLimitResult = rateLimit(request, 100, 60 * 1000); // 100 requests per minute
+      if (!rateLimitResult.success) {
+        return NextResponse.json(
+          { success: false, message: rateLimitResult.message },
+          { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter?.toString() || '60' } }
+        );
+      }
+    }
+
     const token = extractTokenFromRequest(request);
 
     if (!token) {

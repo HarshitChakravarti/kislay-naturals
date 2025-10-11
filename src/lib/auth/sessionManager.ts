@@ -21,8 +21,8 @@ export interface SessionState {
 }
 
 const DEFAULT_CONFIG: SessionConfig = {
-  refreshInterval: 5 * 60 * 1000, // 5 minutes
-  warningTime: 2 * 60 * 1000, // 2 minutes before expiry
+  refreshInterval: 15 * 60 * 1000, // 15 minutes (increased from 5)
+  warningTime: 5 * 60 * 1000, // 5 minutes before expiry
   maxInactivity: 30 * 60 * 1000, // 30 minutes
   extendOnActivity: true
 };
@@ -128,10 +128,10 @@ export class SessionManager {
   public async refreshSession(): Promise<boolean> {
     if (this.state.isRefreshing) return false;
 
-    // Implement cooldown to prevent excessive API calls
+    // Implement cooldown to prevent excessive API calls (reduced cooldown)
     const now = Date.now();
     const timeSinceLastAttempt = now - this.state.lastValidationAttempt;
-    const cooldownTime = Math.min(30000, this.state.consecutiveFailures * 10000); // Max 30s cooldown
+    const cooldownTime = Math.min(10000, this.state.consecutiveFailures * 5000); // Max 10s cooldown (reduced from 60s)
 
     if (timeSinceLastAttempt < cooldownTime) {
       console.log(`Session refresh on cooldown for ${cooldownTime - timeSinceLastAttempt}ms`);
@@ -142,16 +142,23 @@ export class SessionManager {
     this.state.lastValidationAttempt = now;
 
     try {
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include',
         cache: 'no-store',
+        signal: controller.signal,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'
         }
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -175,7 +182,16 @@ export class SessionManager {
     } catch (error) {
       console.error('Session refresh failed:', error);
       this.state.consecutiveFailures++;
-      this.callbacks.onSessionError('Failed to refresh session');
+      
+      // Handle timeout and network errors gracefully
+      if (error.name === 'AbortError') {
+        this.callbacks.onSessionError('Session refresh timed out');
+      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        this.callbacks.onSessionError('Network error during session refresh');
+      } else {
+        this.callbacks.onSessionError('Failed to refresh session');
+      }
+      
       this.clearSession();
       return false;
     } finally {

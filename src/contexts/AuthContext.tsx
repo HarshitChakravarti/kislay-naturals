@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserData } from '@/types';
 import { SessionManager } from '@/lib/auth/sessionManager';
@@ -44,12 +44,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserData | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Start with true to prevent hydration mismatch
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [isCheckingAuth, setIsCheckingAuth] = useState(false); // Prevent multiple simultaneous checks
   const [sessionManager, setSessionManager] = useState<SessionManager | null>(null);
+  const sessionManagerRef = useRef<SessionManager | null>(null);
   const [sessionState, setSessionState] = useState({
     isActive: false,
     timeUntilExpiry: 0,
@@ -73,29 +75,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     
-    // If we have a user and it's not a force check, validate with server anyway
-    // This ensures we catch expired tokens even when user appears logged in
-    if (user && !forceCheck) {
-      // Still validate with server to catch expired tokens
-      setIsCheckingAuth(true);
-    } else {
-      setIsCheckingAuth(true);
+    // Add debouncing to prevent excessive API calls (reduced from 30 seconds)
+    const now = Date.now();
+    const lastCheck = localStorage.getItem('lastAuthCheck');
+    const timeSinceLastCheck = lastCheck ? now - parseInt(lastCheck) : Infinity;
+    
+    // If not a forced check and we checked recently (within 5 seconds), skip
+    if (!forceCheck && timeSinceLastCheck < 5000) {
+      return;
+    }
+    
+    setIsCheckingAuth(true);
+    if (!user || forceCheck) {
       setIsLoading(true);
     }
     
     setError(null);
     
     try {
-      // Always validate with the server for accurate auth state
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const response = await fetch('/api/auth/me', {
         credentials: 'include',
         cache: 'no-store',
+        signal: controller.signal,
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache',
           'Expires': '0'
         }
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -111,19 +124,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Update localStorage with fresh user data
           if (typeof window !== 'undefined') {
             localStorage.setItem('user', JSON.stringify(serverUser));
+            localStorage.setItem('lastAuthCheck', now.toString());
           }
         } else {
           // No valid session found
           setUser(null);
           if (typeof window !== 'undefined') {
             localStorage.removeItem('user');
+            localStorage.removeItem('lastAuthCheck');
           }
         }
       } else if (response.status === 401 || response.status === 404) {
         // User is not authenticated or not found
         console.log('Auth check failed: User not authenticated');
         
-        // Try to refresh token before giving up
+        // Try to refresh token before giving up (but only once)
         if (user && !forceCheck) {
           console.log('Attempting token refresh...');
           const refreshSuccess = await refreshToken();
@@ -146,12 +161,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
-      setError('Failed to check authentication status');
+      
+      // Handle timeout and network errors gracefully
+      if (error.name === 'AbortError') {
+        console.log('Auth check timed out');
+        setError('Authentication check timed out. Please try again.');
+      } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        console.log('Network error during auth check');
+        setError('Network error. Please check your connection.');
+      } else {
+        setError('Failed to check authentication status');
+      }
+      
       // On error, clear all auth data to show login options
       clearAuthData();
     } finally {
       setIsLoading(false);
       setIsCheckingAuth(false);
+      setIsInitialized(true);
     }
   }, [user, isCheckingAuth, clearAuthData]);
 
@@ -173,19 +200,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Always validate with server on mount for accurate state
       checkAuth(true);
     }
-  }, [checkAuth]);
+  }, []); // Remove checkAuth from dependencies to prevent infinite loop
 
-  // Add periodic token validation for admin users
+  // Add periodic token validation for admin users (reduced frequency)
   useEffect(() => {
     if (user && user.role === 'admin') {
       // Set up periodic validation for admin users to catch expired tokens
       const interval = setInterval(() => {
         checkAuth(true);
-      }, 5 * 60 * 1000); // Check every 5 minutes
+      }, 10 * 60 * 1000); // Check every 10 minutes (increased from 5)
 
       return () => clearInterval(interval);
     }
-  }, [user, checkAuth]);
+  }, [user?.role]); // Only depend on user role, not the entire user object or checkAuth
 
   const login = async (emailOrUsername: string, password: string, callbackUrl = '/') => {
     setIsLoading(true);
@@ -246,6 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Store user data in localStorage for initial client-side hydration
       if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.removeItem('lastAuthCheck'); // Clear auth check cache to allow immediate validation
       }
       
       // Show verification state for a moment before redirecting
@@ -254,6 +282,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Show success message with username
       const displayName = userData.username || userData.name || userData.email?.split('@')[0] || 'User';
       showToast(`Welcome Back! ${displayName}`, 'success');
+      
+      // Force a fresh authentication check to ensure the session is properly established
+      await checkAuth(true);
       
       // Redirect to the callback URL or home page
       router.push(callbackUrl);
@@ -513,83 +544,99 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   }, [sessionManager]);
 
-  // Initialize session manager when user is authenticated
+  // Initialize session manager when user is authenticated (with debouncing)
   useEffect(() => {
-    if (user && !sessionManager && user.email) {
+    if (user && !sessionManagerRef.current && user.email) {
       console.log('Initializing session manager for user:', user.email);
       
-      // Validate user authentication before initializing session manager
-      const validateUser = async () => {
-        try {
-          const response = await fetch('/api/auth/me', {
-            credentials: 'include',
-            cache: 'no-store'
-          });
-          
-          if (!response.ok) {
-            console.log('User validation failed, clearing user data');
+      // Add minimal debouncing to prevent multiple initializations
+      const initTimeout = setTimeout(() => {
+        // Validate user authentication before initializing session manager
+        const validateUser = async () => {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            const response = await fetch('/api/auth/me', {
+              credentials: 'include',
+              cache: 'no-store',
+              signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
+            
+            if (!response.ok) {
+              console.log('User validation failed, clearing user data');
+              clearAuthData();
+              return false;
+            }
+            
+            return true;
+          } catch (error) {
+            console.error('User validation error:', error);
             clearAuthData();
             return false;
           }
-          
-          return true;
-        } catch (error) {
-          console.error('User validation error:', error);
-          clearAuthData();
-          return false;
-        }
-      };
-      
-      validateUser().then(isValid => {
-        if (!isValid) return;
+        };
         
-        const manager = new SessionManager(
-        {
-          refreshInterval: 10 * 60 * 1000, // 10 minutes (reduced frequency)
-          warningTime: 5 * 60 * 1000, // 5 minutes before expiry
-          maxInactivity: 30 * 60 * 1000, // 30 minutes
-          extendOnActivity: true
-        },
-        {
-          onSessionExpired: () => {
-            console.log('Session expired');
-            clearAuthData();
-            showToast('Your session has expired. Please log in again.', 'error');
-            router.push('/login');
+        validateUser().then(isValid => {
+          if (!isValid) return;
+          
+          const manager = new SessionManager(
+          {
+            refreshInterval: 15 * 60 * 1000, // 15 minutes (increased from 10)
+            warningTime: 5 * 60 * 1000, // 5 minutes before expiry
+            maxInactivity: 30 * 60 * 1000, // 30 minutes
+            extendOnActivity: true
           },
-          onSessionWarning: () => {
-            console.log('Session warning triggered');
-            setSessionState(prev => ({ ...prev, warningShown: true }));
-          },
-          onSessionRefreshed: (newToken) => {
-            console.log('Session refreshed');
-            setSessionState(prev => ({ ...prev, warningShown: false }));
-            showToast('Session extended successfully', 'success');
-          },
-          onSessionError: (error) => {
-            console.error('Session error:', error);
-            showToast('Session error occurred', 'error');
+          {
+            onSessionExpired: () => {
+              console.log('Session expired');
+              clearAuthData();
+              showToast('Your session has expired. Please log in again.', 'error');
+              router.push('/login');
+            },
+            onSessionWarning: () => {
+              console.log('Session warning triggered');
+              setSessionState(prev => ({ ...prev, warningShown: true }));
+            },
+            onSessionRefreshed: (newToken) => {
+              console.log('Session refreshed');
+              setSessionState(prev => ({ ...prev, warningShown: false }));
+              // Don't show success toast for automatic refreshes
+            },
+            onSessionError: (error) => {
+              console.error('Session error:', error);
+              // Only show error toast for critical errors, not network timeouts
+              if (!error.includes('timed out') && !error.includes('Network error')) {
+                showToast('Session error occurred', 'error');
+              }
+            }
           }
-        }
-      );
+        );
 
-      setSessionManager(manager);
-      
-        // Initialize session with error handling
-        manager.initializeSession().then(success => {
-          if (!success) {
-            console.log('Session initialization failed, clearing user data');
+        sessionManagerRef.current = manager;
+        setSessionManager(manager);
+        
+          // Initialize session with error handling
+          manager.initializeSession().then(success => {
+            if (!success) {
+              console.log('Session initialization failed, clearing user data');
+              clearAuthData();
+            } else {
+              console.log('Session manager initialized successfully');
+            }
+          }).catch(error => {
+            console.error('Session initialization error:', error);
             clearAuthData();
-          } else {
-            console.log('Session manager initialized successfully');
-          }
-        }).catch(error => {
-          console.error('Session initialization error:', error);
-          clearAuthData();
+          });
         });
-      });
-    } else if (!user && sessionManager) {
-      sessionManager.destroy();
+      }, 100); // 100ms debounce (reduced from 1000ms)
+      
+      return () => clearTimeout(initTimeout);
+    } else if (!user && sessionManagerRef.current) {
+      sessionManagerRef.current.destroy();
+      sessionManagerRef.current = null;
       setSessionManager(null);
       setSessionState({
         isActive: false,
@@ -598,7 +645,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         warningShown: false
       });
     }
-  }, [user, sessionManager, clearAuthData, showToast, router]);
+  }, [user?.email, sessionManager]); // Only depend on user email and sessionManager to prevent infinite loops
 
   // Update session state periodically (reduced frequency)
   useEffect(() => {
@@ -612,7 +659,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         inactivityTime: sessionManager.getInactivityTime(),
         warningShown: state.warningShown
       });
-    }, 5000); // Reduced from 1000ms to 5000ms (5 seconds)
+    }, 10000); // Reduced from 5000ms to 10000ms (10 seconds)
 
     return () => clearInterval(interval);
   }, [sessionManager]);
@@ -632,7 +679,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = {
     user,
-    isLoading,
+    isLoading: isLoading && !isInitialized, // Only show loading if not initialized
     isVerifying,
     error,
     login,
