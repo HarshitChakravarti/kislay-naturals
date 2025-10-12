@@ -22,6 +22,15 @@ const ProductsPage = async () => {
       .eq('in_stock', true)
       .order('created_at', { ascending: false });
     
+    // Ensure originalPrice is set for all products
+    if (data) {
+      data.forEach(product => {
+        if (!product.originalPrice) {
+          product.originalPrice = 350; // Set default original price
+        }
+      });
+    }
+    
     if (error) {
       console.error('Error fetching products:', error);
       // Fallback to hardcoded data if database fails

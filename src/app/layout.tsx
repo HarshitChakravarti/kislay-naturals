@@ -6,6 +6,7 @@ import { Montserrat, Open_Sans, Dancing_Script } from "next/font/google";
 import ReduxProvider from "@/store/ReduxProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import DiwaliBanner from "@/components/DiwaliBanner";
 import { AuthProvider } from '@/contexts/AuthContext';
 import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <AuthErrorBoundary>
             <ReduxProvider>
+              <DiwaliBanner />
               <Navbar />
               {children}
               <Footer />

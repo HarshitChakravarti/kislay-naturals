@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
 
     const { amount, currency, orderId } = await request.json();
 
+    console.log('🔍 Razorpay Order Creation - Amount received:', amount, 'Currency:', currency, 'OrderId:', orderId);
+
     // Validate required parameters
     if (!orderId) {
       return NextResponse.json({ 
@@ -68,29 +70,48 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // If we already have a razorpay_order_id, reuse it instead of creating new
+    // If we already have a razorpay_order_id, check if amount matches
     if (existingOrder.razorpay_order_id) {
-      // Increment attempts and refresh expiry
-      const expiresAt = new Date();
-      expiresAt.setMinutes(expiresAt.getMinutes() + 15); // 15 minutes from now
-
-      await supabaseAdmin
+      // Get the stored order amount from the database
+      const { data: orderData, error: orderDataError } = await supabaseAdmin
         .from('orders')
-        .update({ 
-          payment_attempts: existingOrder.payment_attempts + 1,
-          expires_at: expiresAt.toISOString(),
-          updated_at: new Date().toISOString() 
-        })
-        .eq('id', orderId);
+        .select('total_amount')
+        .eq('id', orderId)
+        .single();
 
-      return NextResponse.json({
-        success: true,
-        data: { 
-          id: existingOrder.razorpay_order_id,
-          amount: Math.round(amount),
-          currency: (currency || 'INR').toUpperCase()
-        }
-      });
+      if (orderData && orderData.total_amount === amount / 100) {
+        // Amount matches, reuse the existing order
+        const expiresAt = new Date();
+        expiresAt.setMinutes(expiresAt.getMinutes() + 15); // 15 minutes from now
+
+        await supabaseAdmin
+          .from('orders')
+          .update({ 
+            payment_attempts: existingOrder.payment_attempts + 1,
+            expires_at: expiresAt.toISOString(),
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', orderId);
+
+        return NextResponse.json({
+          success: true,
+          data: { 
+            id: existingOrder.razorpay_order_id,
+            amount: Math.round(amount),
+            currency: (currency || 'INR').toUpperCase()
+          }
+        });
+      } else {
+        // Amount doesn't match, we need to create a new Razorpay order
+        // Clear the existing razorpay_order_id so we create a new one
+        await supabaseAdmin
+          .from('orders')
+          .update({ 
+            razorpay_order_id: null,
+            updated_at: new Date().toISOString() 
+          })
+          .eq('id', orderId);
+      }
     }
 
     const cur = (currency || 'INR').toUpperCase();

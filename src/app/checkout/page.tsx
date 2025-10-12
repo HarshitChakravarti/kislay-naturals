@@ -93,6 +93,9 @@ export default function CheckoutPage() {
     message: string;
     isChecking: boolean;
   }>({ isValid: true, message: '', isChecking: false });
+  const [couponCode, setCouponCode] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState('');
 
   // Get product data from URL params
   useEffect(() => {
@@ -273,7 +276,11 @@ export default function CheckoutPage() {
           },
           product: product,
           quantity: quantity,
-          totalAmount: product.price * quantity,
+          totalAmount: finalTotal, // Use final total with coupon discount
+          originalPrice: originalPrice,
+          discountedPrice: discountedPrice,
+          couponCode: couponApplied ? couponCode : null,
+          couponDiscount: couponDiscount,
           shippingAddress: formData.address
         };
 
@@ -307,13 +314,15 @@ export default function CheckoutPage() {
       setPaymentStep('Initializing payment...');
       console.log('Creating Razorpay order...');
       
+      console.log('💰 Sending to Razorpay - finalTotal:', finalTotal, 'Amount in paise:', Math.round(finalTotal * 100));
+      
       const razorpayResponse = await fetch('/api/create-razorpay-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          amount: Math.round((product.price * quantity) * 100), // Use product price directly
+          amount: Math.round(finalTotal * 100), // Use final total with coupon discount
           currency: 'INR',
           orderId: orderId
         }),
@@ -521,8 +530,44 @@ export default function CheckoutPage() {
     );
   }
 
+  // Coupon validation function
+  const validateCoupon = (code: string) => {
+    if (code.toUpperCase() === 'DIWALI025') {
+      return { valid: true, discount: 30 }; // ₹30 discount
+    }
+    return { valid: false, discount: 0 };
+  };
+
+  // Apply coupon
+  const handleApplyCoupon = () => {
+    setCouponError('');
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    const validation = validateCoupon(couponCode.trim());
+    if (validation.valid) {
+      setCouponApplied(true);
+      setCouponError('');
+    } else {
+      setCouponApplied(false);
+      setCouponError('Invalid coupon code');
+    }
+  };
+
+  // Remove coupon
+  const handleRemoveCoupon = () => {
+    setCouponCode('');
+    setCouponApplied(false);
+    setCouponError('');
+  };
+
   const totalAmount = product.price * quantity;
-  const finalTotal = totalAmount; // Only product price, no tax or shipping
+  const originalPrice = 350 * quantity; // Original price ₹350 per unit
+  const discountedPrice = product.price * quantity; // Use actual product price (₹299)
+  const couponDiscount = couponApplied ? 30 * quantity : 0; // ₹30 discount per unit
+  const finalTotal = discountedPrice - couponDiscount; // Final price after coupon
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -793,12 +838,56 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Coupon Code Section */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Coupon Code</h3>
+                {!couponApplied ? (
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center">
+                      <span className="text-green-600 text-sm font-medium">DIWALI025</span>
+                      <span className="ml-2 text-green-600 text-xs">Applied</span>
+                    </div>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="text-green-600 hover:text-green-700 text-sm font-medium"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                {couponError && (
+                  <p className="text-red-500 text-xs mt-1">{couponError}</p>
+                )}
+              </div>
+
               {/* Price Breakdown */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Product Price</span>
-                  <span className="text-gray-900">₹{totalAmount.toFixed(2)}</span>
+                  <span className="text-gray-900">₹{discountedPrice.toFixed(2)}</span>
                 </div>
+                {couponApplied && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-green-600">Coupon Discount (DIWALI025)</span>
+                    <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
                   <span className="text-green-600">Free</span>

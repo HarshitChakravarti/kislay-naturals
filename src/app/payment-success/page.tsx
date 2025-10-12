@@ -10,6 +10,7 @@ export default function PaymentSuccessPage() {
   const [orderId, setOrderId] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(true);
+  const [isLoadingOrderNumber, setIsLoadingOrderNumber] = useState(false);
 
   useEffect(() => {
     const orderIdParam = searchParams.get('orderId');
@@ -34,6 +35,7 @@ export default function PaymentSuccessPage() {
   }, [searchParams, router]);
 
   const fetchOrderNumber = async (orderId: string) => {
+    setIsLoadingOrderNumber(true);
     try {
       const response = await fetch(`/api/orders/${orderId}/order-number`);
       if (response.ok) {
@@ -44,6 +46,8 @@ export default function PaymentSuccessPage() {
       }
     } catch (error) {
       console.error('Failed to fetch order number:', error);
+    } finally {
+      setIsLoadingOrderNumber(false);
     }
   };
 
@@ -51,7 +55,8 @@ export default function PaymentSuccessPage() {
     <PaymentProcessing 
       orderId={orderId}
       orderNumber={orderNumber}
-      isProcessing={isProcessing} 
+      isProcessing={isProcessing}
+      isLoadingOrderNumber={isLoadingOrderNumber}
     />
   );
 }

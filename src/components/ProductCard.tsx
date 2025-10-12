@@ -25,6 +25,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     totalReviews: 0
   });
 
+
   // Fetch reviews for the product
   useEffect(() => {
     const fetchReviews = async () => {
@@ -99,19 +100,19 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h2 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
           
           <div className="mb-3">
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-3">
               <div className="text-2xl font-bold text-gray-900">
                 ₹{product.price?.toFixed(2) || '0.00'}
               </div>
               {product.originalPrice && product.originalPrice > (product.price || 0) && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500 line-through">
+                <>
+                  <span className="text-lg text-gray-500 line-through">
                     ₹{product.originalPrice.toFixed(2)}
                   </span>
                   <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
                     {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
                   </span>
-                </div>
+                </>
               )}
             </div>
             <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes • Free shipping across India</p>

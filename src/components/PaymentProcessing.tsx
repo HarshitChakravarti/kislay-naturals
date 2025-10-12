@@ -7,9 +7,10 @@ interface PaymentProcessingProps {
   orderId?: string | null;
   orderNumber?: string | null;
   isProcessing?: boolean;
+  isLoadingOrderNumber?: boolean;
 }
 
-export default function PaymentProcessing({ orderId, orderNumber, isProcessing = true }: PaymentProcessingProps) {
+export default function PaymentProcessing({ orderId, orderNumber, isProcessing = true, isLoadingOrderNumber = false }: PaymentProcessingProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex items-center justify-center">
       <div className="max-w-md mx-auto px-4">
@@ -96,7 +97,12 @@ export default function PaymentProcessing({ orderId, orderNumber, isProcessing =
             >
               <p className="text-sm text-gray-600">Order Number</p>
               <p className="font-mono text-lg font-bold text-gray-900">
-                {orderNumber || orderId}
+                {orderNumber ? orderNumber : (
+                  <span className="flex items-center space-x-2">
+                    <span>Loading...</span>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </span>
+                )}
               </p>
             </motion.div>
           )}

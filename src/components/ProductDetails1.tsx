@@ -43,6 +43,7 @@ interface ProductDetailsProps {
 export default function ProductDetails({ product, onOpenCheckout }: ProductDetailsProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+
   const [isEnquireFormVisible, setIsEnquireFormVisible] = useState(false);
   const [enquireFormData, setEnquireFormData] = useState({
     name: '',
@@ -423,7 +424,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 </span>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">
+                    <span className="text-xl text-gray-400 line-through">
                       ₹{product.originalPrice.toFixed(2)}
                     </span>
                     <span className="text-sm font-medium text-white bg-green-600 px-2 py-0.5 rounded-full">

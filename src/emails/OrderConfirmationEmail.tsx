@@ -68,7 +68,7 @@ export default function OrderConfirmationEmail({
   supportEmail = "support@kislaynaturals.com",
   contactPhone,
   siteUrl = "https://kislaynaturals.com",
-  logoUrl = "https://dummyimage.com/200x60/1f2937/ffffff&text=Kislay+Naturals",
+  logoUrl = "https://kislaynaturals.com/logo.png",
   brandName = "Kislay Naturals",
 }: OrderConfirmationEmailProps) {
   const previewText = `Your ${brandName} order ${orderId} is confirmed`;

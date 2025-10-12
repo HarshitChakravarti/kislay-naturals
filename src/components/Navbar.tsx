@@ -207,7 +207,7 @@ function Header() {
   }, []);
 
   return (
-    <header className={`bg-white border-b border-gray-200 sticky top-0 z-50 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+    <header className={`bg-white border-b border-gray-200 sticky top-0 z-40 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
       <div className="container mx-auto px-0">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}

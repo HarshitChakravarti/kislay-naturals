@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsCheckingAuth(false);
       setIsInitialized(true);
     }
-  }, [user, isCheckingAuth, clearAuthData]);
+  }, [user, isCheckingAuth, clearAuthData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Initialize with server-first validation (reduced localStorage dependency)
   useEffect(() => {
@@ -204,7 +204,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Always validate with server on mount for accurate state
       checkAuth(true);
     }
-  }, []); // Remove checkAuth to prevent infinite loop
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Add periodic token validation for admin users (reduced frequency)
   useEffect(() => {
@@ -216,7 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return () => clearInterval(interval);
     }
-  }, [user?.role]); // Only depend on user role to prevent infinite loops
+  }, [user?.role, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = async (emailOrUsername: string, password: string, callbackUrl = '/') => {
     setIsLoading(true);
@@ -649,7 +649,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         warningShown: false
       });
     }
-  }, [user?.email, sessionManager]); // Only depend on user email and sessionManager to prevent infinite loops
+  }, [user?.email, sessionManager, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Update session state periodically (reduced frequency)
   useEffect(() => {

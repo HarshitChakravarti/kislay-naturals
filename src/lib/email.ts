@@ -191,10 +191,22 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
         .underline {
           text-decoration: underline;
         }
+        .logo {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+        .logo img {
+          max-width: 200px;
+          height: auto;
+        }
       </style>
     </head>
     <body>
       <div class="container">
+        <div class="logo">
+          <img src="https://kislaynaturals.com/logo.png" alt="Kislay Naturals" />
+        </div>
+        
         <div class="greeting">
           <strong>Dear ${data.customerName},</strong>
         </div>
@@ -213,6 +225,8 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
         <div class="delivery-address">
           <h3><span class="underline">Delivery Address</span> :</h3>
           <div class="shipping-info">
+            <p><strong>${data.shippingAddress.street}</strong></p>
+            <p><strong>${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}</strong></p>
             <p>You will receive shipping and tracking information via email / WhatsApp</p>
           </div>
           <div class="estimated-delivery">
@@ -250,6 +264,8 @@ function generateOrderConfirmationEmailText(data: OrderConfirmationEmailData): s
     `Payment Received: ₹ ${(data.totalAmount || 0).toFixed(2)}`,
     '',
     `Delivery Address:`,
+    `${data.shippingAddress.street}`,
+    `${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}`,
     `You will receive shipping and tracking information via email / WhatsApp`,
     `Estimated delivery: 7 – 10 business days`,
     '',

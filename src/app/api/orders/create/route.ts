@@ -28,9 +28,12 @@ export async function POST(request: NextRequest) {
 
     const payload = body;
 
-    // Calculate pricing - only product price, no tax or shipping
+    // Calculate pricing with coupon discount
     const itemsPrice = payload.product.price * payload.quantity;
-    const totalPrice = itemsPrice; // Only product price
+    const originalPrice = payload.originalPrice || itemsPrice;
+    const discountedPrice = payload.discountedPrice || itemsPrice;
+    const couponDiscount = payload.couponDiscount || 0;
+    const totalPrice = payload.totalAmount; // Use the final total from frontend
 
     // Normalize key fields for easier querying; also store full payload
     const insertRow = {
@@ -53,7 +56,7 @@ export async function POST(request: NextRequest) {
       shipping_zip: payload.shippingAddress.zip,
       status: 'created' as const,
       order_status: 'created' as const,
-      payload, // store full JSON for flexibility
+      payload, // store full JSON for flexibility (includes coupon info)
     };
 
     console.log(' Attempting to insert order:', JSON.stringify(insertRow, null, 2));
@@ -86,7 +89,7 @@ export async function POST(request: NextRequest) {
       category: payload.product.category || null,
       sku: payload.product.sku || null,
       total_amount: itemTotalPrice,
-      discount_amount: 0, // No discount for now
+      discount_amount: couponDiscount, // Coupon discount amount
       tax_rate: 0, // No tax
       tax_amount: 0, // No tax
     };

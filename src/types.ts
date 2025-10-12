@@ -89,6 +89,10 @@ export type OrderDetails = {
   product: Product; // Use the full Product type
   quantity: number;
   totalAmount: number;
+  originalPrice?: number;
+  discountedPrice?: number;
+  couponCode?: string | null;
+  couponDiscount?: number;
   shippingAddress: Address;
   paymentDetails?: {
     razorpay_payment_id: string;

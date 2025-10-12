@@ -51,6 +51,11 @@ async function getProductById(id: string): Promise<Product | null> {
       .select('*')
       .eq('id', id)
       .single();
+    
+    // Ensure originalPrice is set
+    if (data && !data.originalPrice) {
+      data.originalPrice = 350; // Set default original price
+    }
 
     if (error) {
       console.error('Error fetching product by ID:', error);
@@ -61,6 +66,11 @@ async function getProductById(id: string): Promise<Product | null> {
         .select('*')
         .eq('slug', id)
         .single();
+      
+      // Ensure originalPrice is set for slug data
+      if (slugData && !slugData.originalPrice) {
+        slugData.originalPrice = 350; // Set default original price
+      }
       
       if (slugError) {
         console.error('Error fetching product by slug:', slugError);
