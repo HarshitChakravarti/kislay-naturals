@@ -87,7 +87,9 @@ export default function CheckoutPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [paymentTimeout, setPaymentTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null); // Track current order
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
+  const [razorpayInstance, setRazorpayInstance] = useState<any>(null);
+  const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
   const [emailValidation, setEmailValidation] = useState<{
     isValid: boolean;
     message: string;
@@ -121,14 +123,21 @@ export default function CheckoutPage() {
     }
   }, [searchParams, router]);
 
-  // Cleanup timeout on unmount
+  // Cleanup timeout and razorpay instance on unmount
   useEffect(() => {
     return () => {
       if (paymentTimeout) {
         clearTimeout(paymentTimeout);
       }
+      if (razorpayInstance) {
+        // Remove all event listeners to prevent duplicate warnings
+        razorpayInstance.off('payment.failed');
+        razorpayInstance.off('payment.cancelled');
+        razorpayInstance.off('modal.close');
+        razorpayInstance.off('payment.success');
+      }
     };
-  }, [paymentTimeout]);
+  }, [paymentTimeout, razorpayInstance]);
 
   // Enhanced email validation function
   const validateEmail = (email: string): string | null => {
@@ -373,7 +382,10 @@ export default function CheckoutPage() {
         order_id: razorpayResult.data.id,
         handler: async function (response: any) {
           console.log('Payment successful:', response);
-          setPaymentStep('Processing payment...');
+          
+          // Show immediate loading state with prominent loading circle
+          setIsPaymentCompleted(true);
+          setPaymentStep('Payment successful! Processing your order...');
           
           try {
             // Update order with payment details
@@ -400,6 +412,10 @@ export default function CheckoutPage() {
             console.log('Payment update result:', updateResult);
 
             if (updateResult.success) {
+              // Add a delay to show loading circle prominently
+              setPaymentStep('Order confirmed! Redirecting to success page...');
+              await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
+              
               // Redirect to fast payment success page
               router.push(`/payment-success?orderId=${orderId}`);
             } else {
@@ -420,7 +436,16 @@ export default function CheckoutPage() {
         }
       };
 
+      // Clean up existing razorpay instance to prevent duplicate event listeners
+      if (razorpayInstance) {
+        razorpayInstance.off('payment.failed');
+        razorpayInstance.off('payment.cancelled');
+        razorpayInstance.off('modal.close');
+        razorpayInstance.off('payment.success');
+      }
+
       const razorpay = new (window as any).Razorpay(options);
+      setRazorpayInstance(razorpay); // Store the instance for cleanup
       
       razorpay.on('payment.failed', function (response: any) {
         console.error('Payment failed:', response);
@@ -478,11 +503,15 @@ export default function CheckoutPage() {
       // Handle modal close events
       razorpay.on('modal.close', function (response: any) {
         console.log('Razorpay modal closed:', response);
-        setIsProcessingPayment(false);
-        setPaymentStep('');
-        if (paymentTimeout) {
-          clearTimeout(paymentTimeout);
-          setPaymentTimeout(null);
+        
+        // Only reset if payment wasn't completed
+        if (!isPaymentCompleted) {
+          setIsProcessingPayment(false);
+          setPaymentStep('');
+          if (paymentTimeout) {
+            clearTimeout(paymentTimeout);
+            setPaymentTimeout(null);
+          }
         }
       });
       
@@ -496,12 +525,20 @@ export default function CheckoutPage() {
       
       setPaymentTimeout(resetTimeout);
       
-      // Clear timeout when payment succeeds
+      // Handle payment success with immediate loading state
       razorpay.on('payment.success', function (response: any) {
+        console.log('Payment successful:', response);
+        
+        // Clear timeout
         if (paymentTimeout) {
           clearTimeout(paymentTimeout);
           setPaymentTimeout(null);
         }
+        
+        // Show immediate loading state
+        setIsPaymentCompleted(true);
+        setIsProcessingPayment(true);
+        setPaymentStep('Payment successful! Processing your order...');
       });
       
       razorpay.open();
@@ -525,6 +562,25 @@ export default function CheckoutPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show payment completion overlay
+  if (isPaymentCompleted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-xl shadow-lg max-w-md mx-4">
+          <div className="animate-pulse rounded-full h-16 w-16 bg-green-100 flex items-center justify-center mx-auto mb-4">
+            <span className="text-green-600 text-2xl">✓</span>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Payment Successful!</h2>
+          <p className="text-gray-600 mb-4">Your order is being processed...</p>
+          <div className="flex items-center justify-center space-x-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+            <span className="text-sm text-gray-500">Redirecting to confirmation page</span>
+          </div>
         </div>
       </div>
     );
@@ -911,11 +967,22 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePayment}
                 disabled={isProcessingPayment}
-                className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-4 px-6 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2"
+                className={`w-full py-4 px-6 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2 ${
+                  isPaymentCompleted 
+                    ? 'bg-green-500 text-white' 
+                    : isProcessingPayment 
+                    ? 'bg-gray-400 text-white' 
+                    : 'bg-green-600 hover:bg-green-700 text-white'
+                }`}
               >
-                {isProcessingPayment ? (
+                {isPaymentCompleted ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
+                    <span>{paymentStep || 'Payment Successful! Redirecting...'}</span>
+                  </>
+                ) : isProcessingPayment ? (
+                  <>
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
                     <span>{paymentStep || 'Processing...'}</span>
                   </>
                 ) : (

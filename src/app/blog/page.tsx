@@ -72,15 +72,15 @@ export default function BlogPage() {
       </div>
 
       {/* Blog Posts Grid */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 py-8 sm:py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {blogPosts.map((post) => (
             <Link 
               key={post.id} 
               href={`/blog/${post.id}`}
               className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden"
             >
-              <div className="relative h-48 w-full">
+              <div className="relative h-40 sm:h-48 w-full">
                 <Image
                   src={post.image}
                   alt={post.title}
@@ -88,21 +88,21 @@ export default function BlogPage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-2">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
                   <span>{post.readTime}</span>
                 </div>
                 <div className="mb-3">
-                  <span className="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                  <span className="inline-block bg-green-100 text-green-800 text-xs font-medium px-2 sm:px-2.5 py-0.5 rounded-full">
                     {post.category}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-green-600 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed line-clamp-3">
                   {post.excerpt}
                 </p>
               </div>

@@ -109,8 +109,9 @@ export default function Recipes() {
 
   const scrollLeft = () => {
     if (scrollContainer.current) {
+      const scrollAmount = window.innerWidth < 640 ? -280 : -300; // Smaller scroll for mobile
       scrollContainer.current.scrollBy({
-        left: -300, // Adjust scroll amount as needed
+        left: scrollAmount,
         behavior: 'smooth'
       });
     }
@@ -118,8 +119,9 @@ export default function Recipes() {
 
   const scrollRight = () => {
     if (scrollContainer.current) {
+      const scrollAmount = window.innerWidth < 640 ? 280 : 300; // Smaller scroll for mobile
       scrollContainer.current.scrollBy({
-        left: 300, // Adjust scroll amount as needed
+        left: scrollAmount,
         behavior: 'smooth'
       });
     }
@@ -163,57 +165,62 @@ export default function Recipes() {
           
           <div 
             ref={scrollContainer}
-            className="flex space-x-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+            className="flex space-x-4 sm:space-x-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {recipes.map((recipe) => (
             <div 
               key={recipe.id} 
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-50 hover:border-green-50 flex-shrink-0 w-80 snap-center"
+              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-50 hover:border-green-50 flex-shrink-0 w-64 sm:w-72 md:w-80 snap-center"
             >
-              <div className="relative h-48 bg-gray-100 overflow-hidden">
+              <div className="relative h-36 sm:h-40 md:h-48 bg-gray-100 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                 <Image 
                   src={recipe.image} 
                   alt={recipe.title}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">{recipe.title}</h3>
-                <p className="text-gray-600 mb-4">{recipe.description}</p>
+              <div className="p-3 sm:p-4 md:p-6">
+                <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 mb-2 line-clamp-2">{recipe.title}</h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-2 sm:mb-3 line-clamp-2">{recipe.description}</p>
                 
-                <div className="flex items-center space-x-4 text-sm text-gray-500 mb-4">
+                <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
                   <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-1 text-green-600" />
+                    <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-green-600" />
                     <span>{recipe.prepTime}</span>
                   </div>
                   <div className="flex items-center">
-                    <Users className="w-4 h-4 mr-1 text-green-600" />
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-green-600" />
                     <span>{recipe.servings} {recipe.servings > 1 ? 'servings' : 'serving'}</span>
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h4 className="font-medium text-gray-900 mb-2">Ingredients:</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                    {recipe.ingredients.map((ingredient, index) => (
+                <div className="mb-2 sm:mb-3">
+                  <h4 className="font-medium text-xs sm:text-sm md:text-base text-gray-900 mb-1 sm:mb-2">Ingredients:</h4>
+                  <ul className="list-disc list-inside text-xs sm:text-sm text-gray-600 space-y-0.5 sm:space-y-1">
+                    {recipe.ingredients.slice(0, 3).map((ingredient, index) => (
                       <li key={index} className="flex items-start">
                         <span className="text-green-600 mr-1">•</span>
-                        <span>{ingredient}</span>
+                        <span className="line-clamp-1">{ingredient}</span>
                       </li>
                     ))}
+                    {recipe.ingredients.length > 3 && (
+                      <li className="text-green-600 text-xs sm:text-sm font-medium">
+                        +{recipe.ingredients.length - 3} more ingredients
+                      </li>
+                    )}
                   </ul>
                 </div>
                 
                 <Link 
                   href={`/recipes/${recipe.id}`}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-green-100"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 rounded-lg transition-all duration-300 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-green-100 text-xs sm:text-sm md:text-base"
                 >
                   <span>View Full Recipe</span>
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
                 </Link>

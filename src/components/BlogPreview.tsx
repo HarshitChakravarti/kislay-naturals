@@ -67,8 +67,9 @@ const BlogPreview = () => {
 
   const scrollLeft = () => {
     if (scrollContainer.current) {
+      const scrollAmount = window.innerWidth < 640 ? -280 : -320; // Smaller scroll for mobile
       scrollContainer.current.scrollBy({
-        left: -320, // Card width + gap
+        left: scrollAmount,
         behavior: 'smooth'
       });
     }
@@ -76,8 +77,9 @@ const BlogPreview = () => {
 
   const scrollRight = () => {
     if (scrollContainer.current) {
+      const scrollAmount = window.innerWidth < 640 ? 280 : 320; // Smaller scroll for mobile
       scrollContainer.current.scrollBy({
-        left: 320, // Card width + gap
+        left: scrollAmount,
         behavior: 'smooth'
       });
     }
@@ -150,27 +152,27 @@ const BlogPreview = () => {
                 </div>
               </div>
               
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
                   <span>5 min read</span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-green-600 transition-colors">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight group-hover:text-green-600 transition-colors">
                   {post.title}
                 </h3>
                 
-                <p className="text-gray-600 mb-5 line-clamp-2">
+                <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-5 line-clamp-2">
                   {post.excerpt}
                 </p>
                 
                 <a
                   href={post.link}
-                  className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors"
+                  className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors text-sm sm:text-base"
                 >
                   Read Full Article
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
             </article>
@@ -207,51 +209,51 @@ const BlogPreview = () => {
         
         <div 
           ref={scrollContainer}
-          className="flex space-x-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
+          className="flex space-x-4 sm:space-x-6 overflow-x-auto pb-6 scrollbar-hide snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {posts.map((post) => (
             <article 
               key={post.id}
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex-shrink-0 w-80 snap-center"
+              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex-shrink-0 w-64 sm:w-72 md:w-80 snap-center"
             >
-              <div className="relative h-48 w-full bg-gray-100">
+              <div className="relative h-36 sm:h-40 md:h-48 w-full bg-gray-100">
                 <Image 
                   src={post.image}
                   alt={post.title}
                   fill
-                  sizes="320px"
+                  sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-4">
-                  <span className="inline-block px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full mb-2">
+                <div className="absolute bottom-0 left-0 p-3 sm:p-4">
+                  <span className="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium text-white bg-green-600 rounded-full mb-1 sm:mb-2">
                     {post.category}
                   </span>
                 </div>
               </div>
               
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 mb-3">
+              <div className="p-3 sm:p-4 md:p-6">
+                <div className="flex items-center text-xs text-gray-500 mb-2">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
                   <span>5 min read</span>
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-green-600 transition-colors">
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-green-600 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
                 
-                <p className="text-gray-600 mb-5 line-clamp-2">
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-2 sm:mb-3 line-clamp-2">
                   {post.excerpt}
                 </p>
                 
                 <a
                   href={post.link}
-                  className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors"
+                  className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors text-xs sm:text-sm md:text-base"
                 >
                   Read Full Article
-                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
                 </a>
               </div>
             </article>

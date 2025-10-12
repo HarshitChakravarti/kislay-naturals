@@ -98,7 +98,7 @@ export default function OrderSuccessPage() {
           >
             <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${yeseva_One.className}`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-                ORDER CONFIRMED!
+                ORDER CONFIRMED! 👍
               </span>
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
@@ -230,22 +230,11 @@ export default function OrderSuccessPage() {
               
               <div className="space-y-3">
                 <a 
-                  href="mailto:naturalskislay@gmail.com"
+                  href="/contact-us"
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  <Mail className="w-5 h-5" />
-                  <span className="flex-grow text-center">Email Support</span>
-                </a>
-                
-                <a 
-                  href="https://wa.me/917043630938"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  <span className="flex-grow text-center">WhatsApp</span>
-                  <ExternalLink className="w-4 h-4" />
+                  <Phone className="w-5 h-5" />
+                  <span className="flex-grow text-center">Contact Us</span>
                 </a>
               </div>
             </div>
