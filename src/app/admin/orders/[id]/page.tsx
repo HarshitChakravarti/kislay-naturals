@@ -44,6 +44,12 @@ interface Order {
   shipped_at: string;
   delivered_at: string;
   notes: string;
+  payload?: {
+    couponCode?: string;
+    couponDiscount?: number;
+    originalPrice?: number;
+    discountedPrice?: number;
+  };
   user_profiles?: {
     username: string;
     full_name: string;
@@ -213,7 +219,7 @@ export default function OrderDetailPage() {
           <select
             value={newStatus}
             onChange={(e) => setNewStatus(e.target.value)}
-            className="block w-full sm:w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            className="block w-full sm:w-40 px-2 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           >
             <option value="created">Created</option>
             <option value="paid">Paid</option>
@@ -235,7 +241,7 @@ export default function OrderDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Customer Information */}
         <div className="bg-white rounded-lg shadow p-4 lg:p-6">
-          <h2 className="text-base lg:text-lg font-medium text-gray-900 mb-4">Customer Information</h2>
+          <h2 className="text-lg lg:text-xl font-medium text-gray-900 mb-4">Customer Information</h2>
           <dl className="space-y-3">
             <div>
               <dt className="text-sm font-medium text-gray-500">Name</dt>
@@ -258,7 +264,7 @@ export default function OrderDetailPage() {
 
         {/* Shipping Information */}
         <div className="bg-white rounded-lg shadow p-4 lg:p-6">
-          <h2 className="text-base lg:text-lg font-medium text-gray-900 mb-4">Shipping Address</h2>
+          <h2 className="text-lg lg:text-xl font-medium text-gray-900 mb-4">Shipping Address</h2>
           <div className="text-sm text-gray-900">
             <div>{order.shipping_street || 'N/A'}</div>
             <div>
@@ -339,6 +345,19 @@ export default function OrderDetailPage() {
             <dt className="text-sm text-gray-500">Items Total</dt>
             <dd className="text-sm text-gray-900">₹{order.items_price.toFixed(2)}</dd>
           </div>
+          
+          {/* Coupon Discount Section */}
+          {order.payload?.couponCode && order.payload?.couponDiscount && order.payload.couponDiscount > 0 && (
+            <div className="flex justify-between">
+              <dt className="text-sm text-green-600">
+                Coupon Discount ({order.payload.couponCode})
+              </dt>
+              <dd className="text-sm text-green-600">
+                -₹{order.payload.couponDiscount.toFixed(2)}
+              </dd>
+            </div>
+          )}
+          
           <div className="flex justify-between">
             <dt className="text-sm text-gray-500">Tax</dt>
             <dd className="text-sm text-gray-900">₹{order.tax_price.toFixed(2)}</dd>

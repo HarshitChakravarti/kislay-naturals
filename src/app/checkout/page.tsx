@@ -98,6 +98,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'none'>('none');
 
   // Get product data from URL params
   useEffect(() => {
@@ -589,9 +590,12 @@ export default function CheckoutPage() {
   // Coupon validation function
   const validateCoupon = (code: string) => {
     if (code.toUpperCase() === 'DIWALI025') {
-      return { valid: true, discount: 30 }; // ₹30 discount
+      return { valid: true, discount: 30, type: 'percentage' }; // ₹30 discount
     }
-    return { valid: false, discount: 0 };
+    if (code.toUpperCase() === 'SPECIAL') {
+      return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
+    }
+    return { valid: false, discount: 0, type: 'none' };
   };
 
   // Apply coupon
@@ -605,9 +609,11 @@ export default function CheckoutPage() {
     const validation = validateCoupon(couponCode.trim());
     if (validation.valid) {
       setCouponApplied(true);
+      setCouponType(validation.type as 'percentage' | 'fixed' | 'none');
       setCouponError('');
     } else {
       setCouponApplied(false);
+      setCouponType('none');
       setCouponError('Invalid coupon code');
     }
   };
@@ -616,14 +622,31 @@ export default function CheckoutPage() {
   const handleRemoveCoupon = () => {
     setCouponCode('');
     setCouponApplied(false);
+    setCouponType('none');
     setCouponError('');
   };
 
   const totalAmount = product.price * quantity;
   const originalPrice = 350 * quantity; // Original price ₹350 per unit
   const discountedPrice = product.price * quantity; // Use actual product price (₹299)
-  const couponDiscount = couponApplied ? 30 * quantity : 0; // ₹30 discount per unit
-  const finalTotal = discountedPrice - couponDiscount; // Final price after coupon
+  
+  // Calculate final total based on coupon type
+  let finalTotal: number;
+  let couponDiscount: number;
+  
+  if (couponApplied && couponType === 'fixed') {
+    // SPECIAL coupon: Fixed price of ₹249
+    finalTotal = 249;
+    couponDiscount = discountedPrice - 249;
+  } else if (couponApplied && couponType === 'percentage') {
+    // DIWALI025 coupon: ₹30 discount per unit
+    couponDiscount = 30 * quantity;
+    finalTotal = discountedPrice - couponDiscount;
+  } else {
+    // No coupon applied
+    couponDiscount = 0;
+    finalTotal = discountedPrice;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -916,7 +939,7 @@ export default function CheckoutPage() {
                 ) : (
                   <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center">
-                      <span className="text-green-600 text-sm font-medium">DIWALI025</span>
+                      <span className="text-green-600 text-sm font-medium">{couponCode.toUpperCase()}</span>
                       <span className="ml-2 text-green-600 text-xs">Applied</span>
                     </div>
                     <button
@@ -940,7 +963,7 @@ export default function CheckoutPage() {
                 </div>
                 {couponApplied && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-green-600">Coupon Discount (DIWALI025)</span>
+                    <span className="text-green-600">Coupon Discount ({couponCode.toUpperCase()})</span>
                     <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
                   </div>
                 )}

@@ -21,6 +21,8 @@ function Header() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -178,7 +180,7 @@ function Header() {
     return <User className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />;
   }, [user, isLoggingOut]);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside and handle navbar auto-hide
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -186,28 +188,47 @@ function Header() {
       }
     }
 
-    // Handle scroll
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    // Handle scroll for navbar auto-hide
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Don't hide navbar if mobile menu is open
+      if (isMenuOpen) {
+        setIsNavbarVisible(true);
+        return;
+      }
+      
+      // Show navbar when at the top
+      if (currentScrollY < 10) {
+        setIsNavbarVisible(true);
+        setScrolled(false);
+      } else {
+        setScrolled(true);
+        
+        // Hide navbar when scrolling down, show when scrolling up
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsNavbarVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+          setIsNavbarVisible(true);
+        }
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
     
     // Add event listeners
     document.addEventListener('mousedown', handleClickOutside);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     // Cleanup
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY, isMenuOpen]);
 
   return (
-    <header className={`bg-white border-b border-gray-200 sticky top-0 z-40 transition-shadow duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+    <header className={`bg-white border-b border-gray-200 sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'} ${isNavbarVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="container mx-auto px-0">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}

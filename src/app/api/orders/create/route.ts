@@ -87,28 +87,76 @@ export async function POST(request: NextRequest) {
       quantity: payload.quantity,
       description: payload.product.description || null,
       category: payload.product.category || null,
-      sku: payload.product.sku || null,
-      total_amount: itemTotalPrice,
-      discount_amount: couponDiscount, // Coupon discount amount
-      tax_rate: 0, // No tax
-      tax_amount: 0, // No tax
+      sku: payload.product.sku || null
     };
 
-    console.log(' Attempting to insert order item:', JSON.stringify(orderItem, null, 2));
+    console.log('📦 Attempting to insert order item:', JSON.stringify(orderItem, null, 2));
+    console.log('💰 Coupon details - Code:', payload.couponCode, 'Discount:', payload.couponDiscount, 'Type:', payload.couponCode === 'SPECIAL' ? 'fixed' : 'percentage');
 
-    const { data: itemData, error: itemError } = await supabaseAdmin
-      .from('order_items')
-      .insert([orderItem])
-      .select('id')
-      .single();
+    // Try to insert order item with better error handling
+    let itemData, itemError;
+    try {
+      const result = await supabaseAdmin
+        .from('order_items')
+        .insert([orderItem])
+        .select('id')
+        .single();
+      
+      itemData = result.data;
+      itemError = result.error;
+    } catch (insertError) {
+      console.error('❌ Exception during order item insertion:', insertError);
+      itemError = insertError;
+      itemData = null;
+    }
 
     if (itemError) {
-      console.error(' Supabase order item insert error:', itemError);
-      // Note: We don't throw here to avoid breaking the order creation
-      // The order is already created, we just log the item error
-      console.warn(' Order created but item details not saved:', itemError);
+      console.error('❌ Supabase order item insert error:', itemError);
+      console.error('❌ Order item details:', JSON.stringify(orderItem, null, 2));
+      
+      // Try to store order item info in the main order record as fallback
+      try {
+        const fallbackUpdate = {
+          order_items_snapshot: [{
+            product_id: payload.product.id,
+            name: payload.product.name,
+            image: payload.product.image,
+            price: payload.product.price,
+            quantity: payload.quantity,
+            description: payload.product.description,
+            category: payload.product.category,
+            sku: payload.product.sku
+          }],
+          updated_at: new Date().toISOString()
+        };
+        
+        await supabaseAdmin
+          .from('orders')
+          .update(fallbackUpdate)
+          .eq('id', orderData.id);
+        
+        console.log('✅ Stored order item info in main order record as fallback');
+      } catch (fallbackError) {
+        console.error('❌ Failed to store order item info as fallback:', fallbackError);
+        
+        // Only clean up if fallback also fails
+        try {
+          await supabaseAdmin
+            .from('orders')
+            .delete()
+            .eq('id', orderData.id);
+          console.log('🧹 Cleaned up order due to complete failure');
+        } catch (cleanupError) {
+          console.error('❌ Failed to cleanup order after complete failure:', cleanupError);
+        }
+        
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Failed to create order items and fallback storage failed. Order creation aborted.' 
+        }, { status: 500 });
+      }
     } else {
-      console.log(' Order item created successfully:', itemData);
+      console.log('✅ Order item created successfully:', itemData);
     }
 
     return NextResponse.json({

@@ -60,11 +60,35 @@ export const GET = withAdminAuthDynamic(async (request: AdminRequest, { params }
       `)
       .eq('order_id', id);
 
-    if (itemsError) {
-      return NextResponse.json({ 
-        success: false, 
-        message: itemsError.message || 'Failed to fetch order items' 
-      }, { status: 500 });
+    let finalOrderItems = orderItems || [];
+
+    // If no order items found in order_items table, check for fallback data in main order
+    if (itemsError || !orderItems || orderItems.length === 0) {
+      console.log('⚠️ No order items found in order_items table, checking fallback data');
+      
+      if (order.order_items_snapshot && Array.isArray(order.order_items_snapshot)) {
+        console.log('✅ Found fallback order items in main order record');
+        finalOrderItems = order.order_items_snapshot.map((item: any, index: number) => ({
+          id: `fallback-${index}`,
+          order_id: id,
+          product_id: item.product_id,
+          name: item.name,
+          image: item.image,
+          price: item.price,
+          quantity: item.quantity,
+          description: item.description,
+          category: item.category,
+          sku: item.sku,
+          products: {
+            id: item.product_id,
+            name: item.name,
+            image: item.image,
+            price: item.price
+          }
+        }));
+      } else {
+        console.log('⚠️ No fallback order items found either');
+      }
     }
 
     return NextResponse.json({
@@ -72,7 +96,7 @@ export const GET = withAdminAuthDynamic(async (request: AdminRequest, { params }
       data: {
         ...order,
         user_profiles: userProfile,
-        order_items: orderItems || []
+        order_items: finalOrderItems
       }
     });
   } catch (error) {
