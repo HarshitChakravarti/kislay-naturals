@@ -70,7 +70,7 @@ export default function BlogDetailPage() {
               {/* Introduction */}
               <div className="mb-8">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Sugar is one of the biggest contributors to obesity, diabetes, and heart disease. If you're planning to quit sugar, monk fruit sweetener is your best option. Here's why:
+                  Sugar is one of the biggest contributors to obesity, diabetes, and heart disease. If you&apos;re planning to quit sugar, monk fruit sweetener is your best option. Here&apos;s why:
                 </p>
               </div>
 
@@ -99,7 +99,7 @@ export default function BlogDetailPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Diabetic-Friendly</h2>
                 <div className="bg-purple-50 p-4 rounded-lg">
                   <p className="text-purple-800 font-medium">
-                    💚 Safe for people with Type 1 and Type 2 diabetes. Monk fruit sweetener has a <strong>zero glycemic index</strong>, meaning it doesn't raise blood sugar levels, making it the perfect choice for diabetics.
+                    💚 Safe for people with Type 1 and Type 2 diabetes. Monk fruit sweetener has a <strong>zero glycemic index</strong>, meaning it doesn&apos;t raise blood sugar levels, making it the perfect choice for diabetics.
                   </p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ export default function BlogDetailPage() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Great Taste</h2>
                 <div className="bg-teal-50 p-4 rounded-lg">
                   <p className="text-teal-800 font-medium">
-                    🍯 Sweet, clean taste with no bitter aftertaste. Unlike stevia which can have a bitter aftertaste, monk fruit sweetener provides a clean, natural sweetness that's closest to sugar.
+                    🍯 Sweet, clean taste with no bitter aftertaste. Unlike stevia which can have a bitter aftertaste, monk fruit sweetener provides a clean, natural sweetness that&apos;s closest to sugar.
                   </p>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function BlogDetailPage() {
               <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-lg mb-8">
                 <h3 className="text-xl font-bold mb-3">Ready to Make the Switch?</h3>
                 <p className="mb-4">
-                  👉 Whether you're on a weight-loss journey, diabetic, or simply health-conscious, <strong>Kislay Monk Fruit Sweetener</strong> is your perfect sugar replacement.
+                  👉 Whether you&apos;re on a weight-loss journey, diabetic, or simply health-conscious, <strong>Kislay Monk Fruit Sweetener</strong> is your perfect sugar replacement.
                 </p>
                 <Link 
                   href="/products" 

@@ -85,7 +85,7 @@ export default function MonkFruitDailyUsesPage() {
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Add to Smoothies & Shakes</h2>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Boost taste without adding sugar. Whether you're making a green smoothie or a protein shake, 
+                  Boost taste without adding sugar. Whether you&apos;re making a green smoothie or a protein shake, 
                   monk fruit sweetener blends perfectly and enhances the natural flavors.
                 </p>
                 <div className="bg-blue-50 p-4 rounded-lg">

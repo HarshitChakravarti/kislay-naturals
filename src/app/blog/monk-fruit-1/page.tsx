@@ -71,7 +71,7 @@ export default function BlogDetailPage() {
               {/* Introduction */}
               <div className="mb-8">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  If you're looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
+                  If you&apos;re looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
                   health-conscious individuals in India. Unlike artificial sweeteners or refined sugar, monk fruit extract is
                   100% natural, zero-calorie, and diabetic-friendly.
                 </p>
@@ -119,7 +119,7 @@ export default function BlogDetailPage() {
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="text-blue-800 font-medium">
                     🍯 Compared to stevia or artificial sweeteners, monk fruit has a <strong>clean, natural taste with no bitter aftertaste</strong>. 
-                    It's perfect for tea, coffee, desserts, and everyday cooking.
+                    It&apos;s perfect for tea, coffee, desserts, and everyday cooking.
                   </p>
                 </div>
               </div>

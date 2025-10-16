@@ -69,7 +69,7 @@ export default function MonkFruitWeightLossBlog() {
               {/* Introduction */}
               <div className="mb-8">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  Trying to lose weight but struggling with sugar cravings? You're not alone. One of the easiest lifestyle changes is switching from sugar to monk fruit sweetener.
+                  Trying to lose weight but struggling with sugar cravings? You&apos;re not alone. One of the easiest lifestyle changes is switching from sugar to monk fruit sweetener.
                 </p>
               </div>
 
@@ -151,7 +151,7 @@ export default function MonkFruitWeightLossBlog() {
               <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-lg mb-8">
                 <h3 className="text-xl font-bold mb-3">Ready to Start Your Weight Loss Journey?</h3>
                 <p className="mb-4">
-                  👉 Try <strong>Kislay's premium monk fruit sweetener</strong> and experience the difference natural sweetness can make.
+                  👉 Try <strong>Kislay&apos;s premium monk fruit sweetener</strong> and experience the difference natural sweetness can make.
                 </p>
                 <Link 
                   href="/products" 
