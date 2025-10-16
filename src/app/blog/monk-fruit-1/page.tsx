@@ -1,178 +1,175 @@
-import { Calendar, Clock, User, CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
+import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft, Clock, User } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Why Monk Fruit Sweetener is the Best Natural Sugar Substitute in India | Kislay Naturals',
+  description: 'Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.',
+  keywords: 'monk fruit sweetener India, natural sugar substitute, zero calorie sweetener, diabetic friendly, healthy sweetener',
+  openGraph: {
+    title: 'Why Monk Fruit Sweetener is the Best Natural Sugar Substitute in India',
+    description: 'Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.',
+    type: 'article',
+    publishedTime: '2025-08-24T00:00:00.000Z',
+    authors: ['Kislay Naturals'],
+  },
+};
 
 export default function BlogDetailPage() {
   return (
-    <article className="max-w-6xl mx-auto px-2 md:px-4 py-8 md:py-12">
-      {/* Blog Header */}
-      <header className="mb-8 md:mb-12">
-
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 md:mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-          Why Monk Fruit Sweetener is the Best Natural Sugar Substitute in India
-        </h1>
-
-        <p className="text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed">
-          Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories,
-          diabetic-friendly, and perfect for weight management.
-        </p>
-        <br></br>
-         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-4 md:mb-6">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4" />
-            <span>August 24, 2025</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span>5 min read</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <User className="w-4 h-4" />
-            <span>Health & Nutrition</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Featured Image Placeholder */}
-      <div className="mb-8 md:mb-12">
-        <Image
-          src="/cover333.jpg"
-          alt="Monk fruit sweetener in a bowl with fresh monk fruits"
-          width={1200}
-          height={600}
-          className="w-full h-auto object-cover rounded-xl md:rounded-2xl shadow-lg"
-        />
-      </div>
-
-      {/* Blog Content */}
-      <div className="prose prose-base sm:prose-lg max-w-none">
-        <div className="mb-6 md:mb-8">
-          <p className="text-base sm:text-lg leading-relaxed text-foreground">
-            If you&apos;re looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
-            health-conscious individuals in India. Unlike artificial sweeteners or refined sugar, monk fruit extract is
-            100% natural, zero-calorie, and diabetic-friendly.
-          </p>
-        </div>
-
-        {/* What is Monk Fruit Section */}
-        <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">What is Monk Fruit Sweetener?</h2>
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-green-100 dark:border-green-800/30">
-            <p className="text-base sm:text-lg leading-relaxed">
-              Monk fruit, also known as <em>luo han guo</em>, is a small fruit native to Southeast Asia. The extract
-              from monk fruit is <strong>150–200 times sweeter than sugar</strong>, but without the calories.
-            </p>
-          </div>
-        </section>
-
-        {/* Health Benefits Section */}
-        <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-foreground">Health Benefits of Monk Fruit Sweetener</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-            {[
-              {
-                title: "Zero calories",
-                description: "ideal for weight management",
-                icon: "🎯",
-              },
-              {
-                title: "Safe for diabetics",
-                description: "no effect on blood sugar levels",
-                icon: "💚",
-              },
-              {
-                title: "Anti-inflammatory properties",
-                description: "supports immunity",
-                icon: "🛡️",
-              },
-              {
-                title: "No artificial chemicals",
-                description: "unlike aspartame or sucralose",
-                icon: "🌿",
-              },
-            ].map((benefit, index) => (
-              <div
-                key={index}
-                className="flex items-start gap-3 md:gap-4 p-4 md:p-6 bg-card rounded-lg md:rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow"
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-green-700 text-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link 
+                href="/blog" 
+                className="flex items-center text-white hover:text-yellow-300 transition-colors"
               >
-                <div className="text-xl md:text-2xl flex-shrink-0">{benefit.icon}</div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-base md:text-lg mb-1 md:mb-2 text-foreground">
-                    <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-600 inline mr-2" />
-                    {benefit.title}
-                  </h3>
-                  <p className="text-sm md:text-base text-muted-foreground">{benefit.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Comparison Section */}
-        <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">
-            Why Choose Monk Fruit Sweetener Over Other Sugar Substitutes?
-          </h2>
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl border border-blue-100 dark:border-blue-800/30">
-            <p className="text-base sm:text-lg leading-relaxed">
-              Compared to stevia or artificial sweeteners, monk fruit has a{" "}
-              <strong>clean, natural taste with no bitter aftertaste</strong>. It&apos;s perfect for tea, coffee, desserts,
-              and everyday cooking.
-            </p>
-          </div>
-        </section>
-
-        {/* India Trend Section */}
-        <section className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-foreground">Monk Fruit Sweetener in India – A Growing Trend</h2>
-          <div className="relative">
-            <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-orange-500 to-red-500 rounded-full"></div>
-            <div className="pl-6 md:pl-8">
-              <p className="text-base sm:text-lg leading-relaxed">
-                As more Indians shift towards healthy eating, monk fruit sweetener is becoming a popular choice for
-                fitness enthusiasts, diabetics, and weight-watchers.
-              </p>
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                Back to Blog
+              </Link>
+            </div>
+            <div className="text-sm">
+              <Link href="/" className="text-white hover:text-yellow-300 transition-colors">
+                Kislay Naturals
+              </Link>
             </div>
           </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="mt-12 md:mt-16">
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 md:p-8 lg:p-12 rounded-xl md:rounded-2xl text-white text-center">
-            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Make the Switch?</h3>
-            <p className="text-base sm:text-lg mb-6 md:mb-8 opacity-90">
-              👉 Switch to Kislay Monk Fruit Sweetener today for a healthier lifestyle!
-            </p>
-            <Link href="/products">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="bg-white text-green-600 hover:bg-gray-100 font-semibold px-6 md:px-8 py-2 md:py-3 text-base md:text-lg w-full sm:w-auto"
-              >
-                Buy Now - Get Started Today
-              </Button>
-            </Link>
-          </div>
-        </section>
+        </div>
       </div>
 
-      {/* Article Footer */}
-      <footer className="mt-12 md:mt-16 pt-6 md:pt-8 border-t border-border">
-        <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
-          {["Natural Sweeteners", "Monk Fruit", "Healthy Living", "Sugar Substitute", "Diabetic Friendly"].map(
-            (tag) => (
-              <span key={tag} className="px-2 md:px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs md:text-sm">
-                #{tag.replace(" ", "")}
-              </span>
-            ),
-          )}
-        </div>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <article className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Article Header */}
+          <div className="p-6 lg:p-8">
+            <div className="flex items-center text-sm text-gray-500 mb-4">
+              <Clock className="h-4 w-4 mr-2" />
+              <span>August 24, 2025</span>
+              <span className="mx-2">•</span>
+              <User className="h-4 w-4 mr-2" />
+              <span>Kislay Naturals</span>
+            </div>
+            
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Why <span className="text-green-600">Monk Fruit Sweetener</span> is the Best Natural Sugar Substitute in India
+            </h1>
+            
+            <p className="text-lg text-gray-600 leading-relaxed mb-6">
+              Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories,
+              diabetic-friendly, and perfect for weight management.
+            </p>
+          </div>
 
-        <div className="text-xs md:text-sm text-muted-foreground">
-          <p>Last updated: August 24, 2025</p>
+          {/* Article Content */}
+          <div className="px-6 lg:px-8 pb-8">
+            <div className="prose prose-lg max-w-none">
+              
+              {/* Introduction */}
+              <div className="mb-8">
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  If you're looking for a healthy alternative to sugar, monk fruit sweetener is becoming the top choice for
+                  health-conscious individuals in India. Unlike artificial sweeteners or refined sugar, monk fruit extract is
+                  100% natural, zero-calorie, and diabetic-friendly.
+                </p>
+              </div>
+
+              {/* What is Monk Fruit Section */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">What is Monk Fruit Sweetener?</h2>
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <p className="text-green-800 font-medium">
+                    🍯 <strong>Monk fruit</strong>, also known as <em>luo han guo</em>, is a small fruit native to Southeast Asia. The extract
+                    from monk fruit is <strong>150–200 times sweeter than sugar</strong>, but without the calories.
+                  </p>
+                </div>
+              </div>
+
+              {/* Health Benefits Section */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Health Benefits of Monk Fruit Sweetener</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-blue-900 mb-2">🎯 Zero Calories</h3>
+                    <p className="text-blue-800 text-sm">Ideal for weight management</p>
+                  </div>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-green-900 mb-2">💚 Safe for Diabetics</h3>
+                    <p className="text-green-800 text-sm">No effect on blood sugar levels</p>
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-purple-900 mb-2">🛡️ Anti-inflammatory Properties</h3>
+                    <p className="text-purple-800 text-sm">Supports immunity</p>
+                  </div>
+                  <div className="bg-emerald-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-emerald-900 mb-2">🌿 No Artificial Chemicals</h3>
+                    <p className="text-emerald-800 text-sm">Unlike aspartame or sucralose</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Comparison Section */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  Why Choose Monk Fruit Sweetener Over Other Sugar Substitutes?
+                </h2>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-blue-800 font-medium">
+                    🍯 Compared to stevia or artificial sweeteners, monk fruit has a <strong>clean, natural taste with no bitter aftertaste</strong>. 
+                    It's perfect for tea, coffee, desserts, and everyday cooking.
+                  </p>
+                </div>
+              </div>
+
+              {/* India Trend Section */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Monk Fruit Sweetener in India – A Growing Trend</h2>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  As more Indians shift towards healthy eating, monk fruit sweetener is becoming a popular choice for
+                  fitness enthusiasts, diabetics, and weight-watchers.
+                </p>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-lg mb-8">
+                <h3 className="text-xl font-bold mb-3">Ready to Make the Switch?</h3>
+                <p className="mb-4">
+                  👉 Switch to <strong>Kislay Monk Fruit Sweetener</strong> today for a healthier lifestyle!
+                </p>
+                <Link 
+                  href="/products" 
+                  className="inline-block bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                >
+                  Buy Now - Get Started Today
+                </Link>
+              </div>
+
+            </div>
+          </div>
+        </article>
+
+        {/* Related Articles */}
+        <div className="mt-12">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Related Articles</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link href="/blog/monk-fruit-2" className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">Is Monk Fruit Sweetener Good for Diabetics?</h4>
+                <p className="text-gray-600 text-sm">Find out why monk fruit sweetener is safe for diabetics.</p>
+              </div>
+            </Link>
+            <Link href="/blog/monk-fruit-3" className="block bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">5 Reasons to Switch from Sugar to Monk Fruit</h4>
+                <p className="text-gray-600 text-sm">Learn the powerful reasons to make the switch today.</p>
+              </div>
+            </Link>
+          </div>
         </div>
-      </footer>
-    </article>
-  )
+      </div>
+    </div>
+  );
 }

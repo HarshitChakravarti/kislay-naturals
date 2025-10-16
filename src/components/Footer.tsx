@@ -35,7 +35,7 @@ export default function Footer() {
               </div>
               <div className="flex items-start space-x-2 sm:space-x-3">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-700 text-xs sm:text-sm">naturalskislay@gmail.com</span>
+                <span className="text-gray-700 text-xs sm:text-sm">support@kislaynaturals.com</span>
               </div>
             </div>
           </div>

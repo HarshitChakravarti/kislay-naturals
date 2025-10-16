@@ -121,7 +121,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex flex-col gap-2 mt-3 sm:mt-4">
             <Link 
               href={`/products/${product.id}`}
-              className="w-full flex items-center justify-center gap-2 bg-transparent hover:bg-green-600 border-2 border-green-600 text-green-600 hover:text-white py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm sm:text-base"
+              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm sm:text-base"
             >
               <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
               Buy Now
@@ -210,7 +210,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="flex gap-4">
               <Link 
                 href={`/products/${product.id}`}
-                className="flex-1 flex items-center justify-center gap-2 bg-transparent hover:bg-green-600 border-2 border-green-600 text-green-600 hover:text-white py-3 px-6 rounded-lg font-medium transition-all duration-300"
+                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300"
               >
                 <ShoppingCart className="h-5 w-5" />
                 Buy Now

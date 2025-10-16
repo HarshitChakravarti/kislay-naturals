@@ -9,6 +9,15 @@ const yeseva_One = Yeseva_One({
 
 const blogPosts = [
   {
+    id: 'monk-fruit-daily-uses',
+    title: '7 Easy Ways to Use Monk Fruit Sweetener in Your Daily Diet',
+    excerpt: 'Discover 7 simple ways to add monk fruit sweetener to your daily diet. Perfect for tea, coffee, desserts, and Indian recipes.',
+    image: '/cover4.jpg',
+    date: 'October 14, 2025',
+    readTime: '4 min read',
+    category: 'Daily Living'
+  },
+  {
     id: 'monk-fruit-weight-loss',
     title: 'How Monk Fruit Sweetener Supports Weight Loss Naturally',
     excerpt: 'Find out how monk fruit sweetener helps with weight loss. Zero calories, reduces cravings, and keeps you full without sugar spikes.',

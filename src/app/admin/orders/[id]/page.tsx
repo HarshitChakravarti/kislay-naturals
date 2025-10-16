@@ -68,6 +68,7 @@ export default function OrderDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
   const [newStatus, setNewStatus] = useState('');
+  const [removing, setRemoving] = useState(false);
 
   const fetchOrderDetails = useCallback(async () => {
     try {
@@ -131,6 +132,41 @@ export default function OrderDetailPage() {
       console.error('Status update error:', err);
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const handleRemoveOrder = async () => {
+    if (!order) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to remove this order?\n\nOrder Number: ${order.order_number || formatShortOrderId(order.id)}\nCustomer: ${order.user_name}\nAmount: ₹${order.total_amount}\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setRemoving(true);
+      
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('Order removed successfully!');
+        router.push('/admin/orders');
+      } else {
+        setError(data.message || 'Failed to remove order');
+      }
+    } catch (err) {
+      setError('Failed to remove order');
+      console.error('Remove order error:', err);
+    } finally {
+      setRemoving(false);
     }
   };
 
@@ -401,6 +437,28 @@ export default function OrderDetailPage() {
           <p className="text-sm text-gray-700">{order.notes}</p>
         </div>
       )}
+
+      {/* Danger Zone - Remove Order */}
+      <div className="bg-white rounded-lg shadow p-4 lg:p-6 border-l-4 border-red-500">
+        <h2 className="text-base lg:text-lg font-medium text-gray-900 mb-4">Danger Zone</h2>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <p className="text-sm text-gray-600 mb-2">
+              Permanently remove this order from the system. This action cannot be undone.
+            </p>
+            <p className="text-xs text-gray-500">
+              Order Number: {order.order_number || formatShortOrderId(order.id)} • Customer: {order.user_name} • Amount: ₹{order.total_amount}
+            </p>
+          </div>
+          <button
+            onClick={handleRemoveOrder}
+            disabled={removing}
+            className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {removing ? 'Removing...' : 'Remove Order'}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

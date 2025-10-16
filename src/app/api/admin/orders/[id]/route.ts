@@ -189,3 +189,59 @@ export const PUT = withAdminAuthDynamic(async (request: AdminRequest, { params }
     }, { status: 500 });
   }
 });
+
+export const DELETE = withAdminAuthDynamic(async (request: AdminRequest, { params }: { params: { id: string } }) => {
+  try {
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Order ID is required' 
+      }, { status: 400 });
+    }
+
+    console.log('🗑️ Attempting to delete order:', id);
+
+    // First, delete order items
+    const { error: itemsError } = await supabaseAdmin
+      .from('order_items')
+      .delete()
+      .eq('order_id', id);
+
+    if (itemsError) {
+      console.error('❌ Error deleting order items:', itemsError);
+      // Continue with order deletion even if items deletion fails
+    } else {
+      console.log('✅ Order items deleted successfully');
+    }
+
+    // Then delete the main order
+    const { error: orderError } = await supabaseAdmin
+      .from('orders')
+      .delete()
+      .eq('id', id);
+
+    if (orderError) {
+      console.error('❌ Error deleting order:', orderError);
+      return NextResponse.json({ 
+        success: false, 
+        message: orderError.message || 'Failed to delete order' 
+      }, { status: 500 });
+    }
+
+    console.log('✅ Order deleted successfully:', id);
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Order deleted successfully' 
+    });
+
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Internal server error' 
+    }, { status: 500 });
+  }
+});
