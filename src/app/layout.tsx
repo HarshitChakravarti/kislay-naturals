@@ -11,6 +11,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 import SessionManager from '@/components/SessionManager';
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 
 // Load fonts
 const dancingScript = Dancing_Script({
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="180x180" href="/kislayfavicon.png" />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
+        <GoogleAnalytics />
         <AuthProvider>
           <AuthErrorBoundary>
             <ReduxProvider>
