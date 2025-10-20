@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from 'react';
 import Script from 'next/script';
 import "./globals.css";
 import { Montserrat, Open_Sans, Dancing_Script } from "next/font/google";
@@ -76,20 +77,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="180x180" href="/kislayfavicon.png" />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
-        <GoogleAnalytics />
-        <AuthProvider>
-          <AuthErrorBoundary>
-            <ReduxProvider>
-              <DiwaliBanner />
-              <Navbar />
-              {children}
-              <Footer />
-              <AdminAccessDeniedWrapper />
-              <SessionManager />
-              <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-            </ReduxProvider>
-          </AuthErrorBoundary>
-        </AuthProvider>
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+          <AuthProvider>
+            <AuthErrorBoundary>
+              <ReduxProvider>
+                <DiwaliBanner />
+                <Navbar />
+                {children}
+                <Footer />
+                <AdminAccessDeniedWrapper />
+                <SessionManager />
+                <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
+              </ReduxProvider>
+            </AuthErrorBoundary>
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   );
