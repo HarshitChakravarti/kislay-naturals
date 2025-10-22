@@ -290,8 +290,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Force a fresh authentication check to ensure the session is properly established
       await checkAuth(true);
       
-      // Redirect to the callback URL or home page
-      router.push(callbackUrl);
+      // Check if user is admin and redirect accordingly
+      const redirectUrl = userData.role === 'admin' ? '/admin' : callbackUrl;
+      router.push(redirectUrl);
       
       // Reset verification state after a short delay
       setTimeout(() => {

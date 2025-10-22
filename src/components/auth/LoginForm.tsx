@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,6 +23,7 @@ interface ValidationErrors {
 
 function LoginForm() {
   const { login, isLoading, error } = useAuth();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState<LoginFormData>({
     emailOrUsername: '',
     password: '',
@@ -97,7 +99,8 @@ function LoginForm() {
     }
 
     try {
-      await login(formData.emailOrUsername, formData.password);
+      const callbackUrl = searchParams?.get('callbackUrl') || '/';
+      await login(formData.emailOrUsername, formData.password, callbackUrl);
     } catch (error) {
       // Error is handled by the auth context
       console.error('Login error:', error);
