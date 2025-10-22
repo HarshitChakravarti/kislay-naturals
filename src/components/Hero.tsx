@@ -106,7 +106,7 @@ const Hero = () => {
             className={`font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
             style={{ 
               fontFamily: 'var(--font-dancing-script), cursive',
-              fontSize: 'clamp(2rem, 6vw, 4.75rem)'
+              fontSize: 'clamp(3rem, 9vw, 4.75rem)'
             }}
             aria-live="polite"
           >
