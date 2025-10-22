@@ -208,7 +208,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
   }
 
   return (
-    <div className="w-full py-12 bg-gray-50">
+    <div className="w-full py-10 bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Success Message */}
@@ -229,30 +229,30 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
         </AnimatePresence>
 
         {/* Header */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Customer Reviews</h2>
+        <div className="mb-7">
+          <h2 className="text-xl font-bold text-gray-900 mb-3.5">Customer Reviews</h2>
           
           {/* Review Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-7">
             {/* Overall Rating */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
               <div className="text-center">
-                <div className="text-5xl font-bold text-gray-900 mb-3">
+                <div className="text-4xl font-bold text-gray-900 mb-2.5">
                   {reviewStats.averageRating.toFixed(1)}
                 </div>
-                <div className="flex justify-center mb-3">
-                  {renderStars(Math.round(reviewStats.averageRating), 'lg')}
+                <div className="flex justify-center mb-2.5">
+                  {renderStars(Math.round(reviewStats.averageRating), 'md')}
                 </div>
-                <p className="text-gray-600 text-lg">
+                <p className="text-gray-600 text-sm">
                   Based on {reviewStats.totalReviews} review{reviewStats.totalReviews !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
 
             {/* Rating Distribution */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-4 text-lg">Rating Breakdown</h3>
-              <div className="space-y-3">
+            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+              <h3 className="font-semibold text-gray-900 mb-3.5 text-base">Rating Breakdown</h3>
+              <div className="space-y-2.5">
                 {[5, 4, 3, 2, 1].map((starCount, index) => 
                   renderRatingBar(
                     starCount, 
@@ -270,7 +270,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
             >
               <MessageSquare className="w-5 h-5" />
               <span>Write a Review</span>
@@ -287,12 +287,12 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
               exit={{ opacity: 0, height: 0 }}
               className="mb-8 overflow-hidden"
             >
-              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-5">
                   Write a Review for {productName}
                 </h3>
-                <form onSubmit={handleSubmitReview} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmitReview} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Your Name *
@@ -336,7 +336,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                           className="focus:outline-none"
                         >
                           <Star
-                            className={`w-8 h-8 transition-colors ${
+                            className={`w-7 h-7 transition-colors ${
                               star <= formData.rating
                                 ? 'text-yellow-400 fill-current'
                                 : 'text-gray-300 hover:text-yellow-200'
@@ -362,13 +362,13 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                     />
                   </div>
 
-                  <div className="flex space-x-3 pt-4">
+                  <div className="flex space-x-3 pt-3.5">
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
+                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-5 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
                     >
                       {isSubmitting ? (
                         <>
@@ -397,15 +397,15 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
         </AnimatePresence>
 
         {/* Reviews List */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           {reviews.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
-              <MessageSquare className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">No reviews yet</h3>
-              <p className="text-gray-600 mb-6 text-lg">Be the first to review this product!</p>
+            <div className="text-center py-14 bg-white rounded-xl shadow-sm border border-gray-100">
+              <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-5" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2.5">No reviews yet</h3>
+              <p className="text-gray-600 mb-5 text-sm">Be the first to review this product!</p>
               <button
                 onClick={() => setShowReviewForm(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl"
               >
                 Write First Review
               </button>
@@ -417,12 +417,12 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                   key={review.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
+                  className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="w-6 h-6 text-green-600" />
+                  <div className="flex items-start justify-between mb-3.5">
+                    <div className="flex items-center space-x-3.5">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User className="w-5 h-5 text-green-600" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <h4 className="font-semibold text-gray-900 flex items-center space-x-2">
@@ -441,7 +441,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                     </div>
                   </div>
                   
-                  <p className="text-gray-700 leading-relaxed mb-3">
+                  <p className="text-gray-700 leading-relaxed mb-2.5 text-sm">
                     {review.comment}
                   </p>
                   
@@ -458,12 +458,12 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
               
               {/* Show More/Less Button */}
               {reviews.length > 5 && (
-                <div className="flex justify-center pt-6">
+                <div className="flex justify-center pt-5">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setVisibleReviewsCount(visibleReviewsCount === 5 ? reviews.length : 5)}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-sm hover:shadow-md"
                   >
                     <span>
                       {visibleReviewsCount === 5 

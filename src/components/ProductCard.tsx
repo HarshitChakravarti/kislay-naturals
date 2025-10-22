@@ -140,7 +140,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Desktop: Horizontal Layout */}
       <div className="hidden md:flex">
         {/* Left Section - Product Image */}
-        <div className="w-1/2 relative bg-white flex items-center justify-center p-6">
+        <div className="w-1/2 relative bg-white flex items-center justify-center p-5">
           <div className="absolute top-4 left-4 z-10">
             {product.badge && (
               <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
@@ -152,9 +152,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Image
               src={product.image}
               alt={product.name}
-              width={600}
-              height={600}
-              className="object-contain h-[90%] w-auto max-w-[95%] group-hover:scale-105 transition-transform duration-500"
+              width={520}
+              height={520}
+              className="object-contain h-[80%] w-auto max-w-[90%] group-hover:scale-105 transition-transform duration-500"
               priority
               style={{ objectFit: 'contain' }}
             />
@@ -162,16 +162,16 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Right Section - Product Details */}
-        <div className="w-1/2 p-6 flex flex-col">
+        <div className="w-1/2 p-5 flex flex-col">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-3">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => {
                   const rating = reviewStats.averageRating || 0;
                   return (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
+                      className={`h-4 w-4 ${
                         i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
                       }`}
                     />
@@ -180,66 +180,66 @@ export default function ProductCard({ product }: ProductCardProps) {
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
               {product.name}
             </h2>
             
-            <p className="text-gray-600 mb-6 text-justify">
+            <p className="text-gray-600 mb-5 text-justify text-sm">
               {product.description || 'No description available.'}
             </p>
 
-            <div className="mb-8">
+            <div className="mb-6">
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="text-3xl font-bold text-green-700">
+                <span className="text-2xl font-bold text-green-700">
                   ₹{product.price?.toFixed(2) || '0.00'}
                 </span>
                 {product.originalPrice && product.originalPrice > (product.price || 0) && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">
+                    <span className="text-base text-gray-400 line-through">
                       ₹{product.originalPrice.toFixed(2)}
                     </span>
-                    <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                    <span className="text-xs font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
                       {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
                     </span>
                   </>
                 )}
               </div>
-              <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
+              <p className="text-xs text-gray-500">Inclusive of all taxes • Free shipping across India</p>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               <Link 
                 href={`/products/${product.id}`}
-                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-3 px-6 rounded-lg font-medium transition-all duration-300"
+                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-2.5 px-5 rounded-lg font-medium transition-all duration-300"
               >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className="h-4 w-4" />
                 Buy Now
               </Link>
               <Link 
                 href={`/products/${product.id}`}
-                className="flex-1 flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-3 px-6 rounded-lg font-medium transition-colors duration-300"
+                className="flex-1 flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-2.5 px-5 rounded-lg font-medium transition-colors duration-300"
               >
                 View Details
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+            <div className="mt-6 pt-5 border-t border-gray-100">
+              <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🌿</span>
+                  <span className="text-base">🌿</span>
                   <span>100% Natural</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">🔥</span>
+                  <span className="text-base">🔥</span>
                   <span>Zero Calories</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">💚</span>
+                  <span className="text-base">💚</span>
                   <span>Keto Friendly</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">✨</span>
+                  <span className="text-base">✨</span>
                   <span>Diabetic Safe</span>
                 </div>
               </div>

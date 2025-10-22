@@ -58,7 +58,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full md:aspect-[2.15/1] aspect-[9/16] min-h-[80vh] md:min-h-[500px] max-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full md:aspect-[2.4/1] aspect-[9/16] min-h-[70vh] md:min-h-[520px] max-h-[85vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
@@ -101,16 +101,19 @@ const Hero = () => {
         ref={ref}
         className={`relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
-        <div className="min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] flex items-center">
+        <div className="min-h-[160px] sm:min-h-[180px] lg:min-h-[220px] flex items-center">
           <h1 
-            className={`text-6xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
-            style={{ fontFamily: 'var(--font-dancing-script), cursive' }}
+            className={`font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
+            style={{ 
+              fontFamily: 'var(--font-dancing-script), cursive',
+              fontSize: 'clamp(2rem, 6vw, 4.75rem)'
+            }}
             aria-live="polite"
           >
             {quotes[currentQuote]}
           </h1>
         </div>
-        <p className="text-xl sm:text-xl md:text-2xl text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif' }}>
+        <p className="text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 'clamp(1rem, 1.6vw, 1.35rem)' }}>
         Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the sugar crash, guilt, or chemicals.
         </p>
         <Link 

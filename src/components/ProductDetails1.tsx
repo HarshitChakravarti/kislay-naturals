@@ -165,8 +165,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid md:grid-cols-2 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="grid md:grid-cols-2 gap-8">
         {/* Left Column - Images and Enquiry Section */}
         <div className="space-y-8">
           {/* Product Images */}
@@ -182,7 +182,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 alt={`${product.name} - View ${selectedImage + 1}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain p-8 transition-transform duration-500 hover:scale-105"
+                className="object-contain p-6 transition-transform duration-500 hover:scale-105"
                 priority
               />
               
@@ -233,22 +233,22 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
             transition={{ duration: 0.5, delay: 0.3 }}
             className="hidden md:block"
           >
-            <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
-              <div className="text-center space-y-4">
+            <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
+              <div className="text-center space-y-3.5">
                 <div className="flex items-center justify-center space-x-2">
-                  <MessageSquare className="h-6 w-6 text-green-600" />
-                  <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
+                  <MessageSquare className="h-5 w-5 text-green-600" />
+                  <h3 className="text-lg font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600 text-center leading-relaxed">
+                <p className="text-gray-600 text-center leading-relaxed text-sm">
                   Get personalized assistance about this product. We are here to help!
                 </p>
                 <motion.button
                   onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
+                  className="w-full py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
                 >
-                  <MessageSquare className="h-5 w-5" />
+                  <MessageSquare className="h-4 w-4" />
                   <span>{isEnquireFormVisible ? 'Hide Form' : 'Enquire Now'}</span>
                 </motion.button>
               </div>
@@ -260,9 +260,9 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="mt-6 pt-6 border-t border-green-200"
+                  className="mt-5 pt-5 border-t border-green-200"
                 >
-                  <form onSubmit={handleEnquireSubmit} className="space-y-4">
+                  <form onSubmit={handleEnquireSubmit} className="space-y-3.5">
                     {/* Name Field */}
                     <div>
                       <label htmlFor="enquire-name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -275,7 +275,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.name}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your full name"
                       />
                     </div>
@@ -292,7 +292,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.email}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your email address"
                       />
                     </div>
@@ -309,7 +309,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.mobile}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your mobile number"
                         pattern="[0-9]{10}"
                       />
@@ -327,7 +327,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.address}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="City, State"
                       />
                     </div>
@@ -343,7 +343,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.message}
                         onChange={handleEnquireInputChange}
                         rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
                         placeholder="Any specific questions or requirements..."
                       />
                     </div>
@@ -354,14 +354,14 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                       disabled={!isEnquireFormValid || isSubmitting}
                       whileHover={{ scale: isEnquireFormValid ? 1.02 : 1 }}
                       whileTap={{ scale: isEnquireFormValid ? 0.98 : 1 }}
-                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
+                      className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
                           ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                           <span>Sending...</span>
                         </>
                       ) : (
@@ -373,8 +373,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   </form>
 
                   {/* Info Text */}
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
-                    <p className="text-sm text-green-700 text-center text-justify">
+                  <div className="mt-3.5 p-3 bg-green-50 rounded-lg border border-green-100">
+                    <p className="text-xs text-green-700 text-center text-justify">
                       Your enquiry will be sent directly to our WhatsApp for quick response
                     </p>
                   </div>
@@ -389,10 +389,10 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="space-y-6"
+          className="space-y-5"
         >
           <div>
-            <h1 className="text-2xl md:text-2xl lg:text-3xl font-bold text-gray-900">
+            <h1 className="text-xl md:text-2xl lg:text-2xl font-bold text-gray-900">
               {product.name}
             </h1>
             
@@ -402,7 +402,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
                     key={star}
-                    className={`h-5 w-5 ${star <= Math.floor(reviewStats.averageRating || 0)
+                    className={`h-4 w-4 ${star <= Math.floor(reviewStats.averageRating || 0)
                         ? 'fill-yellow-400 text-yellow-400'
                         : 'text-gray-200'
                     }`}
@@ -416,18 +416,18 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
           </div>
 
           {/* Price */}
-          <div className="space-y-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div className="space-y-3 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-gray-900">
+                <span className="text-2xl font-bold text-gray-900">
                   ₹{product.price?.toFixed(2)}
                 </span>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <>
-                    <span className="text-xl text-gray-400 line-through">
+                    <span className="text-lg text-gray-400 line-through">
                       ₹{product.originalPrice.toFixed(2)}
                     </span>
-                    <span className="text-sm font-medium text-white bg-green-600 px-2 py-0.5 rounded-full">
+                    <span className="text-xs font-medium text-white bg-green-600 px-1.5 py-0.5 rounded-full">
                       Save {Math.round(
                         ((product.originalPrice - product.price) / product.originalPrice) * 100
                       )}%
@@ -446,12 +446,12 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
           </div>
 
           {/* Description */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-900">What&apos;s in the box?</h3>
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              <div className="prose prose-green max-w-none text-gray-600 space-y-4">
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-gray-900">What&apos;s in the box?</h3>
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+              <div className="prose prose-green max-w-none text-gray-600 space-y-3">
                 {product.description?.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className={`${index === 0 ? "text-lg font-semibold text-gray-900" : ""} text-justify`}>
+                  <p key={index} className={`${index === 0 ? "text-base font-semibold text-gray-900" : ""} text-justify`}>
                     {paragraph}
                   </p>
                 ))}
@@ -460,9 +460,9 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
           </div>
 
           {/* Key Features Grid */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-gray-900">Why it&apos;s different?</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold text-gray-900">Why it&apos;s different?</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-3.5">
               <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" iconBg="bg-white" iconColor="text-green-600" />
               <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" iconBg="bg-white" iconColor="text-red-600" />
               <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" iconBg="bg-white" iconColor="text-green-600" />
@@ -473,23 +473,23 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
           </div>
 
           {/* Quantity Selector */}
-          <div className="flex items-center justify-between mb-6">
-            <span className="font-semibold text-lg">Quantity</span>
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between mb-5">
+            <span className="font-semibold text-base">Quantity</span>
+            <div className="flex items-center space-x-3">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
                 className="p-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300"
               >
-                <Minus className="h-5 w-5" />
+                <Minus className="h-4 w-4" />
               </motion.button>
-              <span className="font-bold text-xl w-8 text-center">{quantity}</span>
+              <span className="font-bold text-lg w-8 text-center">{quantity}</span>
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setQuantity(q => q + 1)}
                 className="p-2 rounded-full bg-gray-200 text-gray-800 hover:bg-gray-300"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-4 w-4" />
               </motion.button>
             </div>
           </div>
@@ -499,9 +499,9 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
             onClick={() => onOpenCheckout?.(quantity)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full py-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2"
+            className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2"
           >
-            <Zap className="h-5 w-5" />
+            <Zap className="h-4 w-4" />
             <span>Buy Now</span>
           </motion.button>
 
@@ -512,22 +512,22 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
             transition={{ duration: 0.5, delay: 0.4 }}
             className="md:hidden"
           >
-            <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
-              <div className="text-center space-y-4">
+            <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
+              <div className="text-center space-y-3.5">
                 <div className="flex items-center justify-center space-x-2">
-                  <MessageSquare className="h-6 w-6 text-green-600" />
-                  <h3 className="text-xl font-bold text-gray-900">Have Questions?</h3>
+                  <MessageSquare className="h-5 w-5 text-green-600" />
+                  <h3 className="text-lg font-bold text-gray-900">Have Questions?</h3>
                 </div>
-                <p className="text-gray-600 text-center leading-relaxed">
+                <p className="text-gray-600 text-center leading-relaxed text-sm">
                   Get personalized assistance about this product. We are here to help!
                 </p>
                 <motion.button
                   onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
+                  className="w-full py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
                 >
-                  <MessageSquare className="h-5 w-5" />
+                  <MessageSquare className="h-4 w-4" />
                   <span>{isEnquireFormVisible ? 'Hide Form' : 'Enquire Now'}</span>
                 </motion.button>
               </div>
@@ -539,9 +539,9 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="mt-6 pt-6 border-t border-green-200"
+                  className="mt-5 pt-5 border-t border-green-200"
                 >
-                  <form onSubmit={handleEnquireSubmit} className="space-y-4">
+                  <form onSubmit={handleEnquireSubmit} className="space-y-3.5">
                     {/* Name Field */}
                     <div>
                       <label htmlFor="enquire-name-mobile" className="block text-sm font-medium text-gray-700 mb-2">
@@ -554,7 +554,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.name}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your full name"
                       />
                     </div>
@@ -571,7 +571,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.email}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your email address"
                       />
                     </div>
@@ -588,7 +588,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.mobile}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="Enter your mobile number"
                         pattern="[0-9]{10}"
                       />
@@ -606,7 +606,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.address}
                         onChange={handleEnquireInputChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                         placeholder="City, State"
                       />
                     </div>
@@ -622,7 +622,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                         value={enquireFormData.message}
                         onChange={handleEnquireInputChange}
                         rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
+                        className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors resize-none"
                         placeholder="Any specific questions or requirements..."
                       />
                     </div>
@@ -633,14 +633,14 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                       disabled={!isEnquireFormValid || isSubmitting}
                       whileHover={{ scale: isEnquireFormValid ? 1.02 : 1 }}
                       whileTap={{ scale: isEnquireFormValid ? 0.98 : 1 }}
-                      className={`w-full py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
+                      className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 ${isEnquireFormValid
                           ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       }`}
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                           <span>Sending...</span>
                         </>
                       ) : (
@@ -652,8 +652,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   </form>
 
                   {/* Info Text */}
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg border border-green-100">
-                    <p className="text-sm text-green-700 text-center text-justify">
+                  <div className="mt-3.5 p-3 bg-green-50 rounded-lg border border-green-100">
+                    <p className="text-xs text-green-700 text-center text-justify">
                       Your enquiry will be sent directly to our WhatsApp for quick response
                     </p>
                   </div>

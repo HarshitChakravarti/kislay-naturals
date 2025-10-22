@@ -129,6 +129,8 @@
     /* Ensure consistent rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Normalize app-wide sizing to match Safari's sleeker scale */
+    font-size: 16px;
   }
   
   body {
@@ -145,6 +147,18 @@
   @media screen and (-webkit-min-device-pixel-ratio: 0) {
     html {
       zoom: 1;
+    }
+  }
+
+  /* Slightly reduce base rem size on medium+ screens for consistent layout across browsers */
+  @media (min-width: 768px) {
+    html {
+      font-size: 15px; /* scales all Tailwind rem-based sizes consistently */
+    }
+  }
+  @media (min-width: 1280px) {
+    html {
+      font-size: 15.5px; /* small bump on very large screens, still sleeker than Chrome default */
     }
   }
 }
