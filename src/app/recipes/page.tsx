@@ -8,64 +8,29 @@ const yeseva_One = Yeseva_One({
   subsets: ['latin'],
 });
 
-const recipes = [
-  {
-    id: 1,
-    title: "Sugar-Free Lemonade",
-    prepTime: "5 mins",
-    servings: 2,
-    difficulty: "Easy",
-    image: "/recipe1.jpg",
-    description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener"
-  },
-  {
-    id: 2,
-    title: "Healthy Oatmeal",
-    prepTime: "10 mins",
-    servings: 1,
-    difficulty: "Easy",
-    image: "/oatmeal.jpg",
-    description: "Warm and comforting oatmeal with natural sweetness"
-  },
-  {
-    id: 3,
-    title: "Fruit Smoothie",
-    prepTime: "7 mins",
-    servings: 2,
-    difficulty: "Easy",
-    image: "/recipe3.jpg",
-    description: "Creamy fruit smoothie with zero added sugar"
-  },
-  {
-    id: 4,
-    title: "Chia Pudding",
-    prepTime: "5 mins + chilling",
-    servings: 2,
-    difficulty: "Easy",
-    image: "/chiapudding.jpg",
-    description: "Protein-packed chia pudding with natural sweetness"
-  },
-  {
-    id: 5,
-    title: "Sugar-Free Iced Tea",
-    prepTime: "10 mins",
-    servings: 4,
-    difficulty: "Easy",
-    image: "/icedtea.jpg",
-    description: "Refreshing iced tea with a hint of natural sweetness"
-  },
-  {
-    id: 6,
-    title: "Protein Pancakes",
-    prepTime: "15 mins",
-    servings: 2,
-    difficulty: "Medium",
-    image: "/pancakes.jpg",
-    description: "Fluffy pancakes with no added sugar"
+async function getRecipes() {
+  try {
+    const { supabase } = await import('@/lib/supabase');
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      console.error('Failed to fetch recipes:', error);
+      return [];
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    return [];
   }
-];
+}
 
-export default function RecipesPage() {
+export default async function RecipesPage() {
+  const recipes = await getRecipes();
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -94,7 +59,7 @@ export default function RecipesPage() {
       <div className="bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-          {recipes.map((recipe) => (
+          {recipes.map((recipe: any) => (
             <Link
               key={recipe.id}
               href={`/recipes/${recipe.id}`}
@@ -103,7 +68,7 @@ export default function RecipesPage() {
               <div className="relative h-48 sm:h-56 lg:h-64 bg-gray-100 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                 <Image 
-                  src={recipe.image} 
+                  src={recipe.image || '/recipe1.jpg'} 
                   alt={recipe.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -114,11 +79,11 @@ export default function RecipesPage() {
               <div className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <span className="inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    {recipe.difficulty}
+                    {recipe.difficulty || 'Easy'}
                   </span>
                   <div className="flex items-center text-xs sm:text-sm text-gray-500">
                     <Clock className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-green-600" />
-                    <span>{recipe.prepTime}</span>
+                    <span>{recipe.prep_time}</span>
                   </div>
                 </div>
                 

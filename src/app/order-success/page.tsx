@@ -98,7 +98,7 @@ export default function OrderSuccessPage() {
           >
             <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${yeseva_One.className}`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-                ORDER CONFIRMED! 👍
+                ORDER CONFIRMED!
               </span>
             </h1>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">

@@ -1,130 +1,198 @@
-import { MetadataRoute } from 'next'
-import { supabase } from '@/lib/supabase'
+import { MetadataRoute } from 'next';
+import { supabase } from '@/lib/supabase';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kislaynaturals.com'
-  
-  // Static pages
-  const staticPages = [
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kislaynaturals.com';
+  const now = new Date();
+
+  // Base static pages that will be returned even if dynamic content fails
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      lastModified: now,
+      changeFrequency: 'daily',
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/products`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: now,
+      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/recipes`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/contact-us`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'yearly',
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/register`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy-policy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
     {
       url: `${baseUrl}/terms-and-conditions`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
     {
       url: `${baseUrl}/refund-policy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly' as const,
-      priority: 0.3,
+      lastModified: new Date('2024-01-01'),
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
-  ]
-
-  // Dynamic pages from database
-  let dynamicPages: MetadataRoute.Sitemap = []
+  ];
 
   try {
-    // Fetch products from Supabase
-    const { data: products, error: productsError } = await supabase
-      .from('products')
-      .select('id, updated_at')
-      .eq('in_stock', true)
+    // Fetch latest content update times to optimize lastModified dates
+    const [
+      latestProduct,
+      latestBlogPost,
+      latestRecipe
+    ] = await Promise.allSettled([
+      supabase
+        .from('products')
+        .select('created_at, updated_at')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .single(),
+      supabase
+        .from('blogposts')
+        .select('published_at, updated_at')
+        .order('published_at', { ascending: false })
+        .limit(1)
+        .single(),
+      supabase
+        .from('recipes')
+        .select('created_at, updated_at')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+    ]);
 
-    if (!productsError && products) {
+    // Get the most recent update time across all content
+    const getLatestTimestamp = () => {
+      const timestamps: Date[] = [now];
+      
+      if (latestProduct.status === 'fulfilled' && latestProduct.value.data) {
+        if (latestProduct.value.data.updated_at) {
+          timestamps.push(new Date(latestProduct.value.data.updated_at));
+        } else if (latestProduct.value.data.created_at) {
+          timestamps.push(new Date(latestProduct.value.data.created_at));
+        }
+      }
+      if (latestBlogPost.status === 'fulfilled' && latestBlogPost.value.data?.updated_at) {
+        timestamps.push(new Date(latestBlogPost.value.data.updated_at));
+      }
+      if (latestRecipe.status === 'fulfilled' && latestRecipe.value.data?.updated_at) {
+        timestamps.push(new Date(latestRecipe.value.data.updated_at));
+      }
+      
+      return new Date(Math.max(...timestamps.map(d => d.getTime())));
+    };
+
+    const mostRecentUpdate = getLatestTimestamp();
+
+    // Update dynamic pages with most recent content update
+    // Excluded from sitemap: test pages, checkout, account pages, order/payment success pages
+    // These are either development-only, require authentication, or are session-specific
+    staticPages[0].lastModified = mostRecentUpdate; // Homepage
+    staticPages[1].lastModified = mostRecentUpdate; // Products page
+    staticPages[2].lastModified = mostRecentUpdate; // Blog page
+    staticPages[3].lastModified = mostRecentUpdate; // Recipes page
+
+    // --- Dynamic Pages ---
+    let dynamicPages: MetadataRoute.Sitemap = [];
+
+    // Fetch all dynamic content in parallel for better performance
+    const [productsResult, blogpostsResult, recipesResult] = await Promise.allSettled([
+      supabase
+        .from('products')
+        .select('id, created_at, updated_at')
+        .eq('in_stock', true),
+      supabase
+        .from('blogposts')
+        .select('slug, updated_at, published_at')
+        .eq('is_published', true),
+      supabase
+        .from('recipes')
+        .select('id, updated_at, created_at')
+        .eq('is_published', true)
+    ]);
+
+    // --- Process Products ---
+    if (productsResult.status === 'fulfilled' && productsResult.value.data) {
+      const { data: products } = productsResult.value;
       const productPages = products.map((product) => ({
         url: `${baseUrl}/products/${product.id}`,
-        lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
-        changeFrequency: 'weekly' as const,
+        lastModified: product.updated_at 
+          ? new Date(product.updated_at) 
+          : (product.created_at ? new Date(product.created_at) : now),
+        changeFrequency: 'monthly' as const,
         priority: 0.8,
-      }))
-      dynamicPages = [...dynamicPages, ...productPages]
+      }));
+      dynamicPages = [...dynamicPages, ...productPages];
+    } else if (productsResult.status === 'fulfilled' && productsResult.value.error) {
+      console.error('Error fetching products for sitemap:', productsResult.value.error);
     }
 
-    // Add hardcoded blog posts (since they're currently hardcoded)
-    const blogPosts = [
-      'monk-fruit-daily-uses',
-      'monk-fruit-weight-loss', 
-      'monk-fruit-3',
-      'monk-fruit-2',
-      'monk-fruit-1'
-    ]
+    // --- Process Blog Posts ---
+    if (blogpostsResult.status === 'fulfilled' && blogpostsResult.value.data) {
+      const { data: blogposts } = blogpostsResult.value;
+      const blogPages = blogposts.map((blogpost) => ({
+        url: `${baseUrl}/blog/${blogpost.slug}`,
+        lastModified: blogpost.updated_at 
+          ? new Date(blogpost.updated_at) 
+          : (blogpost.published_at ? new Date(blogpost.published_at) : now),
+        changeFrequency: 'monthly' as const,
+        priority: 0.8,
+      }));
+      dynamicPages = [...dynamicPages, ...blogPages];
+    } else if (blogpostsResult.status === 'fulfilled' && blogpostsResult.value.error) {
+      console.error('Error fetching blogposts for sitemap:', blogpostsResult.value.error);
+    }
 
-    const blogPages = blogPosts.map((slug) => ({
-      url: `${baseUrl}/blog/${slug}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }))
-    dynamicPages = [...dynamicPages, ...blogPages]
+    // --- Process Recipes ---
+    if (recipesResult.status === 'fulfilled' && recipesResult.value.data) {
+      const { data: recipes } = recipesResult.value;
+      const recipePages = recipes.map((recipe) => ({
+        url: `${baseUrl}/recipes/${recipe.id}`,
+        lastModified: recipe.updated_at 
+          ? new Date(recipe.updated_at) 
+          : (recipe.created_at ? new Date(recipe.created_at) : now),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }));
+      dynamicPages = [...dynamicPages, ...recipePages];
+    } else if (recipesResult.status === 'fulfilled' && recipesResult.value.error) {
+      console.error('Error fetching recipes for sitemap:', recipesResult.value.error);
+    }
 
-    // Add hardcoded recipes (since they're currently hardcoded)
-    const recipeIds = [1, 2, 3, 4, 5, 6]
-    const recipePages = recipeIds.map((id) => ({
-      url: `${baseUrl}/recipes/${id}`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }))
-    dynamicPages = [...dynamicPages, ...recipePages]
+    return [...staticPages, ...dynamicPages];
 
   } catch (error) {
-    console.error('Error fetching dynamic pages for sitemap:', error)
-    // Continue with static pages even if dynamic pages fail
+    console.error('Error generating sitemap:', error);
+    // Return static pages even if dynamic content fetching fails
+    return staticPages;
   }
-
-  return [...staticPages, ...dynamicPages]
 }
