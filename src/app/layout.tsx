@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   title: "Kislay Naturals – Monk Fruit Sweeteners",
   description: "Kislay Naturals offers pure monk fruit-based sweeteners for a healthy, sustainable lifestyle.",
   verification: {
-    google: 'vmG1TiXv8t1MGxdk5gE-UDjefgrH5y6DIGN_PWQ-TWw',
+    google: 'zsZ85F-izYwXgU0jS73XClOfssfoRjTKDXQQmLp4gPM',
   },
   icons: [
     {
