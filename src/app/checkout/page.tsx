@@ -589,9 +589,7 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
-    if (code.toUpperCase() === 'DIWALI025') {
-      return { valid: true, discount: 30, type: 'percentage' }; // ₹30 discount
-    }
+    
     if (code.toUpperCase() === 'SPECIAL') {
       return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
     }
@@ -639,7 +637,7 @@ export default function CheckoutPage() {
     finalTotal = 249;
     couponDiscount = discountedPrice - 249;
   } else if (couponApplied && couponType === 'percentage') {
-    // DIWALI025 coupon: ₹30 discount per unit
+    // SPECIAL coupon: Fixed price of ₹249
     couponDiscount = 30 * quantity;
     finalTotal = discountedPrice - couponDiscount;
   } else {
