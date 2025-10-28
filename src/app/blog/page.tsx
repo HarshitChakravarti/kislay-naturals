@@ -9,8 +9,9 @@ const yeseva_One = Yeseva_One({
 
 async function getBlogPosts() {
   try {
-    const { supabase } = await import('@/lib/supabase');
-    const { data, error } = await supabase
+    // Use supabaseAdmin to bypass RLS for server-side rendering
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    const { data, error } = await supabaseAdmin
       .from('blogposts')
       .select('*')
       .eq('is_published', true)
@@ -21,6 +22,7 @@ async function getBlogPosts() {
       return [];
     }
     
+    console.log('Blog posts data:', data?.length);
     return data || [];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
@@ -30,6 +32,7 @@ async function getBlogPosts() {
 
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts()
+  console.log('Blog posts fetched:', blogPosts.length, 'posts');
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with green background and gradient shadow */}

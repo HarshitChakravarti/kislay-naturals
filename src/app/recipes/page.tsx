@@ -10,8 +10,9 @@ const yeseva_One = Yeseva_One({
 
 async function getRecipes() {
   try {
-    const { supabase } = await import('@/lib/supabase');
-    const { data, error } = await supabase
+    // Use supabaseAdmin to bypass RLS for server-side rendering
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    const { data, error } = await supabaseAdmin
       .from('recipes')
       .select('*')
       .eq('is_published', true)
@@ -22,6 +23,7 @@ async function getRecipes() {
       return [];
     }
     
+    console.log('Recipes data:', data?.length);
     return data || [];
   } catch (error) {
     console.error('Error fetching recipes:', error);
@@ -31,6 +33,7 @@ async function getRecipes() {
 
 export default async function RecipesPage() {
   const recipes = await getRecipes();
+  console.log('Recipes fetched:', recipes.length, 'recipes');
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
