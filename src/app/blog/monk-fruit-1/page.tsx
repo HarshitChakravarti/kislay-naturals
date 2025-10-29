@@ -64,6 +64,17 @@ export default function BlogDetailPage() {
             </p>
           </div>
 
+          {/* Cover Image */}
+          <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
+            <Image
+              src="/cover3.jpg"
+              alt="Monk Fruit Sweetener – Natural Sugar Substitute"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+
           {/* Article Content */}
           <div className="px-6 lg:px-8 pb-8">
             <div className="prose prose-lg max-w-none">

@@ -10,6 +10,15 @@ const yeseva_One = Yeseva_One({
 
 const posts = [
   {
+    id: 6,
+    title: "Is Monk Fruit Safe for Diabetics? The Complete Guide",
+    excerpt: "Learn why monk fruit sweetener is safe for diabetics. Zero calories, zero carbs, and no effect on blood sugar levels.",
+    image: "/diabetes.jpg",
+    category: "Health & Diabetes",
+    date: "October 29, 2025",
+    link: "/blog/monk-fruit-diabetics-guide",
+  },
+  {
     id: 5,
     title: "7 Easy Ways to Use Monk Fruit Sweetener in Your Daily Diet",
     excerpt: "Discover 7 simple ways to add monk fruit sweetener to your daily diet. Perfect for tea, coffee, desserts, and Indian recipes.",
