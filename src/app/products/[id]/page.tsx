@@ -110,6 +110,47 @@ async function getProductById(id: string): Promise<Product | null> {
   }
 }
 
+async function getProductByIdWithReviews(id: string): Promise<Product | null> {
+  const product = await getProductById(id);
+  if (!product) {
+    return null;
+  }
+
+  try {
+    const { data: reviews, error } = await supabase
+      .from('reviews')
+      .select('rating')
+      .eq('product_id', product.id);
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      // Return product without review data if reviews fetch fails
+      return {
+        ...product,
+        avgRating: 0,
+        numReviews: 0,
+      };
+    }
+
+    const totalReviews = reviews.length;
+    const sumRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
+
+    return {
+      ...product,
+      avgRating: Math.round(averageRating * 10) / 10,
+      numReviews: totalReviews,
+    };
+  } catch (error) {
+    console.error('Error processing reviews:', error);
+    return {
+      ...product,
+      avgRating: 0,
+      numReviews: 0,
+    };
+  }
+}
+
 interface PageProps {
   params: {
     id: string;
@@ -124,7 +165,7 @@ export default async function ProductPage({ params }: PageProps) {
       notFound();
     }
 
-    const product = await getProductById(id);
+    const product = await getProductByIdWithReviews(id);
 
     if (!product) {
       notFound();

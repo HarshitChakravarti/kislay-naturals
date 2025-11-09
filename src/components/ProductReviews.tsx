@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { Star, ThumbsUp, User, MessageSquare, Send, CheckCircle2, Image as ImageIcon, X } from 'lucide-react';
 
 interface Review {
@@ -466,9 +467,11 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                           {uploadedPhotos.map((url, index) => (
                             <div key={index} className="relative group">
-                              <img
+                              <Image
                                 src={url}
                                 alt={`Review photo ${index + 1}`}
+                                width={100}
+                                height={100}
                                 className="w-full h-24 object-cover rounded-lg border border-gray-200"
                               />
                               <button
@@ -605,9 +608,11 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                                     minHeight: '80px'
                                   }}
                                 >
-                                  <img
+                                  <Image
                                     src={photo}
                                     alt={`Review photo ${index + 1}`}
+                                    width={120}
+                                    height={120}
                                     className="w-full h-auto max-h-[120px] object-contain rounded-lg"
                                     style={{ 
                                       display: 'block',
@@ -615,19 +620,6 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                                       zIndex: 1,
                                       backgroundColor: '#ffffff',
                                       maxWidth: '100%'
-                                    }}
-                                    onError={(e) => {
-                                      console.error(`❌ Failed to load image for review ${review.id}:`, photo);
-                                      // Replace with placeholder on error
-                                      const target = e.currentTarget;
-                                      target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23e5e7eb" width="200" height="200"/%3E%3Ctext fill="%239ca3af" font-family="system-ui" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage not available%3C/text%3E%3C/svg%3E';
-                                      target.className = 'w-full h-auto max-h-[120px] object-contain rounded-lg border border-gray-200';
-                                    }}
-                                    onLoad={(e) => {
-                                      console.log(`✅ Successfully loaded image for review ${review.id}`);
-                                      const target = e.currentTarget;
-                                      target.style.opacity = '1';
-                                      target.style.visibility = 'visible';
                                     }}
                                     loading="lazy"
                                   />
@@ -660,14 +652,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                     {review.comment}
                   </p>
                   
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center space-x-4">
-                      <button className="flex items-center space-x-1 hover:text-green-600 transition-colors">
-                        <ThumbsUp className="w-4 h-4" />
-                        <span>Helpful ({review.helpful})</span>
-                      </button>
-                    </div>
-                  </div>
+                  
                 </motion.div>
               ))}
               
