@@ -589,7 +589,9 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
-    
+    if (code.toUpperCase() === 'DIABETIC25') {
+      return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
+    }
     if (code.toUpperCase() === 'SPECIAL') {
       return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
     }

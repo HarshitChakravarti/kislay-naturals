@@ -86,9 +86,6 @@ async function getProductById(id: string): Promise<Product | null> {
             image: '/p1.png',
             description: 'The perfect monk fruit sweetener for you. Made from 100% natural monk fruit extract, our sweetener provides the perfect balance of sweetness without any calories or artificial ingredients.',
             in_stock: true,
-            rating: 4.5,
-            numReviews: 12,
-            avgRating: 4.5,
             badge: 'Featured',
             category: 'Sweeteners',
             slug: 'kislay-monk-fruit-sweetener-drops'

@@ -20,8 +20,6 @@ export async function fetchFeaturedProducts() {
           name: "Monk Fruit Sweetener Drop",
           price: 229,
           originalPrice: 349,
-          rating: 4.5,
-          numReviews: 100,
           reviews: [],
           image: "/productimage-removebg-preview.png",
           badge: "Best Seller",

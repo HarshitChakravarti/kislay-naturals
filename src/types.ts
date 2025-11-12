@@ -59,7 +59,6 @@ export type Product = {
   description?: string;
   price: number;
   originalPrice?: number;
-  rating?: number;
   reviews?: Review[];
   numReviews?: number; // Total number of reviews
   avgRating?: number; // Average rating

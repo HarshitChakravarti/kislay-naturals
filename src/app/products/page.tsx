@@ -42,8 +42,6 @@ const ProductsPage = async () => {
         image: '/p1.png',
         description: 'The perfect monk fruit sweetener for you',
         in_stock: true,
-        rating: 4.5,
-        numReviews: 12,
         badge: 'Featured'
       }];
     } else {

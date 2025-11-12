@@ -84,12 +84,12 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center gap-2 mb-2">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => {
-                const rating = reviewStats.averageRating || 0;
+                const averageRating = reviewStats.averageRating || 0;
                 return (
                   <Star
                     key={i}
                     className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                      i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                      i < Math.floor(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
                     }`}
                   />
                 );
@@ -167,12 +167,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="flex items-center gap-2 mb-3">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => {
-                  const rating = reviewStats.averageRating || 0;
+                  const averageRating = reviewStats.averageRating || 0;
                   return (
                     <Star
                       key={i}
                       className={`h-4 w-4 ${
-                        i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                        i < Math.floor(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
                       }`}
                     />
                   );
