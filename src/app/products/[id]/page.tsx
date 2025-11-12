@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Product } from '@/types';
 import ProductDetailsWrapper from '@/components/ProductDetailsWrapper';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 
 // Only log in non-production to avoid noisy build output
 const debug = (...args: unknown[]) => {
@@ -114,10 +114,14 @@ async function getProductByIdWithReviews(id: string): Promise<Product | null> {
   }
 
   try {
-    const { data: reviews, error } = await supabase
+    // Use supabaseAdmin to bypass RLS and ensure we get all reviews
+    // Convert product.id to string to ensure proper matching
+    const productId = product.id.toString();
+    
+    const { data: reviews, error, count } = await supabaseAdmin
       .from('reviews')
-      .select('rating')
-      .eq('product_id', product.id);
+      .select('rating', { count: 'exact' })
+      .eq('product_id', productId);
 
     if (error) {
       console.error('Error fetching reviews:', error);
@@ -129,8 +133,15 @@ async function getProductByIdWithReviews(id: string): Promise<Product | null> {
       };
     }
 
-    const totalReviews = reviews.length;
-    const sumRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
+    // Use count if available, otherwise use reviews.length
+    const totalReviews = count ?? (reviews?.length ?? 0);
+    
+    // Calculate average rating from actual review data
+    const sumRatings = (reviews || []).reduce((sum, review) => {
+      const rating = typeof review.rating === 'number' ? review.rating : parseFloat(review.rating);
+      return sum + (isNaN(rating) ? 0 : rating);
+    }, 0);
+    
     const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
 
     return {

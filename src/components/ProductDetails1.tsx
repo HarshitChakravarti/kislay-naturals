@@ -341,18 +341,23 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               
               <div className="mt-2 flex items-center space-x-2">
                 <div className="flex items-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-4 w-4 ${star <= Math.floor(product.avgRating || 0)
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-gray-200'
-                      }`}
-                    />
-                  ))}
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const avgRating = product.avgRating || 0;
+                    // Round to nearest integer for star display
+                    const roundedRating = Math.round(avgRating);
+                    return (
+                      <Star
+                        key={star}
+                        className={`h-4 w-4 ${star <= roundedRating
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-gray-200'
+                        }`}
+                      />
+                    );
+                  })}
                 </div>
                 <span className="text-sm text-gray-600">
-                  ({product.numReviews || 0} reviews)
+                  ({product.numReviews || 0} {product.numReviews === 1 ? 'review' : 'reviews'})
                 </span>
               </div>
             </div>

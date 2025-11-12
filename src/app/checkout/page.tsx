@@ -635,11 +635,11 @@ export default function CheckoutPage() {
   let couponDiscount: number;
   
   if (couponApplied && couponType === 'fixed') {
-    // SPECIAL coupon: Fixed price of ₹249
-    finalTotal = 249;
-    couponDiscount = discountedPrice - 249;
+    // SPECIAL/DIABETIC25 coupon: Fixed price of ₹249 per unit
+    finalTotal = 249 * quantity;
+    couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'percentage') {
-    // SPECIAL coupon: Fixed price of ₹249
+    // Percentage-based coupon
     couponDiscount = 30 * quantity;
     finalTotal = discountedPrice - couponDiscount;
   } else {
