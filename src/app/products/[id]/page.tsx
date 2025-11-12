@@ -118,31 +118,53 @@ async function getProductByIdWithReviews(id: string): Promise<Product | null> {
     // Convert product.id to string to ensure proper matching
     const productId = product.id.toString();
     
-    const { data: reviews, error, count } = await supabaseAdmin
+    // First, get an accurate count of all reviews (using head: true for efficiency)
+    const { count: totalCount, error: countError } = await supabaseAdmin
       .from('reviews')
-      .select('rating', { count: 'exact' })
+      .select('id', { count: 'exact', head: true })
       .eq('product_id', productId);
 
-    if (error) {
-      console.error('Error fetching reviews:', error);
-      // Return product without review data if reviews fetch fails
+    if (countError) {
+      console.error('Error fetching review count:', countError);
+    }
+
+    // Then, fetch all reviews (select id and rating to get all rows, including null ratings)
+    // Using 'id,rating' ensures we get all reviews, even if rating is null
+    const { data: reviews, error: reviewsError } = await supabaseAdmin
+      .from('reviews')
+      .select('id, rating')
+      .eq('product_id', productId);
+
+    if (reviewsError) {
+      console.error('Error fetching reviews:', reviewsError);
+      // Return product with count even if rating fetch fails
       return {
         ...product,
         avgRating: 0,
-        numReviews: 0,
+        numReviews: totalCount ?? 0,
       };
     }
 
-    // Use count if available, otherwise use reviews.length
-    const totalReviews = count ?? (reviews?.length ?? 0);
+    // Use the count from the count query (most accurate - includes all reviews)
+    // Fall back to array length only if count is not available
+    const totalReviews = totalCount !== null && totalCount !== undefined ? totalCount : (reviews?.length ?? 0);
     
-    // Calculate average rating from actual review data
-    const sumRatings = (reviews || []).reduce((sum, review) => {
-      const rating = typeof review.rating === 'number' ? review.rating : parseFloat(review.rating);
+    // Calculate average rating only from reviews with valid ratings
+    // Filter out null/undefined ratings for accurate average calculation
+    const reviewsWithRatings = (reviews || []).filter(review => 
+      review.rating !== null && review.rating !== undefined
+    );
+    
+    const sumRatings = reviewsWithRatings.reduce((sum, review) => {
+      const rating = typeof review.rating === 'number' ? review.rating : parseFloat(String(review.rating));
       return sum + (isNaN(rating) ? 0 : rating);
     }, 0);
     
-    const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
+    // Calculate average only from reviews with valid ratings
+    // But display total count of all reviews
+    const averageRating = reviewsWithRatings.length > 0 ? sumRatings / reviewsWithRatings.length : 0;
+
+    debug(`Product ${productId}: Found ${totalReviews} reviews (count query: ${totalCount}, array length: ${reviews?.length ?? 0}), avg rating: ${averageRating}`);
 
     return {
       ...product,
