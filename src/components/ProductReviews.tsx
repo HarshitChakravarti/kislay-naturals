@@ -51,14 +51,30 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
   });
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5);
 
-  const calculateReviewStats = (reviewsData: Review[]) => {
-    const totalReviews = reviewsData.length;
-    const sumRatings = reviewsData.reduce((sum, review) => sum + review.rating, 0);
-    const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
+  const calculateReviewStats = (reviewsData: Review[], totalCount?: number) => {
+    // Use totalCount from API if provided (more accurate), otherwise use array length
+    const totalReviews = totalCount ?? reviewsData.length;
     
+    // Filter out reviews with null/undefined ratings for average calculation
+    const reviewsWithRatings = reviewsData.filter(review => 
+      review.rating !== null && review.rating !== undefined && !isNaN(Number(review.rating))
+    );
+    
+    // Calculate average only from reviews with valid ratings
+    const sumRatings = reviewsWithRatings.reduce((sum, review) => {
+      const rating = typeof review.rating === 'number' ? review.rating : parseFloat(String(review.rating));
+      return sum + (isNaN(rating) ? 0 : rating);
+    }, 0);
+    
+    const averageRating = reviewsWithRatings.length > 0 ? sumRatings / reviewsWithRatings.length : 0;
+    
+    // Calculate distribution from all reviews with valid ratings
     const distribution = [0, 0, 0, 0, 0];
-    reviewsData.forEach(review => {
-      distribution[review.rating - 1]++;
+    reviewsWithRatings.forEach(review => {
+      const rating = typeof review.rating === 'number' ? review.rating : Math.floor(parseFloat(String(review.rating)));
+      if (rating >= 1 && rating <= 5) {
+        distribution[rating - 1]++;
+      }
     });
 
     setReviewStats({
@@ -71,12 +87,15 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
   const fetchReviews = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/reviews?productId=${productId}&limit=100`);
+      // Fetch all reviews with a high limit to get accurate count
+      const response = await fetch(`/api/reviews?productId=${productId}&limit=1000`);
       const data = await response.json();
       
       if (data.success) {
         setReviews(data.data);
-        calculateReviewStats(data.data);
+        // Pass the total count from API pagination for accurate stats
+        const totalCount = data.pagination?.totalReviews;
+        calculateReviewStats(data.data, totalCount);
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);

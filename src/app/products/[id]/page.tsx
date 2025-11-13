@@ -3,6 +3,10 @@ import type { Product } from '@/types';
 import ProductDetailsWrapper from '@/components/ProductDetailsWrapper';
 import { supabase, supabaseAdmin } from '@/lib/supabase';
 
+// Force dynamic rendering to ensure review counts are always fresh
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; // Disable caching completely for this page
+
 // Only log in non-production to avoid noisy build output
 const debug = (...args: unknown[]) => {
   if (process.env.NODE_ENV !== 'production') {

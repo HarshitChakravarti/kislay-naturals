@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -38,6 +38,10 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [reviewStats, setReviewStats] = useState({
+    avgRating: product.avgRating || 0,
+    numReviews: product.numReviews || 0
+  });
 
   const [isEnquireFormVisible, setIsEnquireFormVisible] = useState(false);
   const [enquireFormData, setEnquireFormData] = useState({
@@ -55,9 +59,87 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
     '/p33.png'
   ];
 
+  // Fetch fresh review stats to match the reviews section
+  useEffect(() => {
+    const fetchReviewStats = async () => {
+      try {
+        // Fetch all reviews with a high limit to get accurate count
+        const response = await fetch(`/api/reviews?productId=${product.id}&limit=1000`);
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          const reviews = data.data;
+          // Use the count from API pagination (most accurate) or fall back to array length
+          const totalReviews = data.pagination?.totalReviews ?? reviews.length;
+          
+          // Filter out reviews with null/undefined ratings for average calculation
+          const reviewsWithRatings = reviews.filter((r: any) => 
+            r.rating !== null && r.rating !== undefined && !isNaN(Number(r.rating))
+          );
+          
+          // Calculate average only from reviews with valid ratings
+          const sumRatings = reviewsWithRatings.reduce((sum: number, review: any) => {
+            const rating = typeof review.rating === 'number' ? review.rating : parseFloat(String(review.rating));
+            return sum + (isNaN(rating) ? 0 : rating);
+          }, 0);
+          
+          const averageRating = reviewsWithRatings.length > 0 ? sumRatings / reviewsWithRatings.length : 0;
+          
+          setReviewStats({
+            avgRating: Math.round(averageRating * 10) / 10,
+            numReviews: totalReviews
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching review stats:', error);
+      }
+    };
+
+    fetchReviewStats();
+  }, [product.id]);
+
   const handleReviewSubmit = useCallback(() => {
+    // Refetch review stats when a new review is submitted
+    const fetchReviewStats = async () => {
+      try {
+        // Fetch all reviews with a high limit to get accurate count
+        const response = await fetch(`/api/reviews?productId=${product.id}&limit=1000`);
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          const reviews = data.data;
+          // Use the count from API pagination (most accurate) or fall back to array length
+          const totalReviews = data.pagination?.totalReviews ?? reviews.length;
+          
+          // Filter out reviews with null/undefined ratings for average calculation
+          const reviewsWithRatings = reviews.filter((r: any) => 
+            r.rating !== null && r.rating !== undefined && !isNaN(Number(r.rating))
+          );
+          
+          // Calculate average only from reviews with valid ratings
+          const sumRatings = reviewsWithRatings.reduce((sum: number, review: any) => {
+            const rating = typeof review.rating === 'number' ? review.rating : parseFloat(String(review.rating));
+            return sum + (isNaN(rating) ? 0 : rating);
+          }, 0);
+          
+          const averageRating = reviewsWithRatings.length > 0 ? sumRatings / reviewsWithRatings.length : 0;
+          
+          setReviewStats({
+            avgRating: Math.round(averageRating * 10) / 10,
+            numReviews: totalReviews
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching review stats:', error);
+      }
+    };
+
+    // Small delay to ensure the review is saved before fetching
+    setTimeout(() => {
+      fetchReviewStats();
+    }, 500);
     router.refresh();
-  }, [router]);
+  }, [router, product.id]);
 
   const nextImage = () => {
     setSelectedImage((prev) => (prev + 1) % productImages.length);
@@ -342,7 +424,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               <div className="mt-2 flex items-center space-x-2">
                 <div className="flex items-center">
                   {[1, 2, 3, 4, 5].map((star) => {
-                    const avgRating = product.avgRating || 0;
+                    const avgRating = reviewStats.avgRating || 0;
                     // Round to nearest integer for star display
                     const roundedRating = Math.round(avgRating);
                     return (
@@ -357,7 +439,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   })}
                 </div>
                 <span className="text-sm text-gray-600">
-                  ({product.numReviews || 0} {product.numReviews === 1 ? 'review' : 'reviews'})
+                  ({reviewStats.numReviews || 0} {reviewStats.numReviews === 1 ? 'review' : 'reviews'})
                 </span>
               </div>
             </div>
