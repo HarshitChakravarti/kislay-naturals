@@ -589,9 +589,7 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
-    if (code.toUpperCase() === 'DIABETIC25') {
-      return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
-    }
+    
     if (code.toUpperCase() === 'SPECIAL') {
       return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
     }
@@ -635,7 +633,7 @@ export default function CheckoutPage() {
   let couponDiscount: number;
   
   if (couponApplied && couponType === 'fixed') {
-    // SPECIAL/DIABETIC25 coupon: Fixed price of ₹249 per unit
+    // SPECIAL coupon: Fixed price of ₹249 per unit
     finalTotal = 249 * quantity;
     couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'percentage') {
