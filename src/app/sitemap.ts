@@ -2,7 +2,21 @@ import { MetadataRoute } from 'next';
 import { supabase } from '@/lib/supabase';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kislaynaturals.com';
+  // Ensure baseUrl has no trailing slash and uses https
+  // This must match your canonical domain exactly
+  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kislaynaturals.com';
+  
+  // Remove trailing slash if present
+  baseUrl = baseUrl.replace(/\/$/, '');
+  
+  // Ensure https protocol (required for sitemaps)
+  if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    baseUrl = `https://${baseUrl}`;
+  } else if (baseUrl.startsWith('http://')) {
+    // Convert http to https for production
+    baseUrl = baseUrl.replace('http://', 'https://');
+  }
+  
   const now = new Date();
 
   // Base static pages that will be returned even if dynamic content fails

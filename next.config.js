@@ -13,6 +13,9 @@ const nextConfig = {
     // Add any experimental features here if needed
   },
   reactStrictMode: true,
+  // Explicitly set trailingSlash to false to match sitemap URLs
+  // This ensures consistency between sitemap and actual URLs
+  trailingSlash: false,
   // Add any other Next.js config options here
 };
 

@@ -6,8 +6,39 @@ import { validateToken, extractTokenFromRequest, isAdminUser, validateAdminRole,
 const protectedRoutes = ['/account', '/admin'];
 const authRoutes = ['/login', '/register'];
 
+// Define public routes that should never be processed by middleware
+// These routes are accessible to everyone, including Googlebot
+const publicRoutes = [
+  '/',
+  '/products',
+  '/about',
+  '/blog',
+  '/recipes',
+  '/contact-us',
+  '/privacy-policy',
+  '/terms-and-conditions',
+  '/refund-policy',
+  '/order-success',
+  '/payment-success',
+  '/checkout',
+  '/subscribe',
+];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // Early return for public routes - no authentication checks needed
+  // This prevents any potential redirect loops for Googlebot and other crawlers
+  const isPublicRoute = publicRoutes.some(route => {
+    // Exact match for root or exact path match
+    if (route === '/' && pathname === '/') return true;
+    // Check if pathname starts with the public route (handles /products, /products/123, etc.)
+    return pathname === route || pathname.startsWith(`${route}/`);
+  });
+
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
 
   // Check if the route is protected
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
@@ -59,6 +90,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // For all other routes (like auth routes), allow access
   return NextResponse.next();
 }
 
@@ -83,7 +115,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
+     * - static files (.ico, .png, .jpg, .jpeg, .gif, .svg, .webp, etc.)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|eot)).*)',
   ],
 };
