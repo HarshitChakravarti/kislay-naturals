@@ -27,6 +27,13 @@ const publicRoutes = [
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Skip static files (images, fonts, CSS, JS, etc.)
+  const staticFileExtensions = ['.ico', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.css', '.js', '.woff', '.woff2', '.ttf', '.eot', '.json', '.xml'];
+  const hasStaticExtension = staticFileExtensions.some(ext => pathname.toLowerCase().endsWith(ext));
+  if (hasStaticExtension) {
+    return NextResponse.next();
+  }
+
   // Early return for public routes - no authentication checks needed
   // This prevents any potential redirect loops for Googlebot and other crawlers
   const isPublicRoute = publicRoutes.some(route => {
@@ -114,9 +121,11 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
-     * - static files (.ico, .png, .jpg, .jpeg, .gif, .svg, .webp, etc.)
+     * - static file extensions (.ico, .png, .jpg, etc.)
+     * 
+     * Note: Next.js matcher doesn't support capturing groups, so we use
+     * a simpler pattern and handle static files in the middleware function itself
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(ico|png|jpg|jpeg|gif|svg|webp|css|js|woff|woff2|ttf|eot)).*)',
+    '/((?!api|_next/static|_next/image|favicon\\.ico).*)',
   ],
 };
