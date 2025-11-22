@@ -1,6 +1,16 @@
 import React from 'react';
 import { ArrowLeft, Shield, Eye, Lock, Cookie, Mail, Phone, MapPin, AlertTriangle, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Kislay Naturals',
+  description: 'Learn how Kislay Naturals collects, uses, and protects your personal data. Our commitment to privacy and data security.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (
@@ -178,7 +188,7 @@ export default function PrivacyPolicyPage() {
               <div className="flex items-start space-x-3 md:space-x-4">
                 <div className="w-2 h-2 bg-green-500 rounded-full mt-2 md:mt-3 flex-shrink-0"></div>
                 <p className="text-base md:text-lg text-foreground">
-                  If you have previously agreed to us using your personal information for direct marketing purposes, you may change your mind at any time by writing to or emailing us at <a href="mailto:naturalskislay@gmail.com" className="text-green-600 hover:text-green-700 underline">naturalskislay@gmail.com</a>.
+                  If you have previously agreed to us using your personal information for direct marketing purposes, you may change your mind at any time by writing to or emailing us at <a href="mailto:support@kislaynaturals.com" className="text-green-600 hover:text-green-700 underline">support@kislaynaturals.com</a>.
                 </p>
               </div>
             </div>
@@ -224,8 +234,8 @@ export default function PrivacyPolicyPage() {
                 <Mail className="w-5 h-5 text-green-600" />
                 <div>
                   <p className="text-sm md:text-base text-muted-foreground mb-2">Email:</p>
-                  <a href="mailto:naturalskislay@gmail.com" className="text-green-600 hover:text-green-700 font-medium text-base md:text-lg">
-                    naturalskislay@gmail.com
+                  <a href="mailto:support@kislaynaturals.com" className="text-green-600 hover:text-green-700 font-medium text-base md:text-lg">
+                    support@kislaynaturals.com
                   </a>
                 </div>
               </div>
