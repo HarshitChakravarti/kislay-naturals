@@ -11,9 +11,10 @@ import SectionDivider from '@/components/SectionDivider';
 
 interface HomeClientProps {
   products: Product[];
+  blogPosts?: any[];
 }
 
-export default function HomeClient({ products }: HomeClientProps) {
+export default function HomeClient({ products, blogPosts = [] }: HomeClientProps) {
   const features: Feature[] = [
     {
       title: "100% NATURAL",
@@ -49,7 +50,7 @@ export default function HomeClient({ products }: HomeClientProps) {
       <FeaturedProducts products={products} />
       <FeaturesBanner features={features} />
       <Recipes />
-      <BlogPreview />
+      <BlogPreview blogPosts={blogPosts} />
       <WhatsAppButton />
     </main>
   );

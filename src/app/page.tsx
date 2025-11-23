@@ -1,5 +1,5 @@
 import HomeClient from '@/components/HomeClient';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 import type { Product } from '@/types';
 
 export default async function Home() {
@@ -56,9 +56,42 @@ export default async function Home() {
     ];
   }
 
+  // Fetch blog posts from database
+  let blogPosts: any[] = [];
+  
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('blogposts')
+      .select('*')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
+      // No limit - show all published blog posts
+    
+    if (error) {
+      console.error('Error fetching blog posts:', error);
+      blogPosts = [];
+    } else {
+      // Filter out any posts with missing required fields
+      blogPosts = (data || []).filter(post => 
+        post && 
+        post.slug && 
+        post.title && 
+        post.published_at
+      );
+      console.log('Homepage blog posts fetched:', blogPosts.length, 'out of', data?.length || 0, 'total');
+      if (blogPosts.length < (data?.length || 0)) {
+        const missing = (data || []).filter(post => !post || !post.slug || !post.title || !post.published_at);
+        console.log('Filtered out posts:', missing.map(p => ({ slug: p?.slug, title: p?.title?.substring(0, 50) })));
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    blogPosts = [];
+  }
+
   return (
     <main>
-      <HomeClient products={featuredProducts} />
+      <HomeClient products={featuredProducts} blogPosts={blogPosts} />
     </main>
   );
 }

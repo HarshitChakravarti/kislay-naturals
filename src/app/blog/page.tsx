@@ -22,8 +22,16 @@ async function getBlogPosts() {
       return [];
     }
     
-    console.log('Blog posts data:', data?.length);
-    return data || [];
+    // Filter out any posts with missing required fields
+    const validPosts = (data || []).filter(post => 
+      post && 
+      post.slug && 
+      post.title && 
+      post.published_at
+    );
+    
+    console.log('Blog posts data:', validPosts.length, 'out of', data?.length || 0);
+    return validPosts;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
@@ -76,9 +84,9 @@ export default async function BlogPage() {
               </div>
               <div className="p-4 sm:p-6">
                 <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-2">
-                  <span>{new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span>{post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent'}</span>
                   <span className="mx-2">•</span>
-                  <span>{post.read_time}</span>
+                  <span>{post.read_time || '5 min read'}</span>
                 </div>
                 {post.category && (
                   <div className="mb-3">

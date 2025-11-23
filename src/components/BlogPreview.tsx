@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Yeseva_One } from 'next/font/google';
@@ -8,64 +8,50 @@ const yeseva_One = Yeseva_One({
   subsets: ['latin'],
 });
 
-const posts = [
-  {
-    id: 6,
-    title: "Is Monk Fruit Safe for Diabetics? The Complete Guide",
-    excerpt: "Learn why monk fruit sweetener is safe for diabetics. Zero calories, zero carbs, and no effect on blood sugar levels.",
-    image: "/diabetes.jpg",
-    category: "Health & Diabetes",
-    date: "October 29, 2025",
-    link: "/blog/monk-fruit-diabetics-guide",
-  },
-  {
-    id: 5,
-    title: "7 Easy Ways to Use Monk Fruit Sweetener in Your Daily Diet",
-    excerpt: "Discover 7 simple ways to add monk fruit sweetener to your daily diet. Perfect for tea, coffee, desserts, and Indian recipes.",
-    image: "/cover4.jpg", 
-    category: "Daily Living",
-    date: "October 14, 2025",
-    link: "/blog/monk-fruit-daily-uses",
-  },
-  {
-    id: 4,
-    title: "How Monk Fruit Sweetener Supports Weight Loss Naturally",
-    excerpt: "Find out how monk fruit sweetener helps with weight loss. Zero calories, reduces cravings, and keeps you full without sugar spikes.",
-    image: "/herophoto2.png", 
-    category: "Weight Loss",
-    date: "October 2, 2025",
-    link: "/blog/monk-fruit-weight-loss",
-  },
-  {
-    id: 3,
-    title: "5 Reasons to Switch from Sugar to Monk Fruit Sweetener Today",
-    excerpt: "Thinking of quitting sugar? Here are 5 powerful reasons why monk fruit sweetener is the healthiest sugar replacement for your daily lifestyle.",
-    image: "/mcover.png", 
-    category: "Health & Wellness",
-    date: "September 14, 2025",
-    link: "/blog/monk-fruit-3",
-  },
-  {
-    id: 2,
-    title: "Is Monk Fruit Sweetener Good for Diabetics?",
-    excerpt: "Find out why monk fruit sweetener is safe for diabetics. Zero sugar, zero carbs, and a natural way to sweeten food without raising blood sugar levels.",
-    image: "/herophoto.png", 
-    category: "Health & Diabetes",
-    date: "September 9, 2025",
-    link: "/blog/monk-fruit-2",
-  },
-  {
-    id: 1,
-    title: "Monk Fruit Sweetener – The Best Natural Sugar Substitute in India",
-    excerpt: "Discover why monk fruit sweetener is the healthiest sugar alternative in India. Zero calories, diabetic-friendly, and perfect for weight management.",
-    image: "/cover3.jpg", 
-    category: "Health & Wellness",
-    date: "August 24, 2025",
-    link: "/blog/monk-fruit-1",
-  },
-];
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  image: string;
+  category: string;
+  date: string;
+  link: string;
+  readTime?: string;
+}
 
-const BlogPreview = () => {
+interface BlogPreviewProps {
+  blogPosts?: any[];
+}
+
+const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
+  // Transform database blog posts to component format
+  const posts: BlogPost[] = useMemo(() => {
+    if (blogPosts && blogPosts.length > 0) {
+      const transformed = blogPosts
+        .filter(post => post && post.slug && post.title) // Filter out invalid posts
+        .map((post, index) => ({
+          id: post.id || index,
+          title: post.title || '',
+          excerpt: post.excerpt || '',
+          image: post.image || '/cover.jpg',
+          category: post.category || 'Health & Wellness',
+          date: post.published_at 
+            ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+            : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+          link: `/blog/${post.slug || ''}`,
+          readTime: post.read_time || '5 min read',
+        }));
+      
+      // Debug logging
+      if (typeof window !== 'undefined') {
+        console.log('BlogPreview: Received', blogPosts.length, 'posts, transformed to', transformed.length, 'posts');
+      }
+      
+      return transformed;
+    }
+    // Fallback to empty array if no blog posts
+    return [];
+  }, [blogPosts]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const postsPerPage = 3; // Show 3 posts at a time on desktop
   const totalPages = Math.ceil(posts.length / postsPerPage);
@@ -105,7 +91,12 @@ const BlogPreview = () => {
 
   const getCurrentPosts = () => {
     const startIndex = currentIndex * postsPerPage;
-    return posts.slice(startIndex, startIndex + postsPerPage);
+    const currentPosts = posts.slice(startIndex, startIndex + postsPerPage);
+    // Debug: Log when posts change
+    if (typeof window !== 'undefined' && currentIndex === 0) {
+      console.log(`BlogPreview: Showing ${currentPosts.length} posts on page ${currentIndex + 1} of ${totalPages} (Total: ${posts.length} posts)`);
+    }
+    return currentPosts;
   };
 
   return (
@@ -134,7 +125,7 @@ const BlogPreview = () => {
       <div className="relative hidden lg:block">
         <button
           onClick={prevSlide}
-          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white hover:bg-gray-50 border-2 border-green-600 text-green-600 hover:text-green-700 rounded-full p-3 shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 z-10 bg-white hover:bg-gray-50 border-2 border-green-600 text-green-600 hover:text-green-700 rounded-full p-3 shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={posts.length <= postsPerPage}
         >
           <ChevronLeft className="w-6 h-6" />
@@ -142,13 +133,13 @@ const BlogPreview = () => {
         
         <button
           onClick={nextSlide}
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white hover:bg-gray-50 border-2 border-green-600 text-green-600 hover:text-green-700 rounded-full p-3 shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 z-10 bg-white hover:bg-gray-50 border-2 border-green-600 text-green-600 hover:text-green-700 rounded-full p-3 shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={posts.length <= postsPerPage}
         >
           <ChevronRight className="w-6 h-6" />
         </button>
 
-        <div className="grid grid-cols-3 gap-7 transition-all duration-300">
+        <div className="grid grid-cols-3 gap-7 transition-all duration-300 px-8">
           {getCurrentPosts().map((post) => (
             <article 
               key={post.id}
@@ -174,7 +165,7 @@ const BlogPreview = () => {
                 <div className="flex items-center text-xs sm:text-xs text-gray-500 mb-2 sm:mb-2.5">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
-                  <span>5 min read</span>
+                  <span>{post.readTime || '5 min read'}</span>
                 </div>
                 
                 <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-2.5 leading-tight group-hover:text-green-600 transition-colors">
@@ -255,7 +246,7 @@ const BlogPreview = () => {
                 <div className="flex items-center text-xs text-gray-500 mb-2">
                   <span>{post.date}</span>
                   <span className="mx-2">•</span>
-                  <span>5 min read</span>
+                  <span>{post.readTime || '5 min read'}</span>
                 </div>
                 
                 <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-green-600 transition-colors line-clamp-2">
