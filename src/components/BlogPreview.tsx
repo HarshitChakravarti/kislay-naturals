@@ -35,8 +35,8 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
           excerpt: post.excerpt || '',
           image: post.image || '/cover.jpg',
           category: post.category || 'Health & Wellness',
-          date: post.published_at 
-            ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+          date: (post.published_at || post.created_at)
+            ? new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
             : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
           link: `/blog/${post.slug || ''}`,
           readTime: post.read_time || '5 min read',

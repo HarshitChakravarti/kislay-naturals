@@ -38,6 +38,12 @@ export interface RecipeData {
 // Sync a blog post to the database
 export async function syncBlogPost(blogPostData: BlogPostData) {
   try {
+    // Ensure published_at is set if not provided
+    const blogDataWithPublishedAt = {
+      ...blogPostData,
+      published_at: blogPostData.published_at || new Date().toISOString()
+    };
+    
     // Check if blog post already exists
     const { data: existingPost } = await supabaseAdmin
       .from('blogposts')
@@ -50,7 +56,7 @@ export async function syncBlogPost(blogPostData: BlogPostData) {
       // Update existing post
       const { data, error } = await supabaseAdmin
         .from('blogposts')
-        .update(blogPostData)
+        .update(blogDataWithPublishedAt)
         .eq('slug', blogPostData.slug)
         .select()
         .single();
@@ -61,7 +67,7 @@ export async function syncBlogPost(blogPostData: BlogPostData) {
       // Create new post
       const { data, error } = await supabaseAdmin
         .from('blogposts')
-        .insert(blogPostData)
+        .insert(blogDataWithPublishedAt)
         .select()
         .single();
       
@@ -125,11 +131,25 @@ export async function getAllBlogPosts() {
     const { data, error } = await supabaseAdmin
       .from('blogposts')
       .select('*')
-      .eq('is_published', true)
-      .order('published_at', { ascending: false });
+      .eq('is_published', true);
 
     if (error) throw error;
-    return data;
+    
+    // Filter out posts with missing required fields
+    const validPosts = (data || []).filter(post => 
+      post && 
+      post.slug && 
+      post.title
+    );
+    
+    // Sort by published_at (descending), fallback to created_at if published_at is missing
+    validPosts.sort((a, b) => {
+      const dateA = a.published_at || a.created_at || '';
+      const dateB = b.published_at || b.created_at || '';
+      return dateB.localeCompare(dateA); // Descending order (newest first)
+    });
+    
+    return validPosts;
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     throw error;

@@ -2,21 +2,54 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Clock, User } from 'lucide-react';
+import { supabaseAdmin } from '@/lib/supabase';
 
-export const metadata: Metadata = {
-  title: 'Monk Fruit vs Artificial Sweeteners — The Healthier Sugar Alternative | Kislay Naturals',
-  description: 'Learn why monk fruit sweetener is a safer choice than artificial sweeteners like aspartame or sucralose. 100% natural, zero calories, and diabetic-friendly.',
-  keywords: 'monk fruit vs artificial sweeteners, aspartame, sucralose, saccharin, natural sweetener, healthy sugar alternative, monk fruit benefits',
-  openGraph: {
-    title: 'Monk Fruit vs Artificial Sweeteners — The Healthier Sugar Alternative',
+async function getBlogPost() {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('blogposts')
+      .select('*')
+      .eq('slug', 'monk-fruit-vs-artificial-sweeteners')
+      .eq('is_published', true)
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
+    return null;
+  }
+}
+
+export const revalidate = 0; // Disable caching to ensure fresh data
+
+export async function generateMetadata(): Promise<Metadata> {
+  const post = await getBlogPost();
+  const publishedTime = post?.published_at || new Date().toISOString();
+
+  return {
+    title: 'Monk Fruit vs Artificial Sweeteners — The Healthier Sugar Alternative | Kislay Naturals',
     description: 'Learn why monk fruit sweetener is a safer choice than artificial sweeteners like aspartame or sucralose. 100% natural, zero calories, and diabetic-friendly.',
-    type: 'article',
-    publishedTime: new Date().toISOString(),
-    authors: ['Kislay Naturals'],
-  },
-};
+    keywords: 'monk fruit vs artificial sweeteners, aspartame, sucralose, saccharin, natural sweetener, healthy sugar alternative, monk fruit benefits',
+    openGraph: {
+      title: 'Monk Fruit vs Artificial Sweeteners — The Healthier Sugar Alternative',
+      description: 'Learn why monk fruit sweetener is a safer choice than artificial sweeteners like aspartame or sucralose. 100% natural, zero calories, and diabetic-friendly.',
+      type: 'article',
+      publishedTime: publishedTime,
+      authors: ['Kislay Naturals'],
+    },
+  };
+}
 
-export default function MonkFruitVsArtificialSweetenersBlog() {
+export default async function MonkFruitVsArtificialSweetenersBlog() {
+  const post = await getBlogPost();
+  const publishedDate = post?.published_at 
+    ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -48,7 +81,7 @@ export default function MonkFruitVsArtificialSweetenersBlog() {
           <div className="p-6 lg:p-8">
             <div className="flex items-center text-sm text-gray-500 mb-4">
               <Clock className="h-4 w-4 mr-2" />
-              <span>{new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span>{publishedDate}</span>
               <span className="mx-2">•</span>
               <User className="h-4 w-4 mr-2" />
               <span>Kislay Naturals</span>

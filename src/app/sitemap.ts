@@ -92,8 +92,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .single(),
       supabase
         .from('blogposts')
-        .select('published_at, updated_at')
-        .order('published_at', { ascending: false })
+        .select('published_at, created_at, updated_at')
+        .eq('is_published', true)
         .limit(1)
         .single(),
       supabase
@@ -115,8 +115,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           timestamps.push(new Date(latestProduct.value.data.created_at));
         }
       }
-      if (latestBlogPost.status === 'fulfilled' && latestBlogPost.value.data?.updated_at) {
-        timestamps.push(new Date(latestBlogPost.value.data.updated_at));
+      if (latestBlogPost.status === 'fulfilled' && latestBlogPost.value.data) {
+        if (latestBlogPost.value.data.updated_at) {
+          timestamps.push(new Date(latestBlogPost.value.data.updated_at));
+        } else if (latestBlogPost.value.data.published_at) {
+          timestamps.push(new Date(latestBlogPost.value.data.published_at));
+        } else if (latestBlogPost.value.data.created_at) {
+          timestamps.push(new Date(latestBlogPost.value.data.created_at));
+        }
       }
       if (latestRecipe.status === 'fulfilled' && latestRecipe.value.data?.updated_at) {
         timestamps.push(new Date(latestRecipe.value.data.updated_at));
@@ -146,7 +152,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .eq('in_stock', true),
       supabase
         .from('blogposts')
-        .select('slug, updated_at, published_at')
+        .select('slug, updated_at, published_at, created_at')
         .eq('is_published', true),
       supabase
         .from('recipes')
@@ -173,14 +179,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // --- Process Blog Posts ---
     if (blogpostsResult.status === 'fulfilled' && blogpostsResult.value.data) {
       const { data: blogposts } = blogpostsResult.value;
-      const blogPages = blogposts.map((blogpost) => ({
-        url: `${baseUrl}/blog/${blogpost.slug}`,
-        lastModified: blogpost.updated_at 
-          ? new Date(blogpost.updated_at) 
-          : (blogpost.published_at ? new Date(blogpost.published_at) : now),
-        changeFrequency: 'monthly' as const,
-        priority: 0.8,
-      }));
+      const blogPages = blogposts
+        .filter(blogpost => blogpost.slug) // Only include blogs with slugs
+        .map((blogpost) => ({
+          url: `${baseUrl}/blog/${blogpost.slug}`,
+          lastModified: blogpost.updated_at 
+            ? new Date(blogpost.updated_at) 
+            : (blogpost.published_at 
+                ? new Date(blogpost.published_at) 
+                : (blogpost.created_at ? new Date(blogpost.created_at) : now)),
+          changeFrequency: 'monthly' as const,
+          priority: 0.8,
+        }));
       dynamicPages = [...dynamicPages, ...blogPages];
     } else if (blogpostsResult.status === 'fulfilled' && blogpostsResult.value.error) {
       console.error('Error fetching blogposts for sitemap:', blogpostsResult.value.error);

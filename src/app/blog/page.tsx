@@ -14,21 +14,27 @@ async function getBlogPosts() {
     const { data, error } = await supabaseAdmin
       .from('blogposts')
       .select('*')
-      .eq('is_published', true)
-      .order('published_at', { ascending: false });
+      .eq('is_published', true);
     
     if (error) {
       console.error('Failed to fetch blog posts:', error);
       return [];
     }
     
-    // Filter out any posts with missing required fields
+    // Filter out any posts with missing required fields (slug and title are required)
+    // published_at is optional - we'll use created_at as fallback for sorting
     const validPosts = (data || []).filter(post => 
       post && 
       post.slug && 
-      post.title && 
-      post.published_at
+      post.title
     );
+    
+    // Sort by published_at (descending), fallback to created_at if published_at is missing
+    validPosts.sort((a, b) => {
+      const dateA = a.published_at || a.created_at || '';
+      const dateB = b.published_at || b.created_at || '';
+      return dateB.localeCompare(dateA); // Descending order (newest first)
+    });
     
     console.log('Blog posts data:', validPosts.length, 'out of', data?.length || 0);
     return validPosts;
@@ -37,6 +43,8 @@ async function getBlogPosts() {
     return [];
   }
 }
+
+export const revalidate = 0; // Disable caching to ensure fresh data
 
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts()
@@ -84,7 +92,7 @@ export default async function BlogPage() {
               </div>
               <div className="p-4 sm:p-6">
                 <div className="flex items-center text-xs sm:text-sm text-gray-500 mb-2">
-                  <span>{post.published_at ? new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent'}</span>
+                  <span>{(post.published_at || post.created_at) ? new Date(post.published_at || post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Recent'}</span>
                   <span className="mx-2">•</span>
                   <span>{post.read_time || '5 min read'}</span>
                 </div>

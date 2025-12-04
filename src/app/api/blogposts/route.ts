@@ -12,9 +12,7 @@ export async function GET(request: NextRequest) {
     let query = supabase
       .from('blogposts')
       .select('*')
-      .eq('is_published', true)
-      .order('published_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+      .eq('is_published', true);
 
     if (category) {
       query = query.eq('category', category);
@@ -27,7 +25,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch blogposts' }, { status: 500 });
     }
 
-    return NextResponse.json({ blogposts });
+    // Filter out posts with missing required fields
+    const validPosts = (blogposts || []).filter(post => 
+      post && 
+      post.slug && 
+      post.title
+    );
+    
+    // Sort by published_at (descending), fallback to created_at if published_at is missing
+    validPosts.sort((a, b) => {
+      const dateA = a.published_at || a.created_at || '';
+      const dateB = b.published_at || b.created_at || '';
+      return dateB.localeCompare(dateA); // Descending order (newest first)
+    });
+    
+    // Apply pagination after sorting
+    const paginatedPosts = validPosts.slice(offset, offset + limit);
+
+    return NextResponse.json({ blogposts: paginatedPosts, total: validPosts.length });
   } catch (error) {
     console.error('Error in GET /api/blogposts:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
