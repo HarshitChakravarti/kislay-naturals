@@ -1,5 +1,6 @@
 import React, { useState, useRef, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Yeseva_One } from 'next/font/google';
 
@@ -145,21 +146,23 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
               key={post.id}
               className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
             >
-              <div className="relative h-44 w-full bg-gray-100">
-                <Image 
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-3">
-                  <span className="inline-block px-2.5 py-0.5 text-[11px] font-medium text-white bg-green-600 rounded-full mb-2">
-                    {post.category}
-                  </span>
+              <Link href={post.link} className="block cursor-pointer">
+                <div className="relative h-44 w-full bg-gray-100">
+                  <Image 
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-3">
+                    <span className="inline-block px-2.5 py-0.5 text-[11px] font-medium text-white bg-green-600 rounded-full mb-2">
+                      {post.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
               
               <div className="p-4 sm:p-5">
                 <div className="flex items-center text-xs sm:text-xs text-gray-500 mb-2 sm:mb-2.5">
@@ -168,21 +171,23 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
                 
-                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-2.5 leading-tight group-hover:text-green-600 transition-colors">
-                  {post.title}
-                </h3>
+                <Link href={post.link}>
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-2.5 leading-tight group-hover:text-green-600 transition-colors cursor-pointer">
+                    {post.title}
+                  </h3>
+                </Link>
                 
                 <p className="text-sm sm:text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-2">
                   {post.excerpt}
                 </p>
                 
-                <a
+                <Link
                   href={post.link}
                   className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors text-sm sm:text-sm"
                 >
                   Read Full Article
                   <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </article>
           ))}
@@ -226,21 +231,23 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
               key={post.id}
               className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex-shrink-0 w-64 sm:w-72 md:w-80 snap-center"
             >
-              <div className="relative h-32 sm:h-36 md:h-44 w-full bg-gray-100">
-                <Image 
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-3 sm:p-3.5">
-                  <span className="inline-block px-2 sm:px-2.5 py-0.5 sm:py-0.5 text-[11px] font-medium text-white bg-green-600 rounded-full mb-1 sm:mb-2">
-                    {post.category}
-                  </span>
+              <Link href={post.link} className="block cursor-pointer">
+                <div className="relative h-32 sm:h-36 md:h-44 w-full bg-gray-100">
+                  <Image 
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, 320px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-3 sm:p-3.5">
+                    <span className="inline-block px-2 sm:px-2.5 py-0.5 sm:py-0.5 text-[11px] font-medium text-white bg-green-600 rounded-full mb-1 sm:mb-2">
+                      {post.category}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </Link>
               
               <div className="p-3 sm:p-4 md:p-5">
                 <div className="flex items-center text-xs text-gray-500 mb-2">
@@ -249,21 +256,23 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
                   <span>{post.readTime || '5 min read'}</span>
                 </div>
                 
-                <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-green-600 transition-colors line-clamp-2">
-                  {post.title}
-                </h3>
+                <Link href={post.link}>
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 leading-tight group-hover:text-green-600 transition-colors line-clamp-2 cursor-pointer">
+                    {post.title}
+                  </h3>
+                </Link>
                 
                 <p className="text-xs sm:text-sm md:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
                   {post.excerpt}
                 </p>
                 
-                <a
+                <Link
                   href={post.link}
                   className="inline-flex items-center text-green-600 font-medium group-hover:text-green-700 transition-colors text-xs sm:text-sm md:text-sm"
                 >
                   Read Full Article
                   <ArrowRight className="ml-1 sm:ml-2 w-3 h-3 sm:w-3.5 sm:h-3.5 transition-transform group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </article>
           ))}
