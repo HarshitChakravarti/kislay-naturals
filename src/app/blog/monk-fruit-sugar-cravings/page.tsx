@@ -85,7 +85,7 @@ export default function MonkFruitSugarCravingsBlog() {
                   </p>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  This cycle fuels overeating and weight gain. When you consume sugar, your blood glucose levels spike rapidly, giving you a temporary energy boost. But this is quickly followed by a crash that leaves you feeling tired and craving more sugar, creating a vicious cycle that's hard to break.
+                  This cycle fuels overeating and weight gain. When you consume sugar, your blood glucose levels spike rapidly, giving you a temporary energy boost. But this is quickly followed by a crash that leaves you feeling tired and craving more sugar, creating a vicious cycle that&apos;s hard to break.
                 </p>
               </div>
 
@@ -112,7 +112,7 @@ export default function MonkFruitSugarCravingsBlog() {
                   </div>
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  It lets you enjoy sweet flavors while your body adjusts to lower sugar dependence. Unlike sugar, monk fruit doesn't trigger the same reward pathways in your brain, helping you gradually reduce your dependence on sweet foods.
+                  It lets you enjoy sweet flavors while your body adjusts to lower sugar dependence. Unlike sugar, monk fruit doesn&apos;t trigger the same reward pathways in your brain, helping you gradually reduce your dependence on sweet foods.
                 </p>
               </div>
 
