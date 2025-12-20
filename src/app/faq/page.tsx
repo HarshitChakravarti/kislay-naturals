@@ -279,7 +279,7 @@ export default function FAQPage() {
                 Still Have Questions?
               </h2>
               <p className="text-gray-700 text-center mb-6 text-base md:text-lg">
-                Can't find the answer you're looking for? We're here to help!
+                Can&apos;t find the answer you&apos;re looking for? We&apos;re here to help!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
