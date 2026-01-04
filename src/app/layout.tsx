@@ -47,20 +47,46 @@ export const metadata: Metadata = {
       rel: 'icon',
       type: 'image/png',
       sizes: '32x32',
-      url: '/logo.png',
+      url: '/logo-transparent.png',
     },
     {
       rel: 'icon',
       type: 'image/png', 
       sizes: '16x16',
-      url: '/logo.png',
+      url: '/logo-transparent.png',
     },
     {
       rel: 'apple-touch-icon',
       sizes: '180x180',
-      url: '/logo.png',
+      url: '/logo-transparent.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '512x512',
+      url: '/logo-transparent.png',
     }
   ],
+  openGraph: {
+    title: "Kislay Naturals – Monk Fruit Sweeteners",
+    description: "Kislay Naturals offers pure monk fruit-based sweeteners for a healthy, sustainable lifestyle.",
+    type: 'website',
+    siteName: 'Kislay Naturals',
+    images: [
+      {
+        url: '/logo-transparent.png',
+        width: 1200,
+        height: 630,
+        alt: 'Kislay Naturals Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Kislay Naturals – Monk Fruit Sweeteners",
+    description: "Kislay Naturals offers pure monk fruit-based sweeteners for a healthy, sustainable lifestyle.",
+    images: ['/logo-transparent.png'],
+  },
 };
 
 export const viewport = {
@@ -75,9 +101,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/kislayfavicon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/kislayfavicon.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/kislayfavicon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo-transparent.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo-transparent.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo-transparent.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/logo-transparent.png" />
+        <meta property="og:image" content="/logo-transparent.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:image" content="/logo-transparent.png" />
       </head>
       <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
         <Suspense fallback={null}>
