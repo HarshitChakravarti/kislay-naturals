@@ -72,12 +72,12 @@ export default function AboutPage() {
                 </div>
                 
                 <div className="order-1 md:order-2 flex justify-center">
-                  <div className="relative w-64 h-64 rounded-2xl p-8 flex items-center justify-center">
+                  <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-2xl p-8 flex items-center justify-center">
                     <Image
-                      src="/logo-transparent.png"
+                      src="/logonew.png"
                       alt="Kislay Naturals Logo"
-                      width={200}
-                      height={200}
+                      width={300}
+                      height={300}
                       className="object-contain"
                     />
                   </div>

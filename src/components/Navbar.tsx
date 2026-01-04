@@ -230,16 +230,16 @@ function Header() {
   return (
     <header className={`bg-white border-b border-gray-200 sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'} ${isNavbarVisible ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="container mx-auto px-0">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-20 md:h-24">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/">
+          <div className="flex items-center h-full">
+            <Link href="/" className="flex items-center h-full pt-1 md:pt-2">
               <Image 
-                src="/logo-transparent.png" 
+                src="/logonew.png" 
                 alt="Kislay" 
                 width={200} 
                 height={72} 
-                className="h-16 md:h-18 w-auto" 
+                className="h-16 md:h-20 w-auto object-contain" 
                 priority
               />
             </Link>

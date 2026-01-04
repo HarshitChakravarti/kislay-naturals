@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Logo and Brand Section */}
           <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center">
-              <Image src="/logo-transparent.png" alt="Kislay Logo" width={150} height={80} className="h-12 sm:h-14 md:h-16 w-auto" />
+              <Image src="/logonew.png" alt="Kislay Logo" width={150} height={80} className="h-16 sm:h-20 md:h-24 w-auto" />
             </div>
             <p className="text-gray-600 font-semibold text-xs sm:text-sm leading-relaxed">
               Naturally Trusted | Deeply Connected | <br className="hidden sm:block"></br> Truly Healthy
@@ -22,11 +22,11 @@ export default function Footer() {
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 uppercase tracking-wide">Contact Details</h3>
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-start space-x-2 sm:space-x-3">
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[#C9A35A] mt-0.5 flex-shrink-0" />
                 <span className="text-gray-700 text-xs sm:text-sm">+91 7043630938</span>
               </div>
               <div className="flex items-start space-x-2 sm:space-x-3">
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#C9A35A] mt-0.5 flex-shrink-0" />
                 <div className="text-gray-700 text-xs sm:text-sm">
                   <p>Samanvay Residency</p>
                   <p>South Bopal,</p>
@@ -34,7 +34,7 @@ export default function Footer() {
                 </div>
               </div>
               <div className="flex items-start space-x-2 sm:space-x-3">
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[#C9A35A] mt-0.5 flex-shrink-0" />
                 <span className="text-gray-700 text-xs sm:text-sm">support@kislaynaturals.com</span>
               </div>
             </div>
