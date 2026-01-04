@@ -58,7 +58,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full md:aspect-[2.4/1] aspect-[9/16] min-h-[70vh] md:min-h-[520px] max-h-[85vh] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full md:aspect-[2.4/1] aspect-[9/16] min-h-[85vh] md:min-h-[700px] max-h-[95vh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
@@ -106,19 +106,19 @@ const Hero = () => {
             className={`font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
             style={{ 
               fontFamily: 'var(--font-dancing-script), cursive',
-              fontSize: 'clamp(3rem, 9vw, 4.75rem)'
+              fontSize: 'clamp(3.25rem, 10vw, 5.25rem)'
             }}
             aria-live="polite"
           >
             {quotes[currentQuote]}
           </h1>
         </div>
-        <p className="text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 'clamp(1rem, 1.6vw, 1.35rem)' }}>
+        <p className="text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 'clamp(1.1rem, 1.8vw, 1.55rem)' }}>
         Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the sugar crash, guilt, or chemicals.
         </p>
         <Link 
           href="/products/e60c3e2e-083b-4da2-8cb4-6789f934f7a8" 
-          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-8 py-3 sm:px-10 sm:py-4 text-base sm:text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
+          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-8 py-3 sm:px-10 sm:py-4 text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
         >
           Shop Now
         </Link>
