@@ -47,24 +47,24 @@ export const metadata: Metadata = {
       rel: 'icon',
       type: 'image/png',
       sizes: '32x32',
-      url: '/logo-transparent.png',
+      url: '/favicon.png',
     },
     {
       rel: 'icon',
       type: 'image/png', 
       sizes: '16x16',
-      url: '/logo-transparent.png',
+      url: '/favicon.png',
     },
     {
       rel: 'apple-touch-icon',
       sizes: '180x180',
-      url: '/logo-transparent.png',
+      url: '/favicon.png',
     },
     {
       rel: 'icon',
       type: 'image/png',
       sizes: '512x512',
-      url: '/logo-transparent.png',
+      url: '/favicon.png',
     }
   ],
   openGraph: {
@@ -101,10 +101,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/logo-transparent.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/logo-transparent.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/logo-transparent.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/logo-transparent.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
         <meta property="og:image" content="/logo-transparent.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
