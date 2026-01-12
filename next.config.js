@@ -21,7 +21,7 @@ const nextConfig = {
     return [
       {
         source: '/lab-report', // The URL on the box
-        destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/blank_page.pdf', // The actual file
+        destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf', // The actual file
         permanent: false, // Keep this FALSE so you can change it later!
       },
     ];
