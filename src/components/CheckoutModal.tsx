@@ -9,9 +9,10 @@ interface CheckoutModalProps {
   onClose: () => void;
   product: Product;
   quantity: number;
+  variantSize?: string;
 }
 
-export default function CheckoutModal({ isOpen, onClose, product, quantity }: CheckoutModalProps) {
+export default function CheckoutModal({ isOpen, onClose, product, quantity, variantSize }: CheckoutModalProps) {
   const router = useRouter();
 
   // Redirect to checkout page when modal opens
@@ -26,10 +27,15 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity }: Ch
         quantity: quantity.toString()
       });
       
+      // Add variant size if available
+      if (variantSize) {
+        params.set('variantSize', variantSize);
+      }
+      
       router.push(`/checkout?${params.toString()}`);
       onClose(); // Close the modal after redirect
     }
-  }, [isOpen, product, quantity, router, onClose]);
+  }, [isOpen, product, quantity, variantSize, router, onClose]);
 
   // This component doesn't render anything as it just redirects
   return null;

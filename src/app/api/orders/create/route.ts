@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
       image: payload.product.image || null,
       price: payload.product.price,
       quantity: payload.quantity,
+      variant_size: (payload.product as any).variantSize || null, // Store variant size
       description: payload.product.description || null,
       category: payload.product.category || null,
       sku: payload.product.sku || null
@@ -123,6 +124,7 @@ export async function POST(request: NextRequest) {
             image: payload.product.image,
             price: payload.product.price,
             quantity: payload.quantity,
+            variant_size: (payload.product as any).variantSize || null,
             description: payload.product.description,
             category: payload.product.category,
             sku: payload.product.sku

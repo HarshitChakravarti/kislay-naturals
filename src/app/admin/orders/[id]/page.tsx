@@ -12,6 +12,7 @@ interface OrderItem {
   image?: string;
   price: number;
   quantity: number;
+  variant_size?: string;
   products?: {
     id: string;
     name: string;
@@ -391,6 +392,13 @@ export default function OrderDetailPage() {
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                    {item.variant_size && (
+                      <div className="mt-1">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                          {item.variant_size}
+                        </span>
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹{item.price.toFixed(2)}
@@ -413,6 +421,13 @@ export default function OrderDetailPage() {
               <div className="flex items-center gap-3">
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
+                  {item.variant_size && (
+                    <div className="mt-1">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                        {item.variant_size}
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-1 text-xs text-gray-500">Qty: {item.quantity}</div>
                 </div>
                 <div className="ml-auto text-right">

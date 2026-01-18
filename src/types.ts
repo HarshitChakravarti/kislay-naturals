@@ -53,12 +53,19 @@ export type Review = {
   updatedAt?: string | Date;
 };
 
+export type ProductVariant = {
+  size: string; // e.g., "10ml", "30ml"
+  price: number; // selling price
+  originalPrice: number; // slashed price
+};
+
 export type Product = {
   id: string | number;
   name: string;
   description?: string;
   price: number;
   originalPrice?: number;
+  variants?: ProductVariant[]; // Array of product variants (10ml, 30ml, etc.)
   reviews?: Review[];
   numReviews?: number; // Total number of reviews
   avgRating?: number; // Average rating

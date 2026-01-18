@@ -271,7 +271,7 @@ function Header() {
               FAQ
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/lab-report" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/lab-report" target="_blank" rel="noopener noreferrer" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               LAB REPORT
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
@@ -348,7 +348,7 @@ function Header() {
                 FAQ
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link href="/lab-report" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
+              <Link href="/lab-report" target="_blank" rel="noopener noreferrer" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 LAB REPORT
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
               </Link>

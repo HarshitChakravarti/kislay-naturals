@@ -60,6 +60,14 @@ async function getProductById(id: string): Promise<Product | null> {
     if (data && !data.originalPrice) {
       data.originalPrice = 350; // Set default original price
     }
+    
+    // Ensure variants are set with default values if not present
+    if (data && (!data.variants || (Array.isArray(data.variants) && data.variants.length === 0))) {
+      data.variants = [
+        { size: '10ml', price: 299, originalPrice: 399 },
+        { size: '30ml', price: 799, originalPrice: 999 }
+      ];
+    }
 
     if (error) {
       console.error('Error fetching product by ID:', error);
@@ -76,6 +84,14 @@ async function getProductById(id: string): Promise<Product | null> {
         slugData.originalPrice = 350; // Set default original price
       }
       
+      // Ensure variants are set with default values if not present
+      if (slugData && (!slugData.variants || (Array.isArray(slugData.variants) && slugData.variants.length === 0))) {
+        slugData.variants = [
+          { size: '10ml', price: 299, originalPrice: 399 },
+          { size: '30ml', price: 799, originalPrice: 999 }
+        ];
+      }
+      
       if (slugError) {
         console.error('Error fetching product by slug:', slugError);
         
@@ -87,6 +103,10 @@ async function getProductById(id: string): Promise<Product | null> {
             name: 'Kislay Monk Fruit Sweetener Drops',
             price: 299,
             originalPrice: 350,
+            variants: [
+              { size: '10ml', price: 299, originalPrice: 399 },
+              { size: '30ml', price: 799, originalPrice: 999 }
+            ],
             image: '/p1.png',
             description: 'The perfect monk fruit sweetener for you. Made from 100% natural monk fruit extract, our sweetener provides the perfect balance of sweetness without any calories or artificial ingredients.',
             in_stock: true,

@@ -76,6 +76,7 @@ export const GET = withAdminAuthDynamic(async (request: AdminRequest, { params }
           image: item.image,
           price: item.price,
           quantity: item.quantity,
+          variant_size: item.variant_size || null,
           description: item.description,
           category: item.category,
           sku: item.sku,

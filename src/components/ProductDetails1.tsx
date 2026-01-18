@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import type { Product } from '@/types';
+import type { Product, ProductVariant } from '@/types';
 import ProductReviews from './ProductReviews';
 import {
   Star,
@@ -31,13 +31,24 @@ const FeatureCard = ({ emoji, title, description }: { emoji: string, title: stri
 
 interface ProductDetailsProps {
   product: Product;
-  onOpenCheckout?: (quantity: number) => void;
+  onOpenCheckout?: (quantity: number, productWithVariant?: Product, variantSize?: string) => void;
 }
 
 export default function ProductDetails({ product, onOpenCheckout }: ProductDetailsProps) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  
+  // Initialize variants with default values if not present
+  const defaultVariants: ProductVariant[] = product.variants && product.variants.length > 0 
+    ? product.variants 
+    : [
+        { size: '10ml', price: 299, originalPrice: 399 },
+        { size: '30ml', price: 799, originalPrice: 999 }
+      ];
+  
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(defaultVariants[0]);
+  
   const [reviewStats, setReviewStats] = useState({
     avgRating: product.avgRating || 0,
     numReviews: product.numReviews || 0
@@ -444,32 +455,72 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="space-y-3 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="space-y-2">
+            <div className="space-y-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+              {/* Price Display - At the Top */}
+              <div className="space-y-2 pb-4 border-b border-gray-100">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-2xl font-bold text-gray-900">
-                    ₹{product.price?.toFixed(2)}
+                  <span className="text-3xl font-bold text-gray-900">
+                    ₹{selectedVariant.price?.toFixed(2)}
                   </span>
-                  {product.originalPrice && product.originalPrice > product.price && (
+                  {selectedVariant.originalPrice && selectedVariant.originalPrice > selectedVariant.price && (
                     <>
-                      <span className="text-lg text-gray-400 line-through">
-                        ₹{product.originalPrice.toFixed(2)}
+                      <span className="text-xl text-gray-400 line-through">
+                        ₹{selectedVariant.originalPrice.toFixed(2)}
                       </span>
-                      <span className="text-xs font-medium text-white bg-green-600 px-1.5 py-0.5 rounded-full">
+                      <span className="text-xs font-semibold text-white bg-green-600 px-2 py-1 rounded-md">
                         Save {Math.round(
-                          ((product.originalPrice - product.price) / product.originalPrice) * 100
+                          ((selectedVariant.originalPrice - selectedVariant.price) / selectedVariant.originalPrice) * 100
                         )}%
                       </span>
                     </>
                   )}
                 </div>
                 <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
+                <div className="flex items-center text-sm text-green-600 pt-1">
+                  <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                  In Stock
+                </div>
               </div>
 
-              <div className="flex items-center text-sm text-green-600">
-                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                In Stock
-              </div>
+              {/* Size Selection - Below Price */}
+              {defaultVariants.length > 1 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Select Size</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {defaultVariants.map((variant) => (
+                      <motion.button
+                        key={variant.size}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => setSelectedVariant(variant)}
+                        className={`px-4 py-3.5 rounded-lg border-2 transition-all ${
+                          selectedVariant.size === variant.size
+                            ? 'border-green-600 bg-green-50 shadow-sm'
+                            : 'border-gray-200 bg-white hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="text-center space-y-1">
+                          <div className={`font-bold text-base ${
+                            selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-900'
+                          }`}>
+                            {variant.size}
+                          </div>
+                          <div className="text-xs">
+                            <span className={`font-semibold ${
+                              selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-700'
+                            }`}>
+                              ₹{variant.price}
+                            </span>
+                            {variant.originalPrice > variant.price && (
+                              <span className="text-gray-400 line-through ml-1.5">₹{variant.originalPrice}</span>
+                            )}
+                          </div>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
@@ -519,7 +570,15 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
             </div>
 
             <motion.button
-              onClick={() => onOpenCheckout?.(quantity)}
+              onClick={() => {
+                // Pass variant info along with quantity
+                const productWithVariant: Product = {
+                  ...product,
+                  price: selectedVariant.price,
+                  originalPrice: selectedVariant.originalPrice,
+                };
+                onOpenCheckout?.(quantity, productWithVariant, selectedVariant.size);
+              }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2"

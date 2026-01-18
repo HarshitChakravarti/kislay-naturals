@@ -86,6 +86,7 @@ export default function CheckoutPage() {
   const [paymentStep, setPaymentStep] = useState('');
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [variantSize, setVariantSize] = useState<string>('');
   const [paymentTimeout, setPaymentTimeout] = useState<NodeJS.Timeout | null>(null);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [razorpayInstance, setRazorpayInstance] = useState<any>(null);
@@ -108,6 +109,7 @@ export default function CheckoutPage() {
     const productImage = searchParams.get('productImage');
     const productDescription = searchParams.get('productDescription');
     const productQuantity = searchParams.get('quantity');
+    const productVariantSize = searchParams.get('variantSize');
 
     if (productId && productName && productPrice && productImage) {
       setProduct({
@@ -118,6 +120,7 @@ export default function CheckoutPage() {
         description: productDescription || ''
       });
       setQuantity(parseInt(productQuantity || '1'));
+      setVariantSize(productVariantSize || '');
     } else {
       // Redirect back if no product data
       router.push('/products');
@@ -284,7 +287,10 @@ export default function CheckoutPage() {
             email: formData.email,
             mobile: formData.mobile
           },
-          product: product,
+          product: {
+            ...product,
+            variantSize: variantSize // Include variant size in product data
+          },
           quantity: quantity,
           totalAmount: finalTotal, // Use final total with coupon discount
           originalPrice: originalPrice,
@@ -876,6 +882,15 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-gray-900 text-sm leading-tight">{product.name}</h3>
+                  
+                  {/* Variant Size Display */}
+                  {variantSize && (
+                    <div className="mt-2">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {variantSize}
+                      </span>
+                    </div>
+                  )}
                   
                   {/* Quantity Selector */}
                   <div className="mt-3">

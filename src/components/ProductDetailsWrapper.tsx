@@ -18,29 +18,26 @@ interface ProductDetailsWrapperProps {
 export default function ProductDetailsWrapper({ product }: ProductDetailsWrapperProps) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutQuantity, setCheckoutQuantity] = useState(1);
-
-  const handleOpenCheckout = (productId: string, quantity: number) => {
-    // Only open if it's for the current product
-    if (productId === product.id.toString()) {
-      setCheckoutQuantity(quantity);
-      setIsCheckoutOpen(true);
-    }
-  };
+  const [checkoutProduct, setCheckoutProduct] = useState<Product>(product);
+  const [selectedVariantSize, setSelectedVariantSize] = useState<string>('');
 
   return (
     <>
       <ProductDetails 
         product={product} 
-        onOpenCheckout={(quantity) => {
+        onOpenCheckout={(quantity, productWithVariant, variantSize) => {
           setCheckoutQuantity(quantity);
+          setCheckoutProduct(productWithVariant || product);
+          setSelectedVariantSize(variantSize || '');
           setIsCheckoutOpen(true);
         }}
       />
       <CheckoutModal 
         isOpen={isCheckoutOpen} 
         onClose={() => setIsCheckoutOpen(false)} 
-        product={product} 
-        quantity={checkoutQuantity} 
+        product={checkoutProduct} 
+        quantity={checkoutQuantity}
+        variantSize={selectedVariantSize}
       />
     </>
   );

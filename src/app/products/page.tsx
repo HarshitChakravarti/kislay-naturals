@@ -22,11 +22,18 @@ const ProductsPage = async () => {
       .eq('in_stock', true)
       .order('created_at', { ascending: false });
     
-    // Ensure originalPrice is set for all products
+    // Ensure originalPrice and variants are set for all products
     if (data) {
       data.forEach(product => {
         if (!product.originalPrice) {
           product.originalPrice = 350; // Set default original price
+        }
+        // Ensure variants are set with default values if not present
+        if (!product.variants || (Array.isArray(product.variants) && product.variants.length === 0)) {
+          product.variants = [
+            { size: '10ml', price: 299, originalPrice: 399 },
+            { size: '30ml', price: 799, originalPrice: 999 }
+          ];
         }
       });
     }
