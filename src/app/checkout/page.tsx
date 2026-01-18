@@ -99,7 +99,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
-  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'none'>('none');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'republic26' | 'none'>('none');
 
   // Get product data from URL params
   useEffect(() => {
@@ -595,10 +595,17 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
+    const upperCode = code.toUpperCase();
     
-    if (code.toUpperCase() === 'SPECIAL') {
+    if (upperCode === 'SPECIAL') {
       return { valid: true, discount: 249, type: 'fixed' }; // Fixed price ₹249
     }
+    
+    if (upperCode === 'REPUBLIC26') {
+      // Variant-specific discount: 10ml gets ₹50 off, 30ml gets ₹100 off
+      return { valid: true, discount: 0, type: 'republic26' }; // Discount calculated based on variant
+    }
+    
     return { valid: false, discount: 0, type: 'none' };
   };
 
@@ -613,7 +620,7 @@ export default function CheckoutPage() {
     const validation = validateCoupon(couponCode.trim());
     if (validation.valid) {
       setCouponApplied(true);
-      setCouponType(validation.type as 'percentage' | 'fixed' | 'none');
+      setCouponType(validation.type as 'percentage' | 'fixed' | 'republic26' | 'none');
       setCouponError('');
     } else {
       setCouponApplied(false);
@@ -642,6 +649,24 @@ export default function CheckoutPage() {
     // SPECIAL coupon: Fixed price of ₹249 per unit
     finalTotal = 249 * quantity;
     couponDiscount = discountedPrice - finalTotal;
+  } else if (couponApplied && couponType === 'republic26') {
+    // REPUBLIC26 coupon: Variant-specific discount
+    // 10ml: ₹299 → ₹249 (₹50 discount per unit)
+    // 30ml: ₹799 → ₹699 (₹100 discount per unit)
+    if (variantSize === '10ml') {
+      const discountedPricePerUnit = 249;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else if (variantSize === '30ml') {
+      const discountedPricePerUnit = 699;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else {
+      // Fallback: use 10ml discount if variant not specified
+      const discountedPricePerUnit = 249;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    }
   } else if (couponApplied && couponType === 'percentage') {
     // Percentage-based coupon
     couponDiscount = 30 * quantity;

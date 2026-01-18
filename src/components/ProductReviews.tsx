@@ -306,26 +306,26 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
           <h2 className="text-xl font-bold text-gray-900 mb-3.5">Customer Reviews</h2>
           
           {/* Review Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-7">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5 mb-7">
             {/* Overall Rating */}
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+            <div className="bg-white p-4 md:p-5 rounded-lg md:rounded-xl shadow-sm border border-gray-100">
               <div className="text-center">
-                <div className="text-4xl font-bold text-gray-900 mb-2.5">
+                <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                   {reviewStats.averageRating.toFixed(1)}
                 </div>
-                <div className="flex justify-center mb-2.5">
+                <div className="flex justify-center mb-2">
                   {renderStars(Math.round(reviewStats.averageRating), 'md')}
                 </div>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-xs md:text-sm">
                   Based on {reviewStats.totalReviews} review{reviewStats.totalReviews !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
 
             {/* Rating Distribution */}
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-3.5 text-base">Rating Breakdown</h3>
-              <div className="space-y-2.5">
+            <div className="bg-white p-4 md:p-5 rounded-lg md:rounded-xl shadow-sm border border-gray-100">
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm md:text-base">Rating Breakdown</h3>
+              <div className="space-y-2">
                 {[5, 4, 3, 2, 1].map((starCount, index) => 
                   renderRatingBar(
                     starCount, 

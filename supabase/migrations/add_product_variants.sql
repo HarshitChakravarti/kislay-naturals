@@ -19,4 +19,3 @@ COMMENT ON COLUMN products.variants IS 'Array of product variants. Each variant 
 
 -- Create an index on variants for better query performance (optional)
 CREATE INDEX IF NOT EXISTS idx_products_variants ON products USING GIN (variants);
-

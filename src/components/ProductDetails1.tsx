@@ -18,13 +18,13 @@ import {
 } from 'lucide-react';
 
 const FeatureCard = ({ emoji, title, description }: { emoji: string, title: string, description: string }) => (
-  <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center text-center space-y-3 hover:shadow-md transition-shadow">
-    <div className="p-2 rounded-full bg-white flex items-center justify-center">
-      <span className="text-2xl md:text-3xl">{emoji}</span>
+  <div className="bg-white p-4 rounded-lg border border-gray-100 flex flex-col items-center text-center space-y-2 hover:border-gray-200 transition-colors">
+    <div className="flex items-center justify-center">
+      <span className="text-xl">{emoji}</span>
     </div>
     <div className="space-y-1">
-      <h4 className="font-bold text-sm md:text-base text-gray-900 leading-tight">{title}</h4>
-      <p className="text-xs md:text-sm text-gray-600 leading-relaxed text-center hyphens-auto">{description}</p>
+      <h4 className="font-semibold text-sm text-gray-900">{title}</h4>
+      <p className="text-xs text-gray-500 leading-relaxed text-center">{description}</p>
     </div>
   </div>
 );
@@ -476,43 +476,39 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   )}
                 </div>
                 <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
-                <div className="flex items-center text-sm text-green-600 pt-1">
-                  <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                  In Stock
-                </div>
               </div>
 
               {/* Size Selection - Below Price */}
               {defaultVariants.length > 1 && (
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Select Size</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Select Size</h3>
+                  <div className="grid grid-cols-2 gap-2">
                     {defaultVariants.map((variant) => (
                       <motion.button
                         key={variant.size}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setSelectedVariant(variant)}
-                        className={`px-4 py-3.5 rounded-lg border-2 transition-all ${
+                        className={`px-3 py-2 rounded-lg border-2 transition-all ${
                           selectedVariant.size === variant.size
                             ? 'border-green-600 bg-green-50 shadow-sm'
                             : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
                       >
-                        <div className="text-center space-y-1">
-                          <div className={`font-bold text-base ${
+                        <div className="text-center space-y-0.5">
+                          <div className={`font-semibold text-sm ${
                             selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-900'
                           }`}>
                             {variant.size}
                           </div>
                           <div className="text-xs">
-                            <span className={`font-semibold ${
+                            <span className={`font-medium ${
                               selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-700'
                             }`}>
                               ₹{variant.price}
                             </span>
                             {variant.originalPrice > variant.price && (
-                              <span className="text-gray-400 line-through ml-1.5">₹{variant.originalPrice}</span>
+                              <span className="text-gray-400 line-through ml-1">₹{variant.originalPrice}</span>
                             )}
                           </div>
                         </div>
@@ -523,12 +519,12 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               )}
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-bold text-gray-900">What&apos;s in the box?</h3>
-              <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                <div className="prose prose-green max-w-none text-gray-600 space-y-3">
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold text-gray-900 tracking-tight">What&apos;s in the box?</h3>
+              <div className="bg-white p-6 rounded-lg border border-gray-100">
+                <div className="prose prose-sm max-w-none text-gray-600 space-y-3">
                   {product.description?.split('\n\n').map((paragraph, index) => (
-                    <p key={index} className={`${index === 0 ? "text-base font-semibold text-gray-900" : ""} text-justify`}>
+                    <p key={index} className={`${index === 0 ? "text-base font-medium text-gray-900" : "text-sm"} leading-relaxed`}>
                       {paragraph}
                     </p>
                   ))}
@@ -536,9 +532,9 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h3 className="text-lg font-bold text-gray-900">Why it&apos;s different?</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-3.5">
+            <div className="space-y-4">
+              <h3 className="text-base font-semibold text-gray-900 tracking-tight">Why it&apos;s different?</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" />
                 <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" />
                 <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" />
@@ -593,24 +589,24 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               transition={{ duration: 0.5, delay: 0.4 }}
               className="md:hidden"
             >
-              <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm">
-                <div className="text-center space-y-3.5">
+              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
+                <div className="text-center space-y-2.5">
                   <div className="flex items-center justify-center space-x-2">
-                    <MessageSquare className="h-5 w-5 text-green-600" />
-                    <h3 className="text-lg font-bold text-gray-900">Have Questions?</h3>
+                    <MessageSquare className="h-4 w-4 text-green-600" />
+                    <h3 className="text-base font-semibold text-gray-900">Have Questions?</h3>
                   </div>
-                  <p className="text-gray-600 text-center leading-relaxed text-sm">
+                  <p className="text-gray-600 text-center leading-relaxed text-xs">
                     Get personalized assistance about this product. We are here to help!
                   </p>
                   <motion.button
                     onClick={() => setIsEnquireFormVisible(!isEnquireFormVisible)}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors shadow-lg hover:shadow-xl"
+                    className="w-full py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 transition-colors text-sm"
                   >
-                    <MessageSquare className="h-4 w-4" />
+                    <MessageSquare className="h-3.5 w-3.5" />
                     <span>{isEnquireFormVisible ? 'Hide Form' : 'Enquire Now'}</span>
-                  </motion.button>.
+                  </motion.button>
                 </div>
 
                 {isEnquireFormVisible && (

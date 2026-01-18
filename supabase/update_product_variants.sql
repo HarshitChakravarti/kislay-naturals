@@ -16,4 +16,3 @@ SELECT id, name, variants
 FROM products 
 WHERE variants IS NOT NULL 
   AND jsonb_array_length(variants) > 0;
-

@@ -110,7 +110,7 @@ export default function OrderSuccessPage() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {/* Delivery Details Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -118,7 +118,7 @@ export default function OrderSuccessPage() {
             transition={{ delay: 0.6 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
               {/* Card Header */}
               <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4">
                 <h2 className={`text-2xl font-bold text-white ${yeseva_One.className}`}>
@@ -197,38 +197,40 @@ export default function OrderSuccessPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8 }}
-            className="space-y-6"
+            className="flex flex-col h-full"
           >
             {/* Continue Shopping Card */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex-1 flex flex-col">
               <div className="text-center mb-6">
-                <Gift className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                <Gift className="w-12 h-12 text-[#C9A35A] mx-auto mb-4" />
                 <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
                   Keep Shopping
                 </h3>
                 <p className="text-gray-600 text-sm">Discover more natural products</p>
               </div>
               
-              <Link
-                href="/products"
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              >
-                <Home className="w-5 h-5" />
-                <span>Browse Products</span>
-              </Link>
+              <div className="mt-auto">
+                <Link
+                  href="/products"
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                >
+                  <Home className="w-5 h-5" />
+                  <span>Browse Products</span>
+                </Link>
+              </div>
             </div>
 
             {/* Support Card */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mt-6 flex-1 flex flex-col">
               <div className="text-center mb-6">
-                <Phone className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                <Phone className="w-12 h-12 text-[#C9A35A] mx-auto mb-4" />
                 <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
                   Need Help?
                 </h3>
                 <p className="text-gray-600 text-sm">We&apos;re here to assist you</p>
               </div>
               
-              <div className="space-y-3">
+              <div className="mt-auto space-y-3">
                 <a 
                   href="/contact-us"
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
