@@ -7,6 +7,8 @@ import { ArrowLeft, ShoppingCart, CreditCard, MapPin, User, Mail, Phone, Plus, M
 import Link from 'next/link';
 import Image from 'next/image';
 
+import { Product } from '@/types';
+
 interface CheckoutFormData {
   name: string;
   email: string;
@@ -19,13 +21,7 @@ interface CheckoutFormData {
   };
 }
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description?: string;
-}
+
 
 // Indian States and Union Territories
 const INDIAN_STATES = [
