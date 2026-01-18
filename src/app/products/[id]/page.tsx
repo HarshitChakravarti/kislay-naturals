@@ -58,7 +58,7 @@ async function getProductById(id: string): Promise<Product | null> {
     
     // Ensure originalPrice is set
     if (data && !data.originalPrice) {
-      data.originalPrice = 350; // Set default original price
+      data.originalPrice = 399; // Set default original price
     }
     
     // Ensure variants are set with default values if not present
@@ -81,7 +81,7 @@ async function getProductById(id: string): Promise<Product | null> {
       
       // Ensure originalPrice is set for slug data
       if (slugData && !slugData.originalPrice) {
-        slugData.originalPrice = 350; // Set default original price
+        slugData.originalPrice = 399; // Set default original price
       }
       
       // Ensure variants are set with default values if not present
@@ -102,7 +102,7 @@ async function getProductById(id: string): Promise<Product | null> {
             id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8', // Use the real UUID from database
             name: 'Kislay Monk Fruit Sweetener Drops',
             price: 299,
-            originalPrice: 350,
+            originalPrice: 399,
             variants: [
               { size: '10ml', price: 299, originalPrice: 399 },
               { size: '30ml', price: 799, originalPrice: 999 }

@@ -26,7 +26,7 @@ const ProductsPage = async () => {
     if (data) {
       data.forEach(product => {
         if (!product.originalPrice) {
-          product.originalPrice = 350; // Set default original price
+          product.originalPrice = 399; // Set default original price
         }
         // Ensure variants are set with default values if not present
         if (!product.variants || (Array.isArray(product.variants) && product.variants.length === 0)) {
@@ -45,7 +45,7 @@ const ProductsPage = async () => {
         id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
         name: 'Kislay Monk Fruit Sweetener Drops',
         price: 299,
-        originalPrice: 350,
+        originalPrice: 399,
         image: '/p1.png',
         description: 'The perfect monk fruit sweetener for you',
         in_stock: true,
@@ -61,7 +61,7 @@ const ProductsPage = async () => {
       id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
       name: 'Kislay Monk Fruit Sweetener Drops',
       price: 299,
-      originalPrice: 350,
+      originalPrice: 399,
       image: '/p1.png',
       description: 'The perfect monk fruit sweetener for you',
       inStock: true,

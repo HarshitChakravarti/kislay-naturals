@@ -391,14 +391,14 @@ export default function OrderDetailPage() {
               {order.order_items?.map((item) => (
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                    {item.variant_size && (
-                      <div className="mt-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-900">{item.name}</span>
+                      {item.variant_size && (
                         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                           {item.variant_size}
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     ₹{item.price.toFixed(2)}
@@ -419,15 +419,15 @@ export default function OrderDetailPage() {
           {order.order_items?.map((item) => (
             <div key={item.id} className="p-4">
               <div className="flex items-center gap-3">
-                <div className="min-w-0">
-                  <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
-                  {item.variant_size && (
-                    <div className="mt-1">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm font-medium text-gray-900">{item.name}</span>
+                    {item.variant_size && (
                       <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                         {item.variant_size}
                       </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <div className="mt-1 text-xs text-gray-500">Qty: {item.quantity}</div>
                 </div>
                 <div className="ml-auto text-right">

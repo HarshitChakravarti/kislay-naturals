@@ -20,7 +20,7 @@ export default async function Home() {
     if (data) {
       data.forEach(product => {
         if (!product.originalPrice) {
-          product.originalPrice = 350; // Set default original price
+          product.originalPrice = 399; // Set default original price
         }
       });
     }
@@ -33,7 +33,7 @@ export default async function Home() {
           id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
           name: 'Kislay Monk Fruit Sweetener Drops',
           price: 299,
-          originalPrice: 350,
+          originalPrice: 399,
           image: '/p1.png',
           description: 'The perfect monk fruit sweetener for you',
           inStock: true
@@ -50,7 +50,7 @@ export default async function Home() {
         id: 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8',
         name: 'Kislay Monk Fruit Sweetener Drops',
         price: 299,
-        originalPrice: 350,
+        originalPrice: 399,
         image: '/p1.png',
         description: 'The perfect monk fruit sweetener for you',
         inStock: true

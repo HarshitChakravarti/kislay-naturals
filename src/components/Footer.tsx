@@ -102,7 +102,7 @@ export default function Footer() {
                   <Facebook className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
-                  href="https://www.linkedin.com/in/nishchoy-gupta-b1421b366?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                  href="https://www.linkedin.com/company/kislay-natural/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-700 hover:bg-blue-800 text-white rounded-full flex items-center justify-center transition-colors"
