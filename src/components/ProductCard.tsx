@@ -109,9 +109,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                   <span className="text-base sm:text-lg text-gray-500 line-through">
                     ₹{product.originalPrice.toFixed(2)}
                   </span>
-                  <span className="bg-green-100 text-green-800 text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded">
-                    {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
-                  </span>
+                  
                 </>
               )}
             </div>
@@ -198,9 +196,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <span className="text-base text-gray-400 line-through">
                       ₹{product.originalPrice.toFixed(2)}
                     </span>
-                    <span className="text-xs font-medium text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
-                      {Math.round((((product.originalPrice - (product.price || 0)) / product.originalPrice) * 100))}% OFF
-                    </span>
+                    
                   </>
                 )}
               </div>

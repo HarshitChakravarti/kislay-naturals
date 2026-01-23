@@ -125,7 +125,7 @@ export default function Footer() {
         {/* Bottom Border */}
         <div className="mt-6 sm:mt-8 md:mt-12 pt-4 sm:pt-6 md:pt-8 border-t border-gray-200">
           <div className="text-center text-gray-600 text-xs sm:text-sm">
-            <p>&copy; 2024 Kislay. All rights reserved.</p>
+            <p>&copy; 2026 Kislay. All rights reserved.</p>
           </div>
         </div>
       </div>

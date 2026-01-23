@@ -467,11 +467,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                       <span className="text-xl text-gray-400 line-through">
                         ₹{selectedVariant.originalPrice.toFixed(2)}
                       </span>
-                      <span className="text-xs font-semibold text-white bg-green-600 px-2 py-1 rounded-md">
-                        Save {Math.round(
-                          ((selectedVariant.originalPrice - selectedVariant.price) / selectedVariant.originalPrice) * 100
-                        )}%
-                      </span>
+                      
                     </>
                   )}
                 </div>
