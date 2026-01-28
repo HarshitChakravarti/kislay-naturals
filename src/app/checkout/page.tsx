@@ -95,7 +95,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
-  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'republic26' | 'special' | 'none'>('none');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'none'>('none');
 
   // Get product data from URL params
   useEffect(() => {
@@ -598,11 +598,6 @@ export default function CheckoutPage() {
       return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
     }
     
-    if (upperCode === 'REPUBLIC26') {
-      // Variant-specific discount: 10ml gets ₹50 off, 30ml gets ₹100 off
-      return { valid: true, discount: 0, type: 'republic26' }; // Discount calculated based on variant
-    }
-    
     return { valid: false, discount: 0, type: 'none' };
   };
 
@@ -617,7 +612,7 @@ export default function CheckoutPage() {
     const validation = validateCoupon(couponCode.trim());
     if (validation.valid) {
       setCouponApplied(true);
-      setCouponType(validation.type as 'percentage' | 'fixed' | 'republic26' | 'special' | 'none');
+      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'none');
       setCouponError('');
     } else {
       setCouponApplied(false);
@@ -635,8 +630,15 @@ export default function CheckoutPage() {
   };
 
   const totalAmount = product.price * quantity;
-  const originalPrice = (product.originalPrice || 399) * quantity; // Original price from product or default ₹399 per unit
-  const discountedPrice = product.price * quantity; // Use actual product price
+
+  // Determine original MRP per unit based on selected variant or product data
+  const originalPricePerUnit =
+    product.variants?.find((v) => v.size === variantSize)?.originalPrice ??
+    (variantSize === '30ml' ? 999 : product.originalPrice ?? 399);
+
+  const originalPrice = originalPricePerUnit * quantity; // Original MRP total
+  const discountedPrice = product.price * quantity; // Price after Kislay Naturals discount (before coupon)
+  const kislayDiscount = Math.max(0, originalPrice - discountedPrice); // Base discount provided by us
   
   // Calculate final total based on coupon type
   let finalTotal: number;
@@ -644,24 +646,6 @@ export default function CheckoutPage() {
   
   if (couponApplied && couponType === 'special') {
     // SPECIAL coupon: Variant-specific discount
-    // 10ml: ₹299 → ₹249 (₹50 discount per unit)
-    // 30ml: ₹799 → ₹699 (₹100 discount per unit)
-    if (variantSize === '10ml') {
-      const discountedPricePerUnit = 249;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else if (variantSize === '30ml') {
-      const discountedPricePerUnit = 699;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else {
-      // Fallback: use 10ml discount if variant not specified
-      const discountedPricePerUnit = 249;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    }
-  } else if (couponApplied && couponType === 'republic26') {
-    // REPUBLIC26 coupon: Variant-specific discount
     // 10ml: ₹299 → ₹249 (₹50 discount per unit)
     // 30ml: ₹799 → ₹699 (₹100 discount per unit)
     if (variantSize === '10ml') {
@@ -1006,24 +990,47 @@ export default function CheckoutPage() {
 
               {/* Price Breakdown */}
               <div className="space-y-3 mb-6">
+                {/* Original MRP */}
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Product Price</span>
-                  <span className="text-gray-900">₹{discountedPrice.toFixed(2)}</span>
+                  <span className="text-gray-600">Original Price (MRP)</span>
+                  <span className="text-gray-900 font-medium">₹{originalPrice.toFixed(2)}</span>
                 </div>
-                {couponApplied && (
+
+                {/* Kislay Naturals discount */}
+                {kislayDiscount > 0 && (
                   <div className="flex justify-between text-sm">
-                    <span className="text-green-600">Coupon Discount ({couponCode.toUpperCase()})</span>
+                    <span className="text-green-700">Kislay Discount</span>
+                    <span className="text-green-700">-₹{kislayDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {/* Price after Kislay discount (base selling price) */}
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-700">Price after Kislay Discount</span>
+                  <span className="text-gray-900 font-medium">₹{discountedPrice.toFixed(2)}</span>
+                </div>
+
+                {/* Coupon discount, if any */}
+                {couponApplied && couponDiscount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-green-600">
+                      Coupon Discount ({couponCode.toUpperCase()})
+                    </span>
                     <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
                   </div>
                 )}
+
+                {/* Shipping */}
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
-                  <span className="text-green-600">Free</span>
+                  <span className="text-green-600 font-medium">Free</span>
                 </div>
+
+                {/* Final payable amount */}
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-semibold">
-                    <span className="text-gray-900">Total</span>
-                    <motion.span 
+                    <span className="text-gray-900">Final Amount Payable</span>
+                    <motion.span
                       key={finalTotal}
                       initial={{ scale: 1.05 }}
                       animate={{ scale: 1 }}
