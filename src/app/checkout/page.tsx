@@ -992,7 +992,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 mb-6">
                 {/* Original MRP */}
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Original Price (MRP)</span>
+                  <span className="text-gray-600">MRP</span>
                   <span className="text-gray-900 font-medium">₹{originalPrice.toFixed(2)}</span>
                 </div>
 
@@ -1004,17 +1004,11 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                {/* Price after Kislay discount (base selling price) */}
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-700">Price after Kislay Discount</span>
-                  <span className="text-gray-900 font-medium">₹{discountedPrice.toFixed(2)}</span>
-                </div>
-
                 {/* Coupon discount, if any */}
                 {couponApplied && couponDiscount > 0 && (
                   <div className="flex justify-between text-sm">
                     <span className="text-green-600">
-                      Coupon Discount ({couponCode.toUpperCase()})
+                      Special Discount ({couponCode.toUpperCase()})
                     </span>
                     <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
                   </div>
