@@ -69,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
           <div className="relative h-48 sm:h-64 md:h-80 w-full flex items-center justify-center">
             <Image
-              src={product.image}
+              src="/product1.png"
               alt={product.name}
               width={400}
               height={400}
@@ -148,7 +148,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
           <div className="relative w-full h-full flex items-center justify-center">
             <Image
-              src={product.image}
+              src="/product1.png"
               alt={product.name}
               width={520}
               height={520}

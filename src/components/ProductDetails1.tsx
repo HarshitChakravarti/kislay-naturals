@@ -65,9 +65,11 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const productImages = [
-    product.image,
-    '/p2.png',
-    '/p33.png'
+    '/product1.png',
+    '/product2.png',
+    '/product3.png',
+    '/product4.png',
+    '/product5.png',
   ];
 
   // Fetch fresh review stats to match the reviews section
@@ -252,22 +254,28 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                 </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-5 gap-2 sm:gap-3">
                 {productImages.map((img, i) => (
                   <motion.div
                     key={i}
-                    whileHover={{ scale: 1.05 }}
+                    animate={{
+                      scale: selectedImage === i ? 1.12 : 0.85,
+                      opacity: selectedImage === i ? 1 : 0.8,
+                      y: selectedImage === i ? -2 : 2
+                    }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                    whileHover={{ scale: selectedImage === i ? 1.14 : 0.9 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSelectedImage(i)}
-                    className={`relative aspect-square rounded-xl overflow-hidden border-2 cursor-pointer
+                    className={`relative aspect-square rounded-lg overflow-hidden border-2 cursor-pointer
                       ${selectedImage === i ? 'border-green-500' : 'border-transparent'}`}
                   >
                     <Image
                       src={img}
                       alt={`Thumbnail ${i + 1}`}
                       fill
-                      sizes="(max-width: 768px) 33vw, 16vw"
-                      className="object-contain"
+                      sizes="(max-width: 768px) 18vw, 9vw"
+                      className="object-contain p-1"
                     />
                   </motion.div>
                 ))}
@@ -736,5 +744,3 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
     </div>
   );
 }
-
-
