@@ -467,7 +467,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               {/* Price Display - At the Top */}
               <div className="space-y-2 pb-4 border-b border-gray-100">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-gray-900">
+                  <span className="text-3xl font-bold text-green-700">
                     ₹{selectedVariant.price?.toFixed(2)}
                   </span>
                   {selectedVariant.originalPrice && selectedVariant.originalPrice > selectedVariant.price && (

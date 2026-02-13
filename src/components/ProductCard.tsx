@@ -1,10 +1,11 @@
 'use client';
 
-import Image from "next/image"
-import { ShoppingCart, Star, ArrowRight } from "lucide-react"
-import { Product } from "@/types"
-import Link from "next/link"
-import { useState, useEffect } from 'react'
+import Image from "next/image";
+import { ShoppingCart, Star, ArrowRight, Heart } from "lucide-react";
+import type { Product } from "@/types";
+import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 interface Review {
   id: string;
@@ -20,28 +21,27 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const router = useRouter();
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
-    totalReviews: 0
+    totalReviews: 0,
   });
 
-
-  // Fetch reviews for the product
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await fetch(`/api/reviews?productId=${product.id}&limit=100`);
         const data = await response.json();
-        
+
         if (data.success && data.data) {
           const reviews: Review[] = data.data;
           const totalReviews = reviews.length;
           const sumRatings = reviews.reduce((sum, review) => sum + review.rating, 0);
           const averageRating = totalReviews > 0 ? sumRatings / totalReviews : 0;
-          
+
           setReviewStats({
             averageRating: Math.round(averageRating * 10) / 10,
-            totalReviews
+            totalReviews,
           });
         }
       } catch (error) {
@@ -54,115 +54,146 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
   }, [product.id]);
 
+  const productHref = `/products/${product.id}`;
+
   return (
-    <div className="bg-white rounded-xl shadow-xl overflow-hidden group w-full">
-      {/* Mobile & Tablet: Vertical Layout */}
+    <div
+      className="group w-full md:mx-auto md:max-w-6xl cursor-pointer overflow-hidden rounded-xl bg-white shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600/40 focus-visible:ring-offset-2"
+      role="link"
+      tabIndex={0}
+      onClick={() => router.push(productHref)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          router.push(productHref);
+        }
+      }}
+    >
+      {/* Mobile */}
       <div className="md:hidden">
-        {/* Product Image */}
-        <div className="relative bg-white pt-2 sm:pt-3 px-3 sm:px-4">
-          <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-10">
+        <div className="relative bg-white px-3 pt-2 sm:px-4 sm:pt-3">
+          <div className="absolute left-3 top-2.5 z-10 sm:left-4 sm:top-3">
             {product.badge && (
-              <span className="inline-flex items-center rounded-full bg-green-100 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-semibold text-green-800">
+              <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-0.5 text-[11px] font-semibold text-green-700 shadow-sm ring-1 ring-green-100 backdrop-blur">
                 {product.badge}
               </span>
             )}
           </div>
-          <div className="relative h-48 sm:h-64 md:h-80 w-full flex items-center justify-center">
+
+          <button
+            type="button"
+            aria-label="Add to wishlist"
+            onClick={(event) => event.stopPropagation()}
+            className="absolute right-3 top-2.5 z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-sm ring-1 ring-gray-200 transition hover:scale-105 hover:text-red-500 sm:right-4 sm:top-3"
+          >
+            <Heart className="h-4 w-4" />
+          </button>
+
+          <div className="relative flex h-56 w-full items-center justify-center sm:h-64">
             <Image
               src="/product1.png"
               alt={product.name}
               width={400}
               height={400}
-              className="object-contain h-full w-auto"
+              className="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
               priority
             />
           </div>
         </div>
 
-        {/* Product Details */}
-        <div className="p-3 sm:p-4">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="p-3 pt-2 sm:p-4">
+          <div className="mb-1 flex items-center gap-2">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => {
                 const averageRating = reviewStats.averageRating || 0;
                 return (
                   <Star
                     key={i}
-                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                      i < Math.floor(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                    className={`h-3 w-3 ${
+                      i < Math.floor(averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'
                     }`}
                   />
                 );
               })}
             </div>
+            {reviewStats.totalReviews > 0 && (
+              <span className="text-[11px] text-gray-500">
+                {reviewStats.averageRating.toFixed(1)} ({reviewStats.totalReviews})
+              </span>
+            )}
           </div>
 
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{product.name}</h2>
-          
-          <div className="mb-3">
-            <div className="flex items-baseline gap-2 sm:gap-3">
-              <div className="text-xl sm:text-2xl font-bold text-gray-900">
+          <h2 className="text-base font-semibold leading-snug text-gray-900 sm:text-lg">{product.name}</h2>
+
+          <div className="mt-2">
+            <div className="flex items-baseline gap-2">
+              <div className="text-2xl font-extrabold text-green-700 sm:text-3xl">
                 ₹{product.price?.toFixed(2) || '0.00'}
               </div>
               {product.originalPrice && product.originalPrice > (product.price || 0) && (
-                <>
-                  <span className="text-base sm:text-lg text-gray-500 line-through">
-                    ₹{product.originalPrice.toFixed(2)}
-                  </span>
-                  
-                </>
+                <span className="text-sm text-gray-500 line-through">
+                  ₹{product.originalPrice.toFixed(2)}
+                </span>
               )}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Inclusive of all taxes • Free shipping across India</p>
+            <p className="mt-1 text-[11px] text-gray-500">Inclusive of all taxes • Free shipping across India</p>
           </div>
 
-          <div className="flex flex-col gap-2 mt-3 sm:mt-4">
-            <Link 
-              href={`/products/${product.id}`}
-              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-medium transition-all duration-300 text-center text-sm sm:text-base"
+          <div className="mt-3 flex items-center gap-2">
+            <Link
+              href={productHref}
+              onClick={(event) => event.stopPropagation()}
+              className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-green-700"
             >
-              <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4" />
+              <ShoppingCart className="h-4 w-4" />
               Buy Now
             </Link>
-            <Link 
-              href={`/products/${product.id}`}
-              className="w-full flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-medium transition-colors duration-300 text-sm sm:text-base"
+            <Link
+              href={productHref}
+              onClick={(event) => event.stopPropagation()}
+              className="inline-flex items-center justify-center gap-1 rounded-lg border border-green-600/30 px-3 py-2 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50"
             >
-              View Details
-              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
+              Details
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Desktop: Horizontal Layout */}
+      {/* Desktop */}
       <div className="hidden md:flex">
-        {/* Left Section - Product Image */}
-        <div className="w-1/2 relative bg-white flex items-center justify-center p-5">
-          <div className="absolute top-4 left-4 z-10">
+        <div className="relative flex w-5/12 items-center justify-center bg-white p-5">
+          <div className="absolute left-4 top-4 z-10">
             {product.badge && (
               <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800">
                 {product.badge}
               </span>
             )}
           </div>
-          <div className="relative w-full h-full flex items-center justify-center">
+          <button
+            type="button"
+            aria-label="Add to wishlist"
+            onClick={(event) => event.stopPropagation()}
+            className="absolute right-4 top-4 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow-sm ring-1 ring-gray-200 transition hover:scale-105 hover:text-red-500"
+          >
+            <Heart className="h-4 w-4" />
+          </button>
+          <div className="relative flex w-full items-center justify-center">
             <Image
               src="/product1.png"
               alt={product.name}
               width={520}
               height={520}
-              className="object-contain h-[80%] w-auto max-w-[90%] group-hover:scale-105 transition-transform duration-500"
+              className="h-auto w-auto max-w-[86%] object-contain transition-transform duration-500 group-hover:scale-105"
               priority
               style={{ objectFit: 'contain' }}
             />
           </div>
         </div>
 
-        {/* Right Section - Product Details */}
-        <div className="w-1/2 p-5 flex flex-col">
+        <div className="flex w-7/12 flex-col p-6">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="mb-3 flex items-center gap-2">
               <div className="flex items-center">
                 {[...Array(5)].map((_, i) => {
                   const averageRating = reviewStats.averageRating || 0;
@@ -170,7 +201,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <Star
                       key={i}
                       className={`h-4 w-4 ${
-                        i < Math.floor(averageRating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200"
+                        i < Math.floor(averageRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'
                       }`}
                     />
                   );
@@ -178,67 +209,43 @@ export default function ProductCard({ product }: ProductCardProps) {
               </div>
             </div>
 
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              {product.name}
-            </h2>
-            
-            <p className="text-gray-600 mb-5 text-justify text-sm">
+            <h2 className="mb-3 text-2xl font-bold text-gray-900">{product.name}</h2>
+
+            <p className="mb-7 text-sm leading-relaxed text-gray-600 lg:text-base">
               {product.description || 'No description available.'}
             </p>
 
             <div className="mb-6">
-              <div className="flex items-baseline gap-3 mb-1">
-                <span className="text-2xl font-bold text-green-700">
+              <div className="mb-1 flex items-baseline gap-3">
+                <span className="text-3xl font-extrabold text-green-700">
                   ₹{product.price?.toFixed(2) || '0.00'}
                 </span>
                 {product.originalPrice && product.originalPrice > (product.price || 0) && (
-                  <>
-                    <span className="text-base text-gray-400 line-through">
-                      ₹{product.originalPrice.toFixed(2)}
-                    </span>
-                    
-                  </>
+                  <span className="text-base text-gray-400 line-through">
+                    ₹{product.originalPrice.toFixed(2)}
+                  </span>
                 )}
               </div>
               <p className="text-xs text-gray-500">Inclusive of all taxes • Free shipping across India</p>
             </div>
 
             <div className="flex gap-3">
-              <Link 
-                href={`/products/${product.id}`}
-                className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 border-2 border-green-600 text-white py-2.5 px-5 rounded-lg font-medium transition-all duration-300"
+              <Link
+                href={productHref}
+                onClick={(event) => event.stopPropagation()}
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 bg-green-600 px-5 py-3 text-base font-semibold text-white transition-all duration-300 hover:bg-green-700"
               >
                 <ShoppingCart className="h-4 w-4" />
                 Buy Now
               </Link>
-              <Link 
-                href={`/products/${product.id}`}
-                className="flex-1 flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 hover:bg-green-50 py-2.5 px-5 rounded-lg font-medium transition-colors duration-300"
+              <Link
+                href={productHref}
+                onClick={(event) => event.stopPropagation()}
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 px-5 py-3 text-base font-semibold text-green-600 transition-colors duration-300 hover:bg-green-50"
               >
                 View Details
                 <ArrowRight className="h-4 w-4" />
               </Link>
-            </div>
-
-            <div className="mt-6 pt-5 border-t border-gray-100">
-              <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">🌿</span>
-                  <span>100% Natural</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base">🔥</span>
-                  <span>Zero Calories</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base">💚</span>
-                  <span>Keto Friendly</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-base">✨</span>
-                  <span>Diabetic Safe</span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
