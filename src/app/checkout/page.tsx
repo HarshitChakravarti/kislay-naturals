@@ -95,7 +95,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
-  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'none'>('none');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'none'>('none');
 
   // Get product data from URL params
   useEffect(() => {
@@ -597,6 +597,11 @@ export default function CheckoutPage() {
       // Variant-specific discount: 10ml gets ₹50 off, 30ml gets ₹100 off
       return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
     }
+
+    if (upperCode === 'HOLI26') {
+      // Holi discount: 10ml → ₹269, 30ml → ₹699
+      return { valid: true, discount: 0, type: 'holi' };
+    }
     
     return { valid: false, discount: 0, type: 'none' };
   };
@@ -612,7 +617,7 @@ export default function CheckoutPage() {
     const validation = validateCoupon(couponCode.trim());
     if (validation.valid) {
       setCouponApplied(true);
-      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'none');
+      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'holi' | 'none');
       setCouponError('');
     } else {
       setCouponApplied(false);
@@ -659,6 +664,24 @@ export default function CheckoutPage() {
     } else {
       // Fallback: use 10ml discount if variant not specified
       const discountedPricePerUnit = 249;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    }
+  } else if (couponApplied && couponType === 'holi') {
+    // HOLI26 coupon: Holi festival discount
+    // 10ml: ₹299 → ₹269 (₹30 off per unit, ₹130 off from MRP ₹399)
+    // 30ml: ₹799 → ₹699 (₹100 off per unit, ₹300 off from MRP ₹999)
+    if (variantSize === '10ml') {
+      const discountedPricePerUnit = 269;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else if (variantSize === '30ml') {
+      const discountedPricePerUnit = 699;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else {
+      // Fallback: use 10ml discount if variant not specified
+      const discountedPricePerUnit = 269;
       finalTotal = discountedPricePerUnit * quantity;
       couponDiscount = discountedPrice - finalTotal;
     }
@@ -892,12 +915,12 @@ export default function CheckoutPage() {
 
               {/* Product Details */}
               <div className="flex items-start space-x-4 mb-6">
-                <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
+                <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
                   <Image
-                    src={product.image}
+                    src="/product1.png"
                     alt={product.name}
                     fill
-                    className="object-contain p-2"
+                    className="object-contain"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
