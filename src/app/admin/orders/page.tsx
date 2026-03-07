@@ -12,6 +12,12 @@ interface Order {
   total_amount: number;
   order_status: string;
   created_at: string;
+  coupon_code?: string | null;
+  coupon_discount?: number;
+  payload?: {
+    couponCode?: string;
+    couponDiscount?: number;
+  };
   user_profiles?: {
     username: string;
     full_name: string;
@@ -324,6 +330,7 @@ export default function AdminOrdersPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Coupon</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -338,6 +345,15 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(order.created_at)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{order.total_amount.toFixed(2)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {(order.coupon_code || order.payload?.couponCode) ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                            {order.coupon_code || order.payload?.couponCode}
+                          </span>
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(order.order_status)}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
                         <Link href={`/admin/orders/${order.id}`} className="text-green-600 hover:text-green-900 transition-colors font-medium">View Details</Link>
@@ -360,6 +376,13 @@ export default function AdminOrdersPage() {
                     </div>
                     <div className="shrink-0">{getStatusBadge(order.order_status)}</div>
                   </div>
+                  {(order.coupon_code || order.payload?.couponCode) && (
+                    <div className="mt-2">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                        Coupon: {order.coupon_code || order.payload?.couponCode}
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-3 flex items-center justify-between text-sm text-gray-700">
                     <div>{formatDate(order.created_at)}</div>
                     <div className="font-medium text-gray-900">₹{order.total_amount.toFixed(2)}</div>

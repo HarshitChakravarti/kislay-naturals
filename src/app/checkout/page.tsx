@@ -95,7 +95,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
-  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'none'>('none');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
 
   // Get product data from URL params
   useEffect(() => {
@@ -602,6 +602,11 @@ export default function CheckoutPage() {
       // Holi discount: 10ml → ₹269, 30ml → ₹699
       return { valid: true, discount: 0, type: 'holi' };
     }
+
+    if (upperCode === 'SWEETSMART') {
+      // SweetSmart discount: 10ml → ₹279, 30ml → ₹719
+      return { valid: true, discount: 0, type: 'sweetsmart' };
+    }
     
     return { valid: false, discount: 0, type: 'none' };
   };
@@ -617,7 +622,7 @@ export default function CheckoutPage() {
     const validation = validateCoupon(couponCode.trim());
     if (validation.valid) {
       setCouponApplied(true);
-      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'holi' | 'none');
+      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none');
       setCouponError('');
     } else {
       setCouponApplied(false);
@@ -682,6 +687,21 @@ export default function CheckoutPage() {
     } else {
       // Fallback: use 10ml discount if variant not specified
       const discountedPricePerUnit = 269;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    }
+  } else if (couponApplied && couponType === 'sweetsmart') {
+    // SWEETSMART coupon: 10ml → ₹279, 30ml → ₹719
+    if (variantSize === '10ml') {
+      const discountedPricePerUnit = 279;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else if (variantSize === '30ml') {
+      const discountedPricePerUnit = 719;
+      finalTotal = discountedPricePerUnit * quantity;
+      couponDiscount = discountedPrice - finalTotal;
+    } else {
+      const discountedPricePerUnit = 279;
       finalTotal = discountedPricePerUnit * quantity;
       couponDiscount = discountedPrice - finalTotal;
     }

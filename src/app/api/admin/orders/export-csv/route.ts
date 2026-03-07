@@ -41,7 +41,9 @@ export const GET = withAdminAuth(async (request: AdminRequest) => {
         delivered_at,
         created_at,
         updated_at,
-        notes
+        notes,
+        coupon_code,
+        coupon_discount
       `)
       .order('created_at', { ascending: false });
 
@@ -130,7 +132,9 @@ function generateCSV(orders: any[]) {
     'Shipped Date',
     'Delivered Date',
     'Last Updated',
-    'Notes'
+    'Notes',
+    'Coupon Code',
+    'Coupon Discount (₹)'
   ];
 
   // Convert orders to CSV rows
@@ -160,7 +164,9 @@ function generateCSV(orders: any[]) {
     order.shipped_at ? formatDateForCSV(order.shipped_at) : '',
     order.delivered_at ? formatDateForCSV(order.delivered_at) : '',
     order.updated_at ? formatDateForCSV(order.updated_at) : '',
-    order.notes || ''
+    order.notes || '',
+    order.coupon_code || '',
+    order.coupon_discount ? order.coupon_discount.toString() : '0'
   ]);
 
   // Combine headers and rows

@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
       shipping_zip: payload.shippingAddress.zip,
       status: 'created' as const,
       order_status: 'created' as const,
+      coupon_code: payload.couponCode || null,
+      coupon_discount: couponDiscount,
       payload, // store full JSON for flexibility (includes coupon info)
     };
 

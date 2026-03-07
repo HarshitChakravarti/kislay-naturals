@@ -46,6 +46,8 @@ interface Order {
   shipped_at: string;
   delivered_at: string;
   notes: string;
+  coupon_code?: string | null;
+  coupon_discount?: number;
   payload?: {
     couponCode?: string;
     couponDiscount?: number;
@@ -450,13 +452,13 @@ export default function OrderDetailPage() {
           </div>
           
           {/* Coupon Discount Section */}
-          {order.payload?.couponCode && order.payload?.couponDiscount && order.payload.couponDiscount > 0 && (
+          {(order.coupon_code || order.payload?.couponCode) && (order.coupon_discount || order.payload?.couponDiscount) && (order.coupon_discount || order.payload?.couponDiscount || 0) > 0 && (
             <div className="flex justify-between">
               <dt className="text-sm text-green-600">
-                Coupon Discount ({order.payload.couponCode})
+                Coupon Discount ({order.coupon_code || order.payload?.couponCode})
               </dt>
               <dd className="text-sm text-green-600">
-                -₹{order.payload.couponDiscount.toFixed(2)}
+                -₹{(order.coupon_discount || order.payload?.couponDiscount || 0).toFixed(2)}
               </dd>
             </div>
           )}

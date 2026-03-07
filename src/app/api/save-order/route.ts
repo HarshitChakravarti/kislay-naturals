@@ -187,6 +187,8 @@ export async function POST(request: NextRequest) {
       status: 'paid' as const,
       order_status: 'paid' as const,
       paid_at: new Date().toISOString(),
+      coupon_code: orderDetails.couponCode || null,
+      coupon_discount: orderDetails.couponDiscount || 0,
       payload: orderDetails,
     } as const;
 
