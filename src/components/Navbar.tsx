@@ -4,9 +4,10 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { User, ShoppingCart, Menu, X, LogIn, UserPlus, LogOut, User as UserIcon, Settings } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import ClientOnly from '@/components/ClientOnly';
+import OfferBanner from '@/components/OfferBanner';
 
 // interface UserData {
 //   _id: string;
@@ -24,8 +25,13 @@ function Header() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { user, logout } = useAuth();
+  const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const showOfferBanner =
+    pathname === '/' ||
+    pathname === '/checkout' ||
+    pathname.startsWith('/products/');
 
   // Callback to close dropdown
   const closeDropdown = useCallback(() => {
@@ -229,6 +235,7 @@ function Header() {
 
   return (
     <header className={`bg-white border-b border-gray-200 sticky top-0 z-40 transition-all duration-300 ${scrolled ? 'shadow-md' : 'shadow-sm'} ${isNavbarVisible ? 'translate-y-0' : '-translate-y-full'}`}>
+      {showOfferBanner && <OfferBanner />}
       <div className="container mx-auto px-0">
         <div className="flex items-center justify-between h-20 md:h-24">
           {/* Logo */}

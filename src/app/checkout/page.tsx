@@ -640,6 +640,10 @@ export default function CheckoutPage() {
   };
 
   const totalAmount = product.price * quantity;
+  const isThirtyMlVariant = variantSize === '30ml';
+  const freeVariantQuantity = isThirtyMlVariant ? quantity : 0;
+  const freeVariantPricePerUnit = product.variants?.find((v) => v.size === '10ml')?.price ?? 299;
+  const freeVariantValue = freeVariantQuantity * freeVariantPricePerUnit;
 
   // Determine original MRP per unit based on selected variant or product data
   const originalPricePerUnit =
@@ -954,6 +958,14 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                   )}
+
+                  {freeVariantQuantity > 0 && (
+                    <div className="mt-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2">
+                      <p className="text-xs font-semibold text-emerald-800">
+                        Offer applied: +{freeVariantQuantity} x 10ml Free
+                      </p>
+                    </div>
+                  )}
                   
                   {/* Quantity Selector */}
                   <div className="mt-3">
@@ -1054,6 +1066,13 @@ export default function CheckoutPage() {
                       Special Discount ({couponCode.toUpperCase()})
                     </span>
                     <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {freeVariantQuantity > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-emerald-700">Free 10ml ({freeVariantQuantity} unit{freeVariantQuantity > 1 ? 's' : ''})</span>
+                    <span className="text-emerald-700">+₹{freeVariantValue.toFixed(2)} value</span>
                   </div>
                 )}
 

@@ -78,9 +78,7 @@ export async function POST(request: NextRequest) {
     console.log(' Order created successfully:', orderData);
 
     // Insert into order_items table
-    const itemTotalPrice = payload.product.price * payload.quantity;
-    
-    const orderItem = {
+    const paidOrderItem = {
       order_id: orderData.id,
       product_id: payload.product.id,
       name: payload.product.name,
@@ -93,7 +91,25 @@ export async function POST(request: NextRequest) {
       sku: payload.product.sku || null
     };
 
-    console.log('📦 Attempting to insert order item:', JSON.stringify(orderItem, null, 2));
+    const isThirtyMlVariant = `${(payload.product as any).variantSize || ''}`.toLowerCase() === '30ml';
+    const freeOrderItem = isThirtyMlVariant
+      ? {
+          order_id: orderData.id,
+          product_id: payload.product.id,
+          name: `${payload.product.name} (Free 10ml)`,
+          image: payload.product.image || null,
+          price: 0,
+          quantity: payload.quantity,
+          variant_size: '10ml',
+          description: 'Complimentary 10ml variant with 30ml purchase',
+          category: payload.product.category || null,
+          sku: payload.product.sku || null
+        }
+      : null;
+
+    const orderItemsToInsert = freeOrderItem ? [paidOrderItem, freeOrderItem] : [paidOrderItem];
+
+    console.log('📦 Attempting to insert order items:', JSON.stringify(orderItemsToInsert, null, 2));
     console.log('💰 Coupon details - Code:', payload.couponCode, 'Discount:', payload.couponDiscount, 'Type:', payload.couponCode === 'SPECIAL' ? 'fixed' : 'percentage');
 
     // Try to insert order item with better error handling
@@ -101,9 +117,8 @@ export async function POST(request: NextRequest) {
     try {
       const result = await supabaseAdmin
         .from('order_items')
-        .insert([orderItem])
-        .select('id')
-        .single();
+        .insert(orderItemsToInsert)
+        .select('id');
       
       itemData = result.data;
       itemError = result.error;
@@ -115,22 +130,22 @@ export async function POST(request: NextRequest) {
 
     if (itemError) {
       console.error('❌ Supabase order item insert error:', itemError);
-      console.error('❌ Order item details:', JSON.stringify(orderItem, null, 2));
+      console.error('❌ Order item details:', JSON.stringify(orderItemsToInsert, null, 2));
       
       // Try to store order item info in the main order record as fallback
       try {
         const fallbackUpdate = {
-          order_items_snapshot: [{
-            product_id: payload.product.id,
-            name: payload.product.name,
-            image: payload.product.image,
-            price: payload.product.price,
-            quantity: payload.quantity,
-            variant_size: (payload.product as any).variantSize || null,
-            description: payload.product.description,
-            category: payload.product.category,
-            sku: payload.product.sku
-          }],
+          order_items_snapshot: orderItemsToInsert.map((item) => ({
+            product_id: item.product_id,
+            name: item.name,
+            image: item.image,
+            price: item.price,
+            quantity: item.quantity,
+            variant_size: item.variant_size,
+            description: item.description,
+            category: item.category,
+            sku: item.sku
+          })),
           updated_at: new Date().toISOString()
         };
         
@@ -160,7 +175,7 @@ export async function POST(request: NextRequest) {
         }, { status: 500 });
       }
     } else {
-      console.log('✅ Order item created successfully:', itemData);
+      console.log('✅ Order items created successfully:', itemData);
     }
 
     return NextResponse.json({

@@ -58,6 +58,43 @@ export const GET = withAdminAuth(async (request: AdminRequest) => {
           user_profiles: profiles?.find(profile => profile.id === order.user_id) || null
         }));
       }
+
+      const orderIds = orders.map(order => order.id).filter(Boolean);
+      let offerOrderIds = new Set<string>();
+
+      if (orderIds.length > 0) {
+        const { data: orderItems } = await supabaseAdmin
+          .from('order_items')
+          .select('order_id, name, price, variant_size, description')
+          .in('order_id', orderIds);
+
+        offerOrderIds = new Set(
+          (orderItems || [])
+            .filter((item: any) => {
+              const variant = String(item.variant_size || '').toLowerCase();
+              const name = String(item.name || '').toLowerCase();
+              const description = String(item.description || '').toLowerCase();
+              const isFreeItem = Number(item.price) === 0;
+
+              return (
+                (variant === '10ml' && isFreeItem) ||
+                name.includes('free 10ml') ||
+                description.includes('complimentary 10ml')
+              );
+            })
+            .map((item: any) => String(item.order_id))
+        );
+      }
+
+      ordersWithProfiles = ordersWithProfiles.map((order: any) => {
+        const payloadVariant = String(order?.payload?.product?.variantSize || '').toLowerCase();
+        const offerFromPayload = payloadVariant === '30ml';
+
+        return {
+          ...order,
+          offer_availed: offerOrderIds.has(String(order.id)) || offerFromPayload,
+        };
+      });
     }
 
     // Build pagination info
