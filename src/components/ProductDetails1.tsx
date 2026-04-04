@@ -503,7 +503,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                           <div className={`font-semibold text-sm ${
                             selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-900'
                           }`}>
-                            {variant.size}
+                            {variant.size === '30ml' ? '30ml (10ml extra free)' : variant.size}
                           </div>
                           <div className="text-xs">
                             <span className={`font-medium ${

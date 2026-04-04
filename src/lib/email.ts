@@ -227,7 +227,7 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
           <div class="shipping-info">
             <p><strong>${data.shippingAddress.street}</strong></p>
             <p><strong>${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}</strong></p>
-            <p>You will receive shipping and tracking information via email / WhatsApp</p>
+            <p>You will receive delivery and tracking information via email / WhatsApp</p>
           </div>
           <div class="estimated-delivery">
             <strong>Estimated <span class="underline">delivery</span>: 7 – 10 business days</strong>
@@ -266,7 +266,7 @@ function generateOrderConfirmationEmailText(data: OrderConfirmationEmailData): s
     `Delivery Address:`,
     `${data.shippingAddress.street}`,
     `${data.shippingAddress.city}, ${data.shippingAddress.state} ${data.shippingAddress.zip}`,
-    `You will receive shipping and tracking information via email / WhatsApp`,
+    `You will receive delivery and tracking information via email / WhatsApp`,
     `Estimated delivery: 7 – 10 business days`,
     '',
     `Customer Support`,

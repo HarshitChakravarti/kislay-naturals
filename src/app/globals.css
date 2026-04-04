@@ -142,6 +142,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  p {
+    text-align: justify;
+    text-justify: inter-word;
+  }
   
   /* Fix for Chrome zoom issues */
   @media screen and (-webkit-min-device-pixel-ratio: 0) {

@@ -99,7 +99,7 @@ export default function OrderConfirmationEmail({
               Hi {customerName},
               <br />
               Thanks for shopping with {brandName}. Your order is confirmed and we’re
-              getting it ready. We’ll notify you when it ships.
+              getting it ready. We’ll notify you when it is delivered.
             </Text>
 
             <Row style={styles.kvRow}>

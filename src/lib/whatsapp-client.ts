@@ -40,6 +40,10 @@ Thank you for your order!
 • Order ${orderDisplayId}
 • Date: ${orderDate}
 
+*Available Variants:*
+• 10ml
+• 30ml+10ml free
+
 *Products:*
 ${productList}
 
@@ -56,7 +60,7 @@ ${data.shippingAddress.city}, ${data.shippingAddress.state} - ${data.shippingAdd
 
   message += `
 
-Your order is confirmed and will be shipped within 6-10 business days.
+Your order is confirmed and will be delivered within 6-10 business days.
 
 Need help? Reply to this message or call us at +91 7043630938
 

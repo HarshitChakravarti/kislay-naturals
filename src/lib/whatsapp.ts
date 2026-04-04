@@ -89,7 +89,11 @@ Thank you for your order!
 • Order #${data.orderId}
 • Product: ${data.productName}
 • Amount: ₹${data.totalAmount.toFixed(2)}
-• Date: ${orderDate}`;
+• Date: ${orderDate}
+
+*Available Variants:*
+• 10ml
+• 30ml+10ml free`;
 
   // Add shipping address if available
   if (data.shippingAddress) {
@@ -102,7 +106,7 @@ ${data.shippingAddress.city}, ${data.shippingAddress.state} - ${data.shippingAdd
 
   message += `
 
-Your order is confirmed and will be shipped within 3-5 business days.
+Your order is confirmed and will be delivered within 3-5 business days.
 
 Need help? Reply to this message or call us at +91 7043630938
 
