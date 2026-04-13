@@ -93,12 +93,12 @@ export default function PaymentProcessing({ orderId, orderNumber, isProcessing =
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}
-              className="bg-gray-50 rounded-lg p-4 mb-6"
+              className="bg-gray-50 rounded-lg p-4 mb-6 text-center"
             >
-              <p className="text-sm text-gray-600">Order Number</p>
-              <p className="font-mono text-lg font-bold text-gray-900">
+              <p className="text-sm text-gray-600 text-center">Order Number</p>
+              <p className="font-mono text-lg font-bold text-gray-900 text-center">
                 {orderNumber ? orderNumber : (
-                  <span className="flex items-center space-x-2">
+                  <span className="inline-flex items-center justify-center gap-2">
                     <span>Loading...</span>
                     <Loader2 className="w-4 h-4 animate-spin" />
                   </span>

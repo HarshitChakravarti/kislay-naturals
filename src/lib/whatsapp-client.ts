@@ -42,7 +42,9 @@ Thank you for your order!
 
 *Available Variants:*
 • 10ml
-• 30ml+10ml free
+• 10ml pack of 2
+• 10ml pack of 3
+• 30ml
 
 *Products:*
 ${productList}
@@ -93,4 +95,3 @@ export function generateWhatsAppLink(data: OrderWhatsAppData): string {
   
   return whatsappLink;
 }
-

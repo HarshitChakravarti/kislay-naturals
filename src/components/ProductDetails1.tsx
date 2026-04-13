@@ -1,16 +1,22 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import type { Product, ProductVariant } from '@/types';
+import {
+  getBundleUnitCount,
+  getProductGalleryForVariant,
+  normalizeProductVariants,
+} from '@/lib/productVariants';
 import ProductReviews from './ProductReviews';
 import {
   Star,
   ChevronLeft,
   ChevronRight,
+  Check,
   Zap,
   Plus,
   Minus,
@@ -18,13 +24,16 @@ import {
 } from 'lucide-react';
 
 const FeatureCard = ({ emoji, title, description }: { emoji: string, title: string, description: string }) => (
-  <div className="bg-white p-4 rounded-lg border border-gray-100 flex flex-col items-center text-center space-y-2 hover:border-gray-200 transition-colors">
-    <div className="flex items-center justify-center">
-      <span className="text-xl">{emoji}</span>
-    </div>
-    <div className="space-y-1">
-      <h4 className="font-semibold text-sm text-gray-900">{title}</h4>
-      <p className="text-xs text-gray-500 leading-relaxed text-center">{description}</p>
+  <div className="group relative overflow-hidden rounded-2xl border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/70 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-[0_18px_36px_rgba(22,101,52,0.10)]">
+    <div className="pointer-events-none absolute -right-6 top-0 h-16 w-16 rounded-full bg-lime-100/60 blur-2xl" />
+    <div className="relative flex flex-col items-center space-y-2 text-center">
+      <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-xl ring-1 ring-emerald-100">
+        <span>{emoji}</span>
+      </div>
+      <div className="space-y-1">
+        <h4 className="font-semibold text-sm text-emerald-800">{title}</h4>
+        <p className="text-xs leading-relaxed text-slate-500 text-center">{description}</p>
+      </div>
     </div>
   </div>
 );
@@ -39,15 +48,13 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   
-  // Initialize variants with default values if not present
-  const defaultVariants: ProductVariant[] = product.variants && product.variants.length > 0 
-    ? product.variants 
-    : [
-        { size: '10ml', price: 299, originalPrice: 399 },
-        { size: '30ml', price: 799, originalPrice: 999 }
-      ];
+  const defaultVariants: ProductVariant[] = useMemo(
+    () => normalizeProductVariants(product.variants),
+    [product.variants]
+  );
+  const initialVariant = defaultVariants[0];
   
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(defaultVariants[0]);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(initialVariant);
   
   const [reviewStats, setReviewStats] = useState({
     avgRating: product.avgRating || 0,
@@ -63,14 +70,32 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const productImages = [
-    '/product1.png',
-    '/product2.png',
-    '/product3.png',
-    '/product4.png',
-    '/product5.png',
-  ];
+  const productImages = getProductGalleryForVariant(selectedVariant);
+
+  useEffect(() => {
+    setSelectedVariant(initialVariant);
+    setQuantity(1);
+  }, [initialVariant, product.id]);
+
+  useEffect(() => {
+    setSelectedImage(0);
+  }, [selectedVariant.size]);
+
+  const getVariantSavings = (variant: ProductVariant) =>
+    Math.max(0, (variant.originalPrice || 0) - variant.price);
+
+  const getVariantDescription = (variant: ProductVariant) => {
+    if (variant.size.toLowerCase() === '30ml') {
+      return 'Larger bottle';
+    }
+
+    const bottleCount = getBundleUnitCount(variant);
+    return bottleCount === 1 ? 'Single bottle' : `${bottleCount} x 10ml bottles`;
+  };
+
+  const bestVariantSavings = Math.max(...defaultVariants.map(getVariantSavings));
+  const selectedSavings = getVariantSavings(selectedVariant);
+  const selectedVariantDescription = getVariantDescription(selectedVariant);
 
   // Fetch fresh review stats to match the reviews section
   useEffect(() => {
@@ -463,88 +488,196 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="space-y-4 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-              {/* Price Display - At the Top */}
-              <div className="space-y-2 pb-4 border-b border-gray-100">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-green-700">
-                    ₹{selectedVariant.price?.toFixed(2)}
-                  </span>
-                  {selectedVariant.originalPrice && selectedVariant.originalPrice > selectedVariant.price && (
-                    <>
-                      <span className="text-xl text-gray-400 line-through">
-                        ₹{selectedVariant.originalPrice.toFixed(2)}
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
+              <div className="pointer-events-none absolute -right-14 top-0 h-36 w-36 rounded-full bg-emerald-100/70 blur-3xl" />
+              <div className="pointer-events-none absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-lime-100/60 blur-3xl" />
+              <div className="relative space-y-5 p-6 md:p-7">
+                {/* Price Display - At the Top */}
+                <div className="flex flex-col gap-4 border-b border-emerald-100/80 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="space-y-3">
+                    <span className="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 ring-1 ring-emerald-100">
+                      Choose Your Pack
+                    </span>
+                    <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
+                      <span className="text-4xl font-bold tracking-tight text-green-700">
+                        ₹{selectedVariant.price?.toFixed(2)}
                       </span>
-                      
-                    </>
-                  )}
-                </div>
-                <p className="text-sm text-gray-500">Inclusive of all taxes • Free shipping across India</p>
-              </div>
+                      {selectedVariant.originalPrice && selectedVariant.originalPrice > selectedVariant.price && (
+                        <span className="text-2xl font-medium text-gray-400 line-through">
+                          ₹{selectedVariant.originalPrice.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs font-medium">
+                      <span className="rounded-full bg-white/90 px-3 py-1 text-slate-600 ring-1 ring-slate-200/80">
+                        {selectedVariantDescription}
+                      </span>
+                      <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700 ring-1 ring-emerald-100">
+                        Inclusive of all taxes
+                      </span>
+                      <span className="rounded-full bg-white/90 px-3 py-1 text-slate-600 ring-1 ring-slate-200/80">
+                        Free shipping across India
+                      </span>
+                    </div>
+                  </div>
 
-              {/* Size Selection - Below Price */}
-              {defaultVariants.length > 1 && (
-                <div className="space-y-2">
-                  <h3 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Select Size</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {defaultVariants.map((variant) => (
-                      <motion.button
-                        key={variant.size}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`px-3 py-2 rounded-lg border-2 transition-all ${
-                          selectedVariant.size === variant.size
-                            ? 'border-green-600 bg-green-50 shadow-sm'
-                            : 'border-gray-200 bg-white hover:border-gray-300'
-                        }`}
-                      >
-                        <div className="text-center space-y-0.5">
-                          <div className={`font-semibold text-sm ${
-                            selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-900'
-                          }`}>
-                            {variant.size === '30ml' ? '30ml (10ml extra free)' : variant.size}
-                          </div>
-                          <div className="text-xs">
-                            <span className={`font-medium ${
-                              selectedVariant.size === variant.size ? 'text-green-700' : 'text-gray-700'
-                            }`}>
-                              ₹{variant.price}
-                            </span>
-                            {variant.originalPrice > variant.price && (
-                              <span className="text-gray-400 line-through ml-1">₹{variant.originalPrice}</span>
-                            )}
-                          </div>
-                        </div>
-                      </motion.button>
-                    ))}
+                  <div className="flex flex-wrap gap-2 sm:max-w-[220px] sm:justify-end">
+                    {selectedSavings > 0 && (
+                      <span className="rounded-full bg-gradient-to-r from-amber-50 to-lime-50 px-3 py-1 text-xs font-semibold text-emerald-800 ring-1 ring-emerald-100">
+                        Save ₹{selectedSavings}
+                      </span>
+                    )}
+                    <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200/80">
+                      Clean, natural sweetness
+                    </span>
                   </div>
                 </div>
-              )}
+
+                {/* Pack Selection */}
+                {defaultVariants.length > 1 && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-sm font-semibold tracking-tight text-slate-900">
+                        Pick the pack that fits your routine
+                      </h3>
+                      <span className="text-xs font-medium text-slate-400">Tap to preview</span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      {defaultVariants.map((variant) => {
+                        const isSelected = selectedVariant.size === variant.size;
+                        const savings = getVariantSavings(variant);
+                        const isBestValue = savings > 0 && savings === bestVariantSavings;
+                        const description = getVariantDescription(variant);
+
+                        return (
+                          <motion.button
+                            key={variant.size}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setSelectedVariant(variant)}
+                            className={`group relative min-h-[138px] overflow-hidden rounded-2xl border px-4 py-4 text-left transition-all duration-300 ${
+                              isSelected
+                                ? 'border-emerald-500 bg-white shadow-[0_18px_40px_rgba(22,101,52,0.14)] ring-2 ring-emerald-100'
+                                : 'border-white/70 bg-white/85 shadow-[0_10px_24px_rgba(15,23,42,0.06)] hover:border-emerald-200 hover:bg-white hover:shadow-[0_16px_32px_rgba(15,23,42,0.08)]'
+                            }`}
+                          >
+                            <div className={`absolute inset-x-0 top-0 h-1 transition-all ${
+                              isSelected
+                                ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-lime-400'
+                                : 'bg-transparent group-hover:bg-gradient-to-r group-hover:from-emerald-200 group-hover:via-lime-100 group-hover:to-amber-100'
+                            }`} />
+
+                            <div className="flex h-full flex-col justify-between">
+                              <div className="space-y-3">
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="space-y-1">
+                                    <div className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${
+                                      isSelected ? 'text-emerald-700' : 'text-slate-400'
+                                    }`}>
+                                      {description}
+                                    </div>
+                                    <div className={`font-semibold text-lg leading-tight ${
+                                      isSelected ? 'text-green-700' : 'text-slate-900'
+                                    }`}>
+                                      {variant.size}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex flex-col items-end gap-2">
+                                    {isBestValue && (
+                                      <span className="rounded-full bg-gradient-to-r from-amber-50 to-lime-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-800 ring-1 ring-emerald-100">
+                                        Best Value
+                                      </span>
+                                    )}
+                                    {isSelected && (
+                                      <span className="rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-sm">
+                                        Selected
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {savings > 0 && (
+                                  <div className="text-xs font-medium text-emerald-700">
+                                    You save ₹{savings} on this pack
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="mt-4 flex items-end justify-between gap-4">
+                                <div className="space-y-1">
+                                  <div className="flex flex-wrap items-baseline gap-2">
+                                    <span className={`text-2xl font-bold tracking-tight ${
+                                      isSelected ? 'text-green-700' : 'text-slate-900'
+                                    }`}>
+                                      ₹{variant.price}
+                                    </span>
+                                    {variant.originalPrice > variant.price && (
+                                      <span className="text-sm font-medium text-gray-400 line-through">
+                                        ₹{variant.originalPrice}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <div className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all ${
+                                  isSelected
+                                    ? 'border-emerald-500 bg-emerald-500 text-white shadow-sm'
+                                    : 'border-slate-200 bg-slate-50 text-slate-300 group-hover:border-emerald-200 group-hover:bg-emerald-50 group-hover:text-emerald-600'
+                                }`}>
+                                  <Check className="h-4 w-4" />
+                                </div>
+                              </div>
+                            </div>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-gray-900 tracking-tight">What&apos;s in the box?</h3>
-              <div className="bg-white p-6 rounded-lg border border-gray-100">
-                <div className="prose prose-sm max-w-none text-gray-600 space-y-3">
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
+              <div className="pointer-events-none absolute -right-12 top-0 h-32 w-32 rounded-full bg-emerald-100/70 blur-3xl" />
+              <div className="pointer-events-none absolute -left-10 bottom-0 h-24 w-24 rounded-full bg-lime-100/60 blur-3xl" />
+              <div className="relative space-y-4 p-6 md:p-7">
+                <div className="flex flex-col gap-2 border-b border-emerald-100/80 pb-4">
+                  <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 ring-1 ring-emerald-100">
+                    What&apos;s In The Box
+                  </span>
+                  <h3 className="text-xl font-semibold tracking-tight text-emerald-800">Everything you need in one clean, simple pack</h3>
+                </div>
+                <div className="rounded-2xl border border-white/80 bg-white/80 p-5 shadow-[0_12px_30px_rgba(15,23,42,0.05)] ring-1 ring-emerald-50">
+                  <div className="prose prose-sm max-w-none space-y-3 text-slate-600">
                   {product.description?.split('\n\n').map((paragraph, index) => (
-                    <p key={index} className={`${index === 0 ? "text-base font-medium text-gray-900" : "text-sm"} leading-relaxed`}>
+                    <p key={index} className={`${index === 0 ? "text-base font-medium text-emerald-800" : "text-sm"} leading-relaxed`}>
                       {paragraph}
                     </p>
                   ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-gray-900 tracking-tight">Why it&apos;s different?</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" />
-                <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" />
-                <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" />
-                <FeatureCard emoji="💧" title="Easy Use" description="Convenient Drop Format - Easy to Mix" />
-                <FeatureCard emoji="☕" title="Versatile" description="Perfect for Tea, Coffee, Smoothies & More" />
-                <FeatureCard emoji="✨" title="Pure & Clean" description="No Artificial Flavors, Colors or Preservatives" />
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
+              <div className="pointer-events-none absolute -left-12 top-0 h-32 w-32 rounded-full bg-emerald-100/70 blur-3xl" />
+              <div className="pointer-events-none absolute -right-10 bottom-0 h-24 w-24 rounded-full bg-lime-100/60 blur-3xl" />
+              <div className="relative space-y-4 p-6 md:p-7">
+                <div className="flex flex-col gap-2 border-b border-emerald-100/80 pb-4">
+                  <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 ring-1 ring-emerald-100">
+                    Why It&apos;s Different
+                  </span>
+                  <h3 className="text-xl font-semibold tracking-tight text-emerald-800">Natural sweetness with a cleaner, smarter profile</h3>
+                </div>
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                  <FeatureCard emoji="🌿" title="100% Natural" description="Monk Fruit Extract" />
+                  <FeatureCard emoji="🔥" title="Zero Calories" description="Zero Glycemic Index" />
+                  <FeatureCard emoji="💚" title="Diabetic Friendly" description="Keto-Friendly & Diabetic-Safe" />
+                  <FeatureCard emoji="💧" title="Easy Use" description="Convenient Drop Format - Easy to Mix" />
+                  <FeatureCard emoji="☕" title="Versatile" description="Perfect for Tea, Coffee, Smoothies & More" />
+                  <FeatureCard emoji="✨" title="Pure & Clean" description="No Artificial Flavors, Colors or Preservatives" />
+                </div>
               </div>
             </div>
 
@@ -576,6 +709,8 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                   ...product,
                   price: selectedVariant.price,
                   originalPrice: selectedVariant.originalPrice,
+                  image: productImages[0],
+                  variants: defaultVariants,
                 };
                 onOpenCheckout?.(quantity, productWithVariant, selectedVariant.size);
               }}

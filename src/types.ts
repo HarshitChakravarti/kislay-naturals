@@ -57,6 +57,8 @@ export type ProductVariant = {
   size: string; // e.g., "10ml", "30ml"
   price: number; // selling price
   originalPrice: number; // slashed price
+  image?: string; // variant-specific hero image
+  unitCount?: number; // number of 10ml units in a bundle
 };
 
 export type Product = {

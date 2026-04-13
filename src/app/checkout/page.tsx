@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Product } from '@/types';
+import { findProductVariant, getVariantCouponPrice, normalizeProductVariants } from '@/lib/productVariants';
 
 interface CheckoutFormData {
   name: string;
@@ -106,6 +107,7 @@ export default function CheckoutPage() {
     const productDescription = searchParams.get('productDescription');
     const productQuantity = searchParams.get('quantity');
     const productVariantSize = searchParams.get('variantSize');
+    const selectedVariant = findProductVariant(productVariantSize || undefined);
 
     if (productId && productName && productPrice && productImage) {
       setProduct({
@@ -113,7 +115,9 @@ export default function CheckoutPage() {
         name: productName,
         price: parseFloat(productPrice),
         image: productImage,
-        description: productDescription || ''
+        description: productDescription || '',
+        originalPrice: selectedVariant?.originalPrice,
+        variants: normalizeProductVariants()
       });
       setQuantity(parseInt(productQuantity || '1'));
       setVariantSize(productVariantSize || '');
@@ -639,16 +643,13 @@ export default function CheckoutPage() {
     setCouponError('');
   };
 
-  const totalAmount = product.price * quantity;
-  const isThirtyMlVariant = variantSize === '30ml';
-  const freeVariantQuantity = isThirtyMlVariant ? quantity : 0;
-  const freeVariantPricePerUnit = product.variants?.find((v) => v.size === '10ml')?.price ?? 299;
-  const freeVariantValue = freeVariantQuantity * freeVariantPricePerUnit;
+  const selectedVariant = findProductVariant(variantSize, product.variants);
 
   // Determine original MRP per unit based on selected variant or product data
   const originalPricePerUnit =
-    product.variants?.find((v) => v.size === variantSize)?.originalPrice ??
-    (variantSize === '30ml' ? 999 : product.originalPrice ?? 399);
+    selectedVariant?.originalPrice ??
+    product.originalPrice ??
+    399;
 
   const originalPrice = originalPricePerUnit * quantity; // Original MRP total
   const discountedPrice = product.price * quantity; // Price after Kislay Naturals discount (before coupon)
@@ -659,56 +660,17 @@ export default function CheckoutPage() {
   let couponDiscount: number;
   
   if (couponApplied && couponType === 'special') {
-    // SPECIAL coupon: Variant-specific discount
-    // 10ml: ₹299 → ₹249 (₹50 discount per unit)
-    // 30ml: ₹799 → ₹699 (₹100 discount per unit)
-    if (variantSize === '10ml') {
-      const discountedPricePerUnit = 249;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else if (variantSize === '30ml') {
-      const discountedPricePerUnit = 699;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else {
-      // Fallback: use 10ml discount if variant not specified
-      const discountedPricePerUnit = 249;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    }
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'special');
+    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'holi') {
-    // HOLI26 coupon: Holi festival discount
-    // 10ml: ₹299 → ₹269 (₹30 off per unit, ₹130 off from MRP ₹399)
-    // 30ml: ₹799 → ₹699 (₹100 off per unit, ₹300 off from MRP ₹999)
-    if (variantSize === '10ml') {
-      const discountedPricePerUnit = 269;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else if (variantSize === '30ml') {
-      const discountedPricePerUnit = 699;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else {
-      // Fallback: use 10ml discount if variant not specified
-      const discountedPricePerUnit = 269;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    }
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'holi');
+    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'sweetsmart') {
-    // SWEETSMART coupon: 10ml → ₹279, 30ml → ₹719
-    if (variantSize === '10ml') {
-      const discountedPricePerUnit = 279;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else if (variantSize === '30ml') {
-      const discountedPricePerUnit = 719;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    } else {
-      const discountedPricePerUnit = 279;
-      finalTotal = discountedPricePerUnit * quantity;
-      couponDiscount = discountedPrice - finalTotal;
-    }
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'sweetsmart');
+    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'percentage') {
     // Percentage-based coupon
     couponDiscount = 30 * quantity;
@@ -958,14 +920,6 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                   )}
-
-                  {freeVariantQuantity > 0 && (
-                    <div className="mt-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2">
-                      <p className="text-xs font-semibold text-emerald-800">
-                        Offer applied: +{freeVariantQuantity} x 10ml Free
-                      </p>
-                    </div>
-                  )}
                   
                   {/* Quantity Selector */}
                   <div className="mt-3">
@@ -1066,13 +1020,6 @@ export default function CheckoutPage() {
                       Special Discount ({couponCode.toUpperCase()})
                     </span>
                     <span className="text-green-600">-₹{couponDiscount.toFixed(2)}</span>
-                  </div>
-                )}
-
-                {freeVariantQuantity > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-emerald-700">Free 10ml ({freeVariantQuantity} unit{freeVariantQuantity > 1 ? 's' : ''})</span>
-                    <span className="text-emerald-700">+₹{freeVariantValue.toFixed(2)} value</span>
                   </div>
                 )}
 

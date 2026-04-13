@@ -93,7 +93,9 @@ Thank you for your order!
 
 *Available Variants:*
 • 10ml
-• 30ml+10ml free`;
+• 10ml pack of 2
+• 10ml pack of 3
+• 30ml`;
 
   // Add shipping address if available
   if (data.shippingAddress) {
