@@ -598,7 +598,7 @@ export default function CheckoutPage() {
     const upperCode = code.toUpperCase();
     
     if (upperCode === 'SPECIAL') {
-      // Variant-specific discount: 10ml gets ₹50 off, 30ml gets ₹100 off
+      // Special discount: 30ml → ₹699, 10ml packs have fixed bundle prices
       return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
     }
 
@@ -608,7 +608,7 @@ export default function CheckoutPage() {
     }
 
     if (upperCode === 'SWEETSMART') {
-      // SweetSmart discount: 10ml → ₹279, 30ml → ₹719
+      // SweetSmart discount: 30ml → ₹719, 10ml packs have fixed bundle prices
       return { valid: true, discount: 0, type: 'sweetsmart' };
     }
     

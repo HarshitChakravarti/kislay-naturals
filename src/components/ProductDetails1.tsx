@@ -488,9 +488,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
-              <div className="pointer-events-none absolute -right-14 top-0 h-36 w-36 rounded-full bg-emerald-100/70 blur-3xl" />
-              <div className="pointer-events-none absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-lime-100/60 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-white shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
               <div className="relative space-y-5 p-6 md:p-7">
                 {/* Price Display - At the Top */}
                 <div className="flex flex-col gap-4 border-b border-emerald-100/80 pb-5 sm:flex-row sm:items-start sm:justify-between">
@@ -638,9 +636,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
-              <div className="pointer-events-none absolute -right-12 top-0 h-32 w-32 rounded-full bg-emerald-100/70 blur-3xl" />
-              <div className="pointer-events-none absolute -left-10 bottom-0 h-24 w-24 rounded-full bg-lime-100/60 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-white shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
               <div className="relative space-y-4 p-6 md:p-7">
                 <div className="flex flex-col gap-2 border-b border-emerald-100/80 pb-4">
                   <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 ring-1 ring-emerald-100">
@@ -660,9 +656,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-gradient-to-br from-white via-white to-emerald-50/60 shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
-              <div className="pointer-events-none absolute -left-12 top-0 h-32 w-32 rounded-full bg-emerald-100/70 blur-3xl" />
-              <div className="pointer-events-none absolute -right-10 bottom-0 h-24 w-24 rounded-full bg-lime-100/60 blur-3xl" />
+            <div className="relative overflow-hidden rounded-[28px] border border-emerald-100/80 bg-white shadow-[0_24px_60px_rgba(22,101,52,0.08)]">
               <div className="relative space-y-4 p-6 md:p-7">
                 <div className="flex flex-col gap-2 border-b border-emerald-100/80 pb-4">
                   <span className="inline-flex w-fit rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700 ring-1 ring-emerald-100">

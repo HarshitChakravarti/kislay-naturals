@@ -29,6 +29,17 @@ const TEN_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   sweetsmart: 279,
 };
 
+const FIXED_BUNDLE_COUPON_PRICE_BY_TYPE: Partial<Record<VariantCouponType, Record<number, number>>> = {
+  special: {
+    2: 539,
+    3: 769,
+  },
+  sweetsmart: {
+    2: 539,
+    3: 769,
+  },
+};
+
 function normalizeVariantKey(size: string) {
   return size.trim().toLowerCase();
 }
@@ -113,6 +124,15 @@ export function getVariantCouponPrice(
 
   if (!normalizedSize.startsWith('10ml')) {
     return null;
+  }
+
+  if (couponType === 'special' || couponType === 'sweetsmart') {
+    const bundleUnitCount = getBundleUnitCount(variant);
+    const fixedBundlePrice = FIXED_BUNDLE_COUPON_PRICE_BY_TYPE[couponType]?.[bundleUnitCount];
+
+    if (fixedBundlePrice) {
+      return Math.min(variant.price, fixedBundlePrice);
+    }
   }
 
   const bundlePrice = TEN_ML_COUPON_PRICE[couponType] * getBundleUnitCount(variant);
