@@ -32,7 +32,7 @@ const ProductsPage = async () => {
         if (!product.variants || (Array.isArray(product.variants) && product.variants.length === 0)) {
           product.variants = [
             { size: '10ml', price: 299, originalPrice: 399 },
-            { size: '30ml', price: 799, originalPrice: 999 }
+            { size: '30ml', price: 699, originalPrice: 999 }
           ];
         }
       });

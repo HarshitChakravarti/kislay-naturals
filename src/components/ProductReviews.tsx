@@ -1,9 +1,16 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
-import { Star, ThumbsUp, User, MessageSquare, Send, CheckCircle2, Image as ImageIcon, X } from 'lucide-react';
+import {
+  Star,
+  MessageSquare,
+  Send,
+  CheckCircle2,
+  Image as ImageIcon,
+  X,
+} from 'lucide-react';
 
 interface Review {
   id: string;
@@ -14,7 +21,7 @@ interface Review {
   helpful?: number;
   verified?: boolean;
   created_at: string;
-  photos?: string[];
+  photos?: string[] | string;
 }
 
 interface ReviewFormData {
@@ -30,7 +37,38 @@ interface ProductReviewsProps {
   onReviewSubmit?: () => void;
 }
 
-export default function ProductReviews({ productId, productName, onReviewSubmit }: ProductReviewsProps) {
+const getInitials = (name: string) =>
+  name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() || '')
+    .join('') || 'KN';
+
+const parseReviewPhotos = (photos?: string[] | string) => {
+  if (!photos) {
+    return [];
+  }
+
+  if (Array.isArray(photos)) {
+    return photos.filter((photo): photo is string => typeof photo === 'string' && photo.length > 0);
+  }
+
+  try {
+    const parsed = JSON.parse(photos);
+    return Array.isArray(parsed)
+      ? parsed.filter((photo): photo is string => typeof photo === 'string' && photo.length > 0)
+      : [];
+  } catch {
+    return typeof photos === 'string' && photos.length > 0 ? [photos] : [];
+  }
+};
+
+export default function ProductReviews({
+  productId,
+  productName,
+  onReviewSubmit,
+}: ProductReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -40,38 +78,41 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
     name: '',
     email: '',
     rating: 5,
-    comment: ''
+    comment: '',
   });
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
     totalReviews: 0,
-    ratingDistribution: [0, 0, 0, 0, 0] // 1-star to 5-star counts
+    ratingDistribution: [0, 0, 0, 0, 0],
   });
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5);
 
   const calculateReviewStats = (reviewsData: Review[], totalCount?: number) => {
-    // Use totalCount from API if provided (more accurate), otherwise use array length
     const totalReviews = totalCount ?? reviewsData.length;
-    
-    // Filter out reviews with null/undefined ratings for average calculation
-    const reviewsWithRatings = reviewsData.filter(review => 
-      review.rating !== null && review.rating !== undefined && !isNaN(Number(review.rating))
+    const reviewsWithRatings = reviewsData.filter(
+      (review) =>
+        review.rating !== null &&
+        review.rating !== undefined &&
+        !Number.isNaN(Number(review.rating))
     );
-    
-    // Calculate average only from reviews with valid ratings
+
     const sumRatings = reviewsWithRatings.reduce((sum, review) => {
-      const rating = typeof review.rating === 'number' ? review.rating : parseFloat(String(review.rating));
-      return sum + (isNaN(rating) ? 0 : rating);
+      const rating =
+        typeof review.rating === 'number' ? review.rating : Number.parseFloat(String(review.rating));
+      return sum + (Number.isNaN(rating) ? 0 : rating);
     }, 0);
-    
+
     const averageRating = reviewsWithRatings.length > 0 ? sumRatings / reviewsWithRatings.length : 0;
-    
-    // Calculate distribution from all reviews with valid ratings
     const distribution = [0, 0, 0, 0, 0];
-    reviewsWithRatings.forEach(review => {
-      const rating = typeof review.rating === 'number' ? review.rating : Math.floor(parseFloat(String(review.rating)));
+
+    reviewsWithRatings.forEach((review) => {
+      const rating =
+        typeof review.rating === 'number'
+          ? review.rating
+          : Math.floor(Number.parseFloat(String(review.rating)));
+
       if (rating >= 1 && rating <= 5) {
         distribution[rating - 1]++;
       }
@@ -80,22 +121,19 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
     setReviewStats({
       averageRating: Math.round(averageRating * 10) / 10,
       totalReviews,
-      ratingDistribution: distribution.reverse() // Show 5-star to 1-star
+      ratingDistribution: distribution.reverse(),
     });
   };
 
   const fetchReviews = useCallback(async () => {
     try {
       setIsLoading(true);
-      // Fetch all reviews with a high limit to get accurate count
       const response = await fetch(`/api/reviews?productId=${productId}&limit=1000`);
       const data = await response.json();
-      
+
       if (data.success) {
         setReviews(data.data);
-        // Pass the total count from API pagination for accurate stats
-        const totalCount = data.pagination?.totalReviews;
-        calculateReviewStats(data.data, totalCount);
+        calculateReviewStats(data.data, data.pagination?.totalReviews);
       }
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -104,31 +142,31 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
     }
   }, [productId]);
 
-  // Fetch reviews on component mount
   useEffect(() => {
-    fetchReviews();
+    void fetchReviews();
   }, [fetchReviews]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleRatingChange = (rating: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      rating
+      rating,
     }));
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) {
+      return;
+    }
 
-    // Limit to 5 photos max
     const remainingSlots = 5 - uploadedPhotos.length;
     if (remainingSlots <= 0) {
       alert('You can upload a maximum of 5 photos');
@@ -140,12 +178,12 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
 
     try {
       const uploadPromises = filesToUpload.map(async (file) => {
-        const formData = new FormData();
-        formData.append('file', file);
+        const formPayload = new FormData();
+        formPayload.append('file', file);
 
         const response = await fetch('/api/reviews/upload-photo', {
           method: 'POST',
-          body: formData,
+          body: formPayload,
         });
 
         const data = await response.json();
@@ -157,19 +195,18 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
       });
 
       const urls = await Promise.all(uploadPromises);
-      setUploadedPhotos(prev => [...prev, ...urls]);
-    } catch (error: any) {
+      setUploadedPhotos((prev) => [...prev, ...urls]);
+    } catch (error: unknown) {
       console.error('Error uploading photos:', error);
-      alert(error.message || 'Failed to upload photos. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to upload photos. Please try again.');
     } finally {
       setUploadingPhotos(false);
-      // Reset input
       e.target.value = '';
     }
   };
 
   const handleRemovePhoto = (index: number) => {
-    setUploadedPhotos(prev => prev.filter((_, i) => i !== index));
+    setUploadedPhotos((prev) => prev.filter((_, currentIndex) => currentIndex !== index));
   };
 
   const handleSubmitReview = async (e: React.FormEvent) => {
@@ -185,7 +222,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
         body: JSON.stringify({
           productId,
           ...formData,
-          photos: uploadedPhotos.length > 0 ? uploadedPhotos : undefined
+          photos: uploadedPhotos.length > 0 ? uploadedPhotos : undefined,
         }),
       });
 
@@ -196,11 +233,9 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
         setFormData({ name: '', email: '', rating: 5, comment: '' });
         setUploadedPhotos([]);
         setShowReviewForm(false);
-        fetchReviews(); // Refresh reviews
-        onReviewSubmit?.(); // Notify parent component to refresh stats
-        
-        // Reset success message after 3 seconds
-        setTimeout(() => setSubmitSuccess(false), 3000);
+        await fetchReviews();
+        onReviewSubmit?.();
+        window.setTimeout(() => setSubmitSuccess(false), 3000);
       } else {
         alert(data.message || 'Failed to submit review');
       }
@@ -212,28 +247,27 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
-  };
 
   const renderStars = (rating: number, size: 'sm' | 'md' | 'lg' = 'md') => {
     const sizeClasses = {
-      sm: 'w-4 h-4',
-      md: 'w-5 h-5',
-      lg: 'w-6 h-6'
+      sm: 'h-4 w-4',
+      md: 'h-5 w-5',
+      lg: 'h-6 w-6',
     };
 
     return (
-      <div className="flex">
+      <div className="flex items-center gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
             className={`${sizeClasses[size]} ${
-              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+              star <= rating ? 'fill-amber-400 text-amber-400' : 'text-green-100'
             }`}
           />
         ))}
@@ -243,36 +277,39 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
 
   const renderRatingBar = (starCount: number, count: number, total: number) => {
     const percentage = total > 0 ? (count / total) * 100 : 0;
-    
+
     return (
-      <div className="flex items-center space-x-3 text-sm">
-        <div className="flex items-center space-x-1 w-12">
-          <span className="text-gray-600 font-medium">{starCount}</span>
-          <Star className="w-3 h-3 text-yellow-400 fill-current" />
+      <div className="flex items-center gap-3 text-sm">
+        <div className="flex w-12 items-center gap-1 text-slate-700">
+          <span className="font-medium">{starCount}</span>
+          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
         </div>
-        <div className="flex-1 bg-gray-200 rounded-full h-2.5">
-          <div 
-            className="bg-yellow-400 h-2.5 rounded-full transition-all duration-300"
+        <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-green-100">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-300 transition-all duration-300"
             style={{ width: `${percentage}%` }}
-          ></div>
+          />
         </div>
-        <span className="w-10 text-gray-600 text-right font-medium">{count}</span>
+        <span className="w-10 text-right text-sm font-medium text-slate-500">{count}</span>
       </div>
     );
   };
 
+  const totalReviewCount = reviewStats.totalReviews || reviews.length;
+
   if (isLoading) {
     return (
-      <div className="w-full py-8">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gray-100 p-4 rounded-lg">
-                <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-full mb-1"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-              </div>
+      <div className="rounded-[32px] border border-green-100 bg-[#F0FAF3] p-6 shadow-[0_24px_60px_rgba(17,24,39,0.05)] sm:p-8">
+        <div className="animate-pulse space-y-5">
+          <div className="h-4 w-32 rounded-full bg-green-100" />
+          <div className="h-10 w-56 rounded-2xl bg-green-100" />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="h-44 rounded-[28px] bg-white" />
+            <div className="h-44 rounded-[28px] bg-white" />
+          </div>
+          <div className="space-y-4">
+            {[1, 2, 3].map((item) => (
+              <div key={item} className="h-36 rounded-[28px] bg-white" />
             ))}
           </div>
         </div>
@@ -281,93 +318,99 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
   }
 
   return (
-    <div className="w-full py-10 bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Success Message */}
+    <div className="rounded-[32px] border border-green-100 bg-[#F0FAF3] p-6 shadow-[0_24px_60px_rgba(17,24,39,0.05)] sm:p-8">
+      <div className="space-y-5 sm:space-y-6">
         <AnimatePresence>
           {submitSuccess && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="mb-6 p-4 bg-green-100 border border-green-200 rounded-lg flex items-center space-x-3"
+              exit={{ opacity: 0, y: -12 }}
+              className="flex items-center gap-3 rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm font-medium text-green-800 shadow-sm"
             >
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <span className="text-green-800 font-medium">
-                Thank you! Your review has been submitted successfully.
-              </span>
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <span>Thank you! Your review has been submitted successfully.</span>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Header */}
-        <div className="mb-7">
-          <h2 className="text-xl font-bold text-gray-900 mb-3.5">Customer Reviews</h2>
-          
-          {/* Review Summary */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5 mb-7">
-            {/* Overall Rating */}
-            <div className="bg-white p-4 md:p-5 rounded-lg md:rounded-xl shadow-sm border border-gray-100">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                  {reviewStats.averageRating.toFixed(1)}
-                </div>
-                <div className="flex justify-center mb-2">
-                  {renderStars(Math.round(reviewStats.averageRating), 'md')}
-                </div>
-                <p className="text-gray-600 text-xs md:text-sm">
-                  Based on {reviewStats.totalReviews} review{reviewStats.totalReviews !== 1 ? 's' : ''}
-                </p>
-              </div>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="space-y-3">
+            <div className="inline-flex rounded-full border border-green-200 bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-green-800">
+              Customer Voices
             </div>
-
-            {/* Rating Distribution */}
-            <div className="bg-white p-4 md:p-5 rounded-lg md:rounded-xl shadow-sm border border-gray-100">
-              <h3 className="font-semibold text-gray-900 mb-3 text-sm md:text-base">Rating Breakdown</h3>
-              <div className="space-y-2">
-                {[5, 4, 3, 2, 1].map((starCount, index) => 
-                  renderRatingBar(
-                    starCount, 
-                    reviewStats.ratingDistribution[index], 
-                    reviewStats.totalReviews
-                  )
-                )}
-              </div>
+            <div>
+              <h2 className="text-2xl font-semibold tracking-tight text-green-900 sm:text-3xl">
+                Customer Reviews
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
+                Honest feedback from people using {productName} in their everyday routines.
+              </p>
             </div>
           </div>
 
-          {/* Write Review Button */}
-          <div className="flex justify-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowReviewForm(!showReviewForm)}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl"
-            >
-              <MessageSquare className="w-5 h-5" />
-              <span>Write a Review</span>
-            </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => setShowReviewForm((current) => !current)}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-green-300 bg-white px-5 py-3 text-sm font-semibold text-green-800 transition hover:border-green-500 hover:bg-green-50 sm:w-auto"
+          >
+            <MessageSquare className="h-4 w-4" />
+            <span>Write a Review</span>
+          </motion.button>
+        </div>
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-[28px] border border-green-100 bg-white p-5 shadow-sm sm:p-6">
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">
+              Overall Rating
+            </p>
+            <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="text-4xl font-bold tracking-tight text-green-900 sm:text-5xl">
+                  {reviewStats.averageRating.toFixed(1)}
+                </div>
+                <div className="mt-3">{renderStars(Math.round(reviewStats.averageRating), 'lg')}</div>
+              </div>
+              <p className="text-sm font-medium text-slate-600">
+                Based on {totalReviewCount} review{totalReviewCount === 1 ? '' : 's'}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-[28px] border border-green-100 bg-white p-5 shadow-sm sm:p-6">
+            <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">
+              Rating Breakdown
+            </p>
+            <div className="mt-4 space-y-3">
+              {[5, 4, 3, 2, 1].map((starCount, index) =>
+                renderRatingBar(
+                  starCount,
+                  reviewStats.ratingDistribution[index],
+                  totalReviewCount
+                )
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Review Form */}
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {showReviewForm && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mb-8 overflow-hidden"
+              className="overflow-hidden"
             >
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-5">
+              <div className="rounded-[28px] border border-green-100 bg-white p-5 shadow-sm sm:p-6">
+                <h3 className="text-xl font-semibold text-slate-900">
                   Write a Review for {productName}
                 </h3>
-                <form onSubmit={handleSubmitReview} className="space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <form onSubmit={handleSubmitReview} className="mt-5 space-y-5">
+                  <div className="grid gap-4 md:grid-cols-2">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="mb-1.5 block text-sm font-medium text-slate-700">
                         Your Name *
                       </label>
                       <input
@@ -376,12 +419,13 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-100"
                         placeholder="Enter your name"
                       />
                     </div>
+
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="mb-1.5 block text-sm font-medium text-slate-700">
                         Your Email *
                       </label>
                       <input
@@ -390,29 +434,29 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-100"
                         placeholder="Enter your email"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
                       Your Rating *
                     </label>
-                    <div className="flex space-x-1">
+                    <div className="flex items-center gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button
                           key={star}
                           type="button"
                           onClick={() => handleRatingChange(star)}
-                          className="focus:outline-none"
+                          className="rounded-full p-1 transition hover:bg-green-50"
                         >
                           <Star
-                            className={`w-7 h-7 transition-colors ${
+                            className={`h-7 w-7 transition-colors ${
                               star <= formData.rating
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300 hover:text-yellow-200'
+                                ? 'fill-amber-400 text-amber-400'
+                                : 'text-green-100 hover:text-amber-200'
                             }`}
                           />
                         </button>
@@ -421,7 +465,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">
                       Your Review *
                     </label>
                     <textarea
@@ -430,21 +474,20 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full resize-none rounded-xl border border-slate-200 px-3 py-2.5 text-sm text-slate-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-100"
                       placeholder="Share your experience with this product..."
                     />
                   </div>
 
-                  {/* Photo Upload Section */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-700">
                       Add Photos (Optional)
-                      <span className="text-gray-500 font-normal text-xs ml-2">
-                        Max 5 photos, 5MB each (JPEG, JPG, PNG, WebP)
-                      </span>
                     </label>
+                    <p className="mb-3 text-xs text-slate-500">
+                      Max 5 photos, 5MB each. JPEG, JPG, PNG and WebP supported.
+                    </p>
+
                     <div className="space-y-3">
-                      {/* Photo Upload Input */}
                       <div className="relative">
                         <input
                           type="file"
@@ -457,23 +500,23 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         />
                         <label
                           htmlFor="photo-upload"
-                          className={`flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                          className={`flex w-full cursor-pointer items-center justify-center rounded-2xl border-2 border-dashed px-4 py-4 text-sm transition ${
                             uploadingPhotos || uploadedPhotos.length >= 5
-                              ? 'border-gray-300 bg-gray-50 cursor-not-allowed'
-                              : 'border-gray-300 hover:border-green-500 hover:bg-green-50'
+                              ? 'cursor-not-allowed border-slate-200 bg-slate-50 text-slate-400'
+                              : 'border-green-200 bg-green-50/40 text-slate-600 hover:border-green-400 hover:bg-green-50'
                           }`}
                         >
                           {uploadingPhotos ? (
-                            <div className="flex items-center space-x-2 text-gray-600">
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-                              <span className="text-sm">Uploading...</span>
+                            <div className="flex items-center gap-2">
+                              <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-300 border-b-green-600" />
+                              <span>Uploading...</span>
                             </div>
                           ) : (
-                            <div className="flex items-center space-x-2 text-gray-600">
-                              <ImageIcon className="w-5 h-5" />
-                              <span className="text-sm">
-                                {uploadedPhotos.length >= 5 
-                                  ? 'Maximum 5 photos reached' 
+                            <div className="flex items-center gap-2">
+                              <ImageIcon className="h-5 w-5" />
+                              <span>
+                                {uploadedPhotos.length >= 5
+                                  ? 'Maximum 5 photos reached'
                                   : 'Click to upload photos'}
                               </span>
                             </div>
@@ -481,25 +524,24 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         </label>
                       </div>
 
-                      {/* Preview Uploaded Photos */}
                       {uploadedPhotos.length > 0 && (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
                           {uploadedPhotos.map((url, index) => (
-                            <div key={index} className="relative group">
+                            <div key={`${url}-${index}`} className="relative group">
                               <Image
                                 src={url}
                                 alt={`Review photo ${index + 1}`}
-                                width={100}
-                                height={100}
-                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
+                                width={120}
+                                height={120}
+                                className="h-24 w-full rounded-2xl border border-green-100 object-cover"
                               />
                               <button
                                 type="button"
                                 onClick={() => handleRemovePhoto(index)}
-                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                className="absolute -right-2 -top-2 rounded-full bg-red-500 p-1 text-white opacity-100 shadow-lg transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
                                 aria-label="Remove photo"
                               >
-                                <X className="w-4 h-4" />
+                                <X className="h-4 w-4" />
                               </button>
                             </div>
                           ))}
@@ -508,26 +550,27 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                     </div>
                   </div>
 
-                  <div className="flex space-x-3 pt-3.5">
+                  <div className="flex flex-col gap-3 sm:flex-row">
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-5 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-green-800 disabled:cursor-not-allowed disabled:bg-slate-400"
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-b-white" />
                           <span>Submitting...</span>
                         </>
                       ) : (
                         <>
-                          <Send className="w-4 h-4" />
+                          <Send className="h-4 w-4" />
                           <span>Submit Review</span>
                         </>
                       )}
                     </motion.button>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -535,7 +578,7 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
                         setUploadedPhotos([]);
                         setFormData({ name: '', email: '', rating: 5, comment: '' });
                       }}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg font-semibold transition-colors duration-200"
+                      className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
                     >
                       Cancel
                     </button>
@@ -546,158 +589,118 @@ export default function ProductReviews({ productId, productName, onReviewSubmit 
           )}
         </AnimatePresence>
 
-        {/* Reviews List */}
-        <div className="space-y-5">
+        <div className="space-y-4">
           {reviews.length === 0 ? (
-            <div className="text-center py-14 bg-white rounded-xl shadow-sm border border-gray-100">
-              <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-5" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2.5">No reviews yet</h3>
-              <p className="text-gray-600 mb-5 text-sm">Be the first to review this product!</p>
+            <div className="rounded-[28px] border border-green-100 bg-white px-6 py-12 text-center shadow-sm">
+              <MessageSquare className="mx-auto h-14 w-14 text-green-200" />
+              <h3 className="mt-4 text-xl font-semibold text-slate-900">No reviews yet</h3>
+              <p className="mt-2 text-sm text-slate-600">
+                Be the first to share your experience with this product.
+              </p>
               <button
+                type="button"
                 onClick={() => setShowReviewForm(true)}
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-green-800"
               >
                 Write First Review
               </button>
             </div>
           ) : (
             <>
-              {reviews.slice(0, visibleReviewsCount).map((review) => (
-                <motion.div
-                  key={review.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200"
-                >
-                  <div className="flex items-start justify-between mb-3.5">
-                    <div className="flex items-center space-x-3.5">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                        <User className="w-5 h-5 text-green-600" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <h4 className="font-semibold text-gray-900 flex items-center space-x-2">
-                          <span className="truncate">{review.name}</span>
-                          {review.verified && (
-                            <div title="Verified Purchase">
-                              <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />
-                            </div>
-                          )}
-                        </h4>
-                        <p className="text-sm text-gray-500">{formatDate(review.created_at)}</p>
-                      </div>
-                    </div>
-                    <div className="flex-shrink-0">
-                      {renderStars(review.rating, 'sm')}
-                    </div>
-                  </div>
+              {reviews.slice(0, visibleReviewsCount).map((review) => {
+                const photos = parseReviewPhotos(review.photos);
 
-                  {/* Display Photos */}
-                  {review.photos && (
-                    (() => {
-                      // Handle photos as array or string (database might return as string)
-                      let photosArray: string[] = [];
-                      if (Array.isArray(review.photos)) {
-                        photosArray = review.photos;
-                      } else if (typeof review.photos === 'string') {
-                        try {
-                          photosArray = JSON.parse(review.photos);
-                        } catch {
-                          photosArray = [review.photos];
-                        }
-                      }
-                      
-                      return photosArray.length > 0 ? (
-                        <div className="mt-3 mb-2.5">
-                          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 auto-rows-min">
-                            {photosArray.map((photo, index) => {
-                              // Ensure photo URL is valid
-                              if (!photo || typeof photo !== 'string') return null;
-                              
-                              // Log for debugging
-                              console.log(`Loading review photo ${index + 1} for review ${review.id}:`, photo);
-                              
-                              return (
-                                <div
-                                  key={`${review.id}-photo-${index}`}
-                                  className="relative group cursor-pointer rounded-lg overflow-hidden border border-gray-200 hover:border-green-500 transition-colors bg-white flex items-center justify-center"
-                                  onClick={() => window.open(photo, '_blank')}
-                                  style={{ 
-                                    aspectRatio: 'auto',
-                                    maxHeight: '120px',
-                                    minHeight: '80px'
-                                  }}
-                                >
-                                  <Image
-                                    src={photo}
-                                    alt={`Review photo ${index + 1}`}
-                                    width={120}
-                                    height={120}
-                                    className="w-full h-auto max-h-[120px] object-contain rounded-lg"
-                                    style={{ 
-                                      display: 'block',
-                                      position: 'relative',
-                                      zIndex: 1,
-                                      backgroundColor: '#ffffff',
-                                      maxWidth: '100%'
-                                    }}
-                                    loading="lazy"
-                                  />
-                                  <div 
-                                    className="absolute inset-0 rounded-lg flex items-center justify-center pointer-events-none"
-                                    style={{ 
-                                      zIndex: 2,
-                                      background: 'rgba(0, 0, 0, 0)',
-                                      transition: 'background 0.2s ease'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      e.currentTarget.style.background = 'rgba(0, 0, 0, 0)';
-                                    }}
-                                  >
-                                    <ImageIcon className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
+                return (
+                  <motion.div
+                    key={review.id}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-[28px] border border-green-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-[0_18px_44px_rgba(17,24,39,0.06)] sm:p-6"
+                  >
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100 text-sm font-semibold text-green-800">
+                          {getInitials(review.name)}
                         </div>
-                      ) : null;
-                    })()
-                  )}
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="text-base font-semibold text-slate-900">{review.name}</h4>
+                            {review.verified && (
+                              <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-green-700">
+                                <CheckCircle2 className="h-3.5 w-3.5" />
+                                Verified
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 text-sm text-slate-500">{formatDate(review.created_at)}</p>
+                        </div>
+                      </div>
 
-                  <p className="text-gray-700 leading-relaxed mb-2.5 text-sm mt-3">
-                    {review.comment}
-                  </p>
-                  
-                  
-                </motion.div>
-              ))}
-              
-              {/* Show More/Less Button */}
+                      <div className="flex-shrink-0">{renderStars(review.rating, 'sm')}</div>
+                    </div>
+
+                    <p className="mt-4 text-sm leading-relaxed text-slate-700 sm:text-base">
+                      {review.comment}
+                    </p>
+
+                    {photos.length > 0 && (
+                      <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+                        {photos.map((photo, index) => (
+                          <button
+                            key={`${review.id}-photo-${index}`}
+                            type="button"
+                            onClick={() => window.open(photo, '_blank')}
+                            className="group relative overflow-hidden rounded-2xl border border-green-100 bg-white"
+                          >
+                            <Image
+                              src={photo}
+                              alt={`Review photo ${index + 1}`}
+                              width={160}
+                              height={160}
+                              className="h-28 w-full object-cover transition duration-300 group-hover:scale-105"
+                              loading="lazy"
+                            />
+                            <div className="pointer-events-none absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+
               {reviews.length > 5 && (
-                <div className="flex justify-center pt-5">
+                <div className="flex justify-center pt-2">
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setVisibleReviewsCount(visibleReviewsCount === 5 ? reviews.length : 5)}
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2 shadow-sm hover:shadow-md"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() =>
+                      setVisibleReviewsCount(
+                        visibleReviewsCount === 5 ? reviews.length : 5
+                      )
+                    }
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-green-300 bg-white px-5 py-3 text-sm font-semibold text-green-800 transition hover:border-green-500 hover:bg-green-50 sm:w-auto"
                   >
                     <span>
-                      {visibleReviewsCount === 5 
-                        ? `Show All ${reviews.length} Reviews` 
-                        : 'Show Less'
-                      }
+                      {visibleReviewsCount === 5
+                        ? `Show All ${totalReviewCount} Reviews`
+                        : 'Show Less'}
                     </span>
-                    <motion.div
+                    <motion.svg
                       animate={{ rotate: visibleReviewsCount === 5 ? 0 : 180 }}
                       transition={{ duration: 0.2 }}
+                      className="h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </motion.div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </motion.svg>
                   </motion.button>
                 </div>
               )}

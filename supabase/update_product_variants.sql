@@ -5,7 +5,7 @@
 UPDATE products 
 SET variants = '[
   {"size": "10ml", "price": 299, "originalPrice": 399},
-  {"size": "30ml", "price": 799, "originalPrice": 999}
+  {"size": "30ml", "price": 699, "originalPrice": 999}
 ]'::jsonb
 WHERE variants IS NULL 
    OR variants = '[]'::jsonb

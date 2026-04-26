@@ -13,7 +13,7 @@ COMMENT ON COLUMN products.variants IS 'Array of product variants. Each variant 
 -- UPDATE products 
 -- SET variants = '[
 --   {"size": "10ml", "price": 299, "originalPrice": 399},
---   {"size": "30ml", "price": 799, "originalPrice": 999}
+--   {"size": "30ml", "price": 699, "originalPrice": 999}
 -- ]'::jsonb
 -- WHERE id = 'your-product-id-here' AND (variants IS NULL OR variants = '[]'::jsonb);
 

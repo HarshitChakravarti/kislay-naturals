@@ -12,29 +12,23 @@ export const DEFAULT_PRODUCT_VARIANTS: ProductVariant[] = [
   { size: '10ml', price: 299, originalPrice: 399, unitCount: 1 },
   { size: '10ml pack of 2', price: 549, originalPrice: 798, image: '/1.png', unitCount: 2 },
   { size: '10ml pack of 3', price: 799, originalPrice: 1197, image: '/2.png', unitCount: 3 },
-  { size: '30ml', price: 799, originalPrice: 999, unitCount: 1 },
+  { size: '30ml', price: 699, originalPrice: 999, unitCount: 1 },
 ];
 
-export type VariantCouponType = 'special' | 'holi' | 'sweetsmart';
+export type VariantCouponType = 'special' | 'holi';
 
 const THIRTY_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   special: 699,
   holi: 699,
-  sweetsmart: 719,
 };
 
 const TEN_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   special: 249,
   holi: 269,
-  sweetsmart: 279,
 };
 
 const FIXED_BUNDLE_COUPON_PRICE_BY_TYPE: Partial<Record<VariantCouponType, Record<number, number>>> = {
   special: {
-    2: 539,
-    3: 769,
-  },
-  sweetsmart: {
     2: 539,
     3: 769,
   },
@@ -119,14 +113,15 @@ export function getVariantCouponPrice(
   const normalizedSize = normalizeVariantKey(variant.size);
 
   if (normalizedSize === '30ml') {
-    return THIRTY_ML_COUPON_PRICE[couponType];
+    // Never allow coupon pricing to raise the current selling price.
+    return Math.min(variant.price, THIRTY_ML_COUPON_PRICE[couponType]);
   }
 
   if (!normalizedSize.startsWith('10ml')) {
     return null;
   }
 
-  if (couponType === 'special' || couponType === 'sweetsmart') {
+  if (couponType === 'special') {
     const bundleUnitCount = getBundleUnitCount(variant);
     const fixedBundlePrice = FIXED_BUNDLE_COUPON_PRICE_BY_TYPE[couponType]?.[bundleUnitCount];
 

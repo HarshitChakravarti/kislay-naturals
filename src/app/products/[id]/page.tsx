@@ -65,7 +65,7 @@ async function getProductById(id: string): Promise<Product | null> {
     if (data && (!data.variants || (Array.isArray(data.variants) && data.variants.length === 0))) {
       data.variants = [
         { size: '10ml', price: 299, originalPrice: 399 },
-        { size: '30ml', price: 799, originalPrice: 999 }
+        { size: '30ml', price: 699, originalPrice: 999 }
       ];
     }
 
@@ -88,7 +88,7 @@ async function getProductById(id: string): Promise<Product | null> {
       if (slugData && (!slugData.variants || (Array.isArray(slugData.variants) && slugData.variants.length === 0))) {
         slugData.variants = [
           { size: '10ml', price: 299, originalPrice: 399 },
-          { size: '30ml', price: 799, originalPrice: 999 }
+          { size: '30ml', price: 699, originalPrice: 999 }
         ];
       }
       
@@ -105,7 +105,7 @@ async function getProductById(id: string): Promise<Product | null> {
             originalPrice: 399,
             variants: [
               { size: '10ml', price: 299, originalPrice: 399 },
-              { size: '30ml', price: 799, originalPrice: 999 }
+              { size: '30ml', price: 699, originalPrice: 999 }
             ],
             image: '/p1.png',
             description: 'The perfect monk fruit sweetener for you. Made from 100% natural monk fruit extract, our sweetener provides the perfect balance of sweetness without any calories or artificial ingredients.',
