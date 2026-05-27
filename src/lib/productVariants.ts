@@ -36,7 +36,7 @@ const FIXED_BUNDLE_COUPON_PRICE_BY_TYPE: Partial<Record<VariantCouponType, Recor
   },
   sweetsmart: {
     2: 519,
-    3: 679,
+    3: 769,
   },
 };
 
