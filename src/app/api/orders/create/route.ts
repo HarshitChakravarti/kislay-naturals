@@ -91,23 +91,7 @@ export async function POST(request: NextRequest) {
       sku: payload.product.sku || null
     };
 
-    const isThirtyMlVariant = `${(payload.product as any).variantSize || ''}`.toLowerCase() === '30ml';
-    const freeOrderItem = isThirtyMlVariant
-      ? {
-          order_id: orderData.id,
-          product_id: payload.product.id,
-          name: `${payload.product.name} (Free 10ml)`,
-          image: payload.product.image || null,
-          price: 0,
-          quantity: payload.quantity,
-          variant_size: '10ml',
-          description: 'Complimentary 10ml variant with 30ml purchase',
-          category: payload.product.category || null,
-          sku: payload.product.sku || null
-        }
-      : null;
-
-    const orderItemsToInsert = freeOrderItem ? [paidOrderItem, freeOrderItem] : [paidOrderItem];
+    const orderItemsToInsert = [paidOrderItem];
 
     console.log('📦 Attempting to insert order items:', JSON.stringify(orderItemsToInsert, null, 2));
     console.log('💰 Coupon details - Code:', payload.couponCode, 'Discount:', payload.couponDiscount, 'Type:', payload.couponCode === 'SPECIAL' ? 'fixed' : 'percentage');

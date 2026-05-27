@@ -289,15 +289,6 @@ export default function OrderDetailPage() {
     );
   }
 
-  const freeOfferItem = order.order_items?.find((item) => {
-    const variant = String(item.variant_size || '').toLowerCase();
-    const name = String(item.name || '').toLowerCase();
-    return (variant === '10ml' && Number(item.price) === 0) || name.includes('free 10ml');
-  });
-
-  const payloadVariant = String(order.payload?.product?.variantSize || '').toLowerCase();
-  const offerAvailed = Boolean(freeOfferItem) || payloadVariant === '30ml';
-
   return (
     <div className="space-y-4 lg:space-y-6">
       {/* Header */}
@@ -308,13 +299,6 @@ export default function OrderDetailPage() {
           </Link>
           <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Order {order.order_number || formatShortOrderId(order.id)}</h1>
           <p className="mt-1 lg:mt-2 text-sm lg:text-base text-gray-600">Order placed on {formatDate(order.created_at)}</p>
-          {offerAvailed && (
-            <div className="mt-2">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                Offer Availed: Buy 30ml, Get 10ml Free{freeOfferItem ? ` (x${freeOfferItem.quantity})` : ''}
-              </span>
-            </div>
-          )}
         </div>
         <div className="text-left lg:text-right">
           <div className="text-sm text-gray-500">Current Status</div>

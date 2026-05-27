@@ -15,22 +15,28 @@ export const DEFAULT_PRODUCT_VARIANTS: ProductVariant[] = [
   { size: '30ml', price: 699, originalPrice: 999, unitCount: 1 },
 ];
 
-export type VariantCouponType = 'special' | 'holi';
+export type VariantCouponType = 'special' | 'holi' | 'sweetsmart';
 
 const THIRTY_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   special: 699,
   holi: 699,
+  sweetsmart: 669,
 };
 
 const TEN_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   special: 249,
   holi: 269,
+  sweetsmart: 279,
 };
 
 const FIXED_BUNDLE_COUPON_PRICE_BY_TYPE: Partial<Record<VariantCouponType, Record<number, number>>> = {
   special: {
     2: 539,
     3: 769,
+  },
+  sweetsmart: {
+    2: 519,
+    3: 679,
   },
 };
 
@@ -121,16 +127,14 @@ export function getVariantCouponPrice(
     return null;
   }
 
-  if (couponType === 'special') {
-    const bundleUnitCount = getBundleUnitCount(variant);
-    const fixedBundlePrice = FIXED_BUNDLE_COUPON_PRICE_BY_TYPE[couponType]?.[bundleUnitCount];
+  const bundleUnitCount = getBundleUnitCount(variant);
+  const fixedBundlePrice = FIXED_BUNDLE_COUPON_PRICE_BY_TYPE[couponType]?.[bundleUnitCount];
 
-    if (fixedBundlePrice) {
-      return Math.min(variant.price, fixedBundlePrice);
-    }
+  if (fixedBundlePrice) {
+    return Math.min(variant.price, fixedBundlePrice);
   }
 
-  const bundlePrice = TEN_ML_COUPON_PRICE[couponType] * getBundleUnitCount(variant);
+  const bundlePrice = TEN_ML_COUPON_PRICE[couponType] * bundleUnitCount;
 
   // Keep bundle coupons additive without ever raising the current selling price.
   return Math.min(variant.price, bundlePrice);
