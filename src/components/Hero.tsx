@@ -5,48 +5,56 @@ import Link from "next/link";
 
 const Hero = () => {
   const [visible, setVisible] = useState(false);
-  const [currentQuote, setCurrentQuote] = useState(0);
+  const [currentBanner, setCurrentBanner] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [currentMobileImage, setCurrentMobileImage] = useState(0);
-  const [currentDesktopImage, setCurrentDesktopImage] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
-  const quotes = [
-    "What you eat today builds your tomorrow - choose sweet, not sugar.",
-    "Nature's sweetness, without the guilt - pure monk fruit magic.",
-    "Sweeten your life the natural way - 300x sweeter than sugar.",
-    "From farm to table - the purest monk fruit sweetener on Earth."
+  const banners = [
+    {
+      headline: "The sweetener that's 300x sweeter — with zero sugar, zero guilt.",
+      subheadline: "For diabetics, keto eaters & health-first families.",
+      proof: "Kislay Monk Fruit Sweetener Drops. 100% natural, zero-calorie monk fruit sweetness.",
+      desktopImage: "/herophoto.png",
+      mobileImage: "/herophoto.png",
+      alt: "Kislay Monk Fruit Sweetener Drops"
+    },
+    {
+      headline: "Tired of products that promise results but don't deliver? Meet Kislay Naturals.",
+      subheadline: "Say no to sugar without giving up sweetness.",
+      proof: "Plant-based monk fruit drops for tea, coffee, desserts and daily sugar swaps.",
+      desktopImage: "/mcover.png",
+      mobileImage: "/mcover.png",
+      alt: "Kislay Naturals monk fruit sweetener in everyday drinks"
+    },
+    {
+      headline: "Sweeten your tea, coffee and desserts without the sugar crash.",
+      subheadline: "Made for everyday Indian homes choosing better sweetness.",
+      proof: "Zero sugar. Zero calories. No artificial sweeteners.",
+      desktopImage: "/herophoto2.png",
+      mobileImage: "/herophoto2.png",
+      alt: "Sugar-free recipes made with monk fruit sweetener"
+    },
+    {
+      headline: "One tiny drop. Big natural sweetness.",
+      subheadline: "For parents, fitness routines and anyone cutting refined sugar.",
+      proof: "Monk fruit is naturally up to 300x sweeter than sugar, so a little goes a long way.",
+      desktopImage: "/cover333.jpg",
+      mobileImage: "/mcover2.png",
+      alt: "Kislay Naturals monk fruit sweetener for healthy families"
+    }
   ];
-
-  const mobileImages = ['/herophoto.png',  '/mcover.png','/herophoto2.png', '/mcover2.png'];
-  const desktopImages = ['/herophoto.png', '/mcover.png', '/herophoto2.png', '/cover333.jpg'];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIsAnimating(true);
       setTimeout(() => {
-        setCurrentQuote((prev) => (prev + 1) % quotes.length);
+        setCurrentBanner((prev) => (prev + 1) % banners.length);
         setIsAnimating(false);
-      }, 500); // Half of the transition time
-    }, 3000); // Change quote every 5 seconds
+      }, 500);
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [quotes.length]);
-
-  useEffect(() => {
-    const mobileImageInterval = setInterval(() => {
-      setCurrentMobileImage(prev => (prev + 1) % mobileImages.length);
-    }, 3000);
-
-    const desktopImageInterval = setInterval(() => {
-      setCurrentDesktopImage(prev => (prev + 1) % desktopImages.length);
-    }, 3000);
-
-    return () => {
-      clearInterval(mobileImageInterval);
-      clearInterval(desktopImageInterval);
-    };
-  }, [mobileImages.length, desktopImages.length]);
+  }, [banners.length]);
 
   useEffect(() => {
     const observer = new window.IntersectionObserver(
@@ -62,14 +70,14 @@ const Hero = () => {
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
-          {desktopImages.map((src, index) => (
+          {banners.map((banner, index) => (
             <Image
-              key={src}
-              src={src}
-              alt="Monk Fruit Sweeteners"
+              key={banner.desktopImage}
+              src={banner.desktopImage}
+              alt={banner.alt}
               fill
               priority={index === 0}
-              className={`object-cover object-center transition-opacity duration-1000 ${index === currentDesktopImage ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover object-center transition-opacity duration-1000 ${index === currentBanner ? 'opacity-100' : 'opacity-0'}`}
               style={{ 
                 filter: 'brightness(0.9) contrast(1.1)',
                 objectPosition: 'center center'
@@ -79,16 +87,16 @@ const Hero = () => {
         </div>
         {/* Mobile Image - shown only on mobile */}
         <div className="md:hidden w-full h-full relative">
-          {mobileImages.map((src, index) => (
+          {banners.map((banner, index) => (
             <Image
-              key={src}
-              src={src}
-              alt="Monk Fruit Sweeteners"
+              key={banner.mobileImage}
+              src={banner.mobileImage}
+              alt={banner.alt}
               fill
               priority={index === 0}
               sizes="100vw"
               quality={90}
-              className={`object-cover object-center transition-opacity duration-1000 ${index === currentMobileImage ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-cover object-center transition-opacity duration-1000 ${index === currentBanner ? 'opacity-100' : 'opacity-0'}`}
               style={{ 
                 filter: 'brightness(0.9) contrast(1.1)'
               }}
@@ -101,20 +109,22 @@ const Hero = () => {
         ref={ref}
         className={`relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
-        <div className="min-h-[160px] sm:min-h-[180px] lg:min-h-[220px] flex items-center">
+        <div className="min-h-[210px] sm:min-h-[240px] lg:min-h-[300px] flex max-w-5xl flex-col items-center justify-center">
           <h1 
-            className={`font-serif font-bold text-white mb-6 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
+            className={`font-heading font-semibold text-white mb-4 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
             style={{ 
-              fontFamily: 'var(--font-dancing-script), cursive',
-              fontSize: 'clamp(3.25rem, 10vw, 5.25rem)'
+              fontSize: 'clamp(30px, 10vw, 84px)'
             }}
             aria-live="polite"
           >
-            {quotes[currentQuote]}
+            {banners[currentBanner].headline}
           </h1>
+          <p className={`max-w-3xl px-4 text-xl font-semibold leading-snug text-green-50 drop-shadow-md transition-opacity duration-500 sm:text-2xl md:text-3xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+            {banners[currentBanner].subheadline}
+          </p>
         </div>
-        <p className="text-green-50 mb-8 font-sans max-w-3xl drop-shadow-md leading-relaxed px-4" style={{ fontFamily: 'var(--font-poppins), sans-serif', fontSize: 'clamp(1.1rem, 1.8vw, 1.55rem)' }}>
-        Our monk fruit sweeteners are 100% natural, zero-calorie, and 300x sweeter than sugar — without the sugar crash, guilt, or chemicals.
+        <p className={`mb-8 max-w-3xl px-4 font-sans leading-relaxed text-green-50 drop-shadow-md transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} style={{ fontSize: 'clamp(1rem, 1.55vw, 1.25rem)' }}>
+          {banners[currentBanner].proof}
         </p>
         <Link 
           href="/products/e60c3e2e-083b-4da2-8cb4-6789f934f7a8" 

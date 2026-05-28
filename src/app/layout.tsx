@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from 'react';
 import Script from 'next/script';
 import "./globals.css";
-import { Montserrat, Open_Sans, Dancing_Script } from "next/font/google";
+import { Open_Sans, Poppins } from "next/font/google";
 
 import ReduxProvider from "@/store/ReduxProvider";
 import Navbar from "@/components/Navbar";
@@ -14,18 +14,10 @@ import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 import SessionManager from '@/components/SessionManager';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 
-// Load fonts
-const dancingScript = Dancing_Script({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-dancing-script",
-  display: 'swap',
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
+  weight: ["600"],
+  variable: "--font-poppins",
   display: 'swap',
 });
 
@@ -110,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta property="og:image:height" content="630" />
         <meta name="twitter:image" content="/logo-transparent.png" />
       </head>
-      <body className={`${montserrat.variable} ${openSans.variable} ${dancingScript.variable} font-sans`}>
+      <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
         <Suspense fallback={null}>
           <GoogleAnalytics />
           <AuthProvider>

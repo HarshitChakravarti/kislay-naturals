@@ -558,11 +558,11 @@ export default function OrderDetailPage() {
           <dl className="space-y-3">
             <div>
               <dt className="text-sm font-medium text-gray-500">Payment ID</dt>
-              <dd className="text-sm text-gray-900 font-mono break-all">{order.razorpay_payment_id}</dd>
+              <dd className="text-sm text-gray-900 font-sans break-all">{order.razorpay_payment_id}</dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Order ID</dt>
-              <dd className="text-sm text-gray-900 font-mono break-all">{order.razorpay_order_id}</dd>
+              <dd className="text-sm text-gray-900 font-sans break-all">{order.razorpay_order_id}</dd>
             </div>
             <div>
               <dt className="text-sm font-medium text-gray-500">Paid At</dt>

@@ -1,12 +1,5 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Yeseva_One } from 'next/font/google'
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-})
-
 async function getBlogPosts() {
   try {
     // Use supabaseAdmin to bypass RLS for server-side rendering
@@ -60,7 +53,7 @@ export default async function BlogPage() {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h1 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   OUR BLOGS
                 </span>
@@ -118,7 +111,7 @@ export default async function BlogPage() {
       {/* End CTA Section */}
       <div className="bg-green-50">
         <div className="container mx-auto px-4 py-14 text-center">
-          <h2 className={`text-3xl md:text-4xl font-bold text-black mb-4 ${yeseva_One.className}`}>
+          <h2 className={`text-3xl md:text-4xl font-bold text-black mb-4 font-heading`}>
             Ready to Keep Exploring?
           </h2>
           <p className="text-lg md:text-xl text-green-700 mb-8 max-w-2xl mx-auto leading-relaxed">

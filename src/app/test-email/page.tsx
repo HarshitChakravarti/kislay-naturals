@@ -126,7 +126,7 @@ export default function TestEmailPage() {
                         {result.message}
                       </p>
                       {result.data?.id && (
-                        <p className="text-xs text-green-600 mt-2 font-mono">
+                        <p className="text-xs text-green-600 mt-2 font-sans">
                           Email ID: {result.data.id}
                         </p>
                       )}

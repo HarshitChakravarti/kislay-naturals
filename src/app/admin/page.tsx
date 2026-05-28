@@ -2,13 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 interface DashboardStats {
   totalOrders: number;
   pendingOrders: number;
@@ -89,7 +82,7 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h1 className={`text-xl lg:text-2xl font-bold text-green-700 ${yeseva_One.className}`}>
+                <h1 className={`text-xl lg:text-2xl font-bold text-green-700 font-heading`}>
                   Welcome back, Nishchoy! 👋
                 </h1>
                 <p className="text-sm text-green-600 font-medium">Ready to manage your store</p>
@@ -216,7 +209,7 @@ export default function AdminDashboard() {
             <tbody className="bg-white divide-y divide-gray-200">
               {(stats?.recentOrders || []).map((order: any) => (
                 <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm font-mono text-gray-900">{order.order_number || formatShortOrderId(order.id)}</td>
+                  <td className="px-6 py-4 text-sm font-sans text-gray-900">{order.order_number || formatShortOrderId(order.id)}</td>
                   <td className="px-6 py-4 text-sm text-gray-900">
                     <div className="font-medium text-gray-900">{order.user_name || '—'}</div>
                     <div className="text-gray-500 text-xs">{order.user_email || '—'}</div>

@@ -87,7 +87,7 @@ export default function SessionTimeoutWarning({
             <p className="text-sm text-gray-600 mb-2">
               Your session will expire in:
             </p>
-            <div className="text-2xl font-mono font-bold text-red-600 text-center">
+            <div className="text-2xl font-sans font-bold text-red-600 text-center">
               {formatTime(countdown)}
             </div>
             <p className="text-xs text-gray-500 text-center mt-1">

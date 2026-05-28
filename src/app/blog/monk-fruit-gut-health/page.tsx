@@ -87,7 +87,7 @@ export default async function MonkFruitGutHealthBlog() {
               <span>Kislay Naturals</span>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl lg:text-4xl font-heading font-semibold text-gray-900 mb-6">
               Can Monk Fruit Sweetener <span className="text-green-600">Improve Gut Health?</span>
             </h1>
             

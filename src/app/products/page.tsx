@@ -2,14 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import { Star, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { Yeseva_One } from 'next/font/google';
 import { supabase } from '@/lib/supabase';
 import ProductCard from '../../components/ProductCard';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
 
 const ProductsPage = async () => {
   // Fetch all products from database
@@ -82,7 +76,7 @@ const ProductsPage = async () => {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h1 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   OUR PRODUCTS
                 </span>
@@ -111,7 +105,7 @@ const ProductsPage = async () => {
       {/* More Products Coming Soon Section */}
       <div className="bg-green-50 py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className={`text-3xl md:text-4xl font-bold text-black mb-4 ${yeseva_One.className}`}>
+          <h2 className={`text-3xl md:text-4xl font-bold text-black mb-4 font-heading`}>
             More Products Coming Soon! 🚀
           </h2>
           <p className="text-lg md:text-xl text-green-700 mb-8 max-w-2xl mx-auto leading-relaxed">

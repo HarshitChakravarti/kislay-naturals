@@ -2,13 +2,6 @@ import React, { useState, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 interface BlogPost {
   id: number;
   title: string;
@@ -107,7 +100,7 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="text-center">
-            <h2 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+            <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 NOURISH YOUR KNOWLEDGE WITH US
               </span>

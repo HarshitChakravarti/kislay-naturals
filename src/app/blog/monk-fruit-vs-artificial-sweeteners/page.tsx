@@ -87,7 +87,7 @@ export default async function MonkFruitVsArtificialSweetenersBlog() {
               <span>Kislay Naturals</span>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl lg:text-4xl font-heading font-semibold text-gray-900 mb-6">
               Monk Fruit vs Artificial Sweeteners — Which Is the <span className="text-green-600">Healthier Choice?</span>
             </h1>
             

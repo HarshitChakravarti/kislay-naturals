@@ -2,22 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDown, ChevronUp } from "lucide-react"
-import { Yeseva_One, Open_Sans } from 'next/font/google'
 import Link from "next/link"
-
-const yeseva_One = Yeseva_One({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-yeseva-one",
-  display: 'swap',
-})
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-open-sans",
-  display: 'swap',
-})
 
 interface FAQItem {
   question: string
@@ -215,7 +200,7 @@ export default function FAQPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-[#F9F9F9] ${openSans.variable} ${yeseva_One.variable}`}>
+    <div className="min-h-screen bg-[#F9F9F9]">
       {/* JSON-LD Schema */}
       <script
         type="application/ld+json"
@@ -227,7 +212,7 @@ export default function FAQPage() {
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
         
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+          <h1 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
             <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
               FREQUENTLY ASKED QUESTIONS 
             </span>
@@ -253,7 +238,7 @@ export default function FAQPage() {
                     className="w-full px-6 py-5 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-inset"
                     aria-expanded={openIndex === index}
                   >
-                    <h3 className={`text-lg md:text-xl font-semibold text-gray-900 pr-4 ${yeseva_One.className}`}>
+                    <h3 className={`text-lg md:text-xl font-semibold text-gray-900 pr-4 font-heading`}>
                       {faq.question}
                     </h3>
                     {openIndex === index ? (
@@ -275,7 +260,7 @@ export default function FAQPage() {
 
             {/* Additional Help Section */}
             <div className="mt-12 bg-green-50 rounded-lg p-8 border border-green-200">
-              <h2 className={`text-2xl md:text-3xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+              <h2 className={`text-2xl md:text-3xl font-bold text-[#2E7D32] mb-4 text-center font-heading`}>
                 Still Have Questions?
               </h2>
               <p className="text-gray-700 text-center mb-6 text-base md:text-lg">
@@ -302,4 +287,3 @@ export default function FAQPage() {
     </div>
   )
 }
-

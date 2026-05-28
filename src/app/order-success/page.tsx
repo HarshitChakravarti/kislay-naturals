@@ -5,13 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle, ArrowLeft, Home, Clock, Truck, Gift, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 interface NotificationStatus {
   orderId: string;
   orderNumber?: string | null;
@@ -96,7 +89,7 @@ export default function OrderSuccessPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h1 className={`text-4xl md:text-5xl font-bold mb-4 ${yeseva_One.className}`}>
+            <h1 className={`text-4xl md:text-5xl font-semibold mb-4 font-heading`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 ORDER CONFIRMED!
               </span>
@@ -121,7 +114,7 @@ export default function OrderSuccessPage() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
               {/* Card Header */}
               <div className="bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-4">
-                <h2 className={`text-2xl font-bold text-white ${yeseva_One.className}`}>
+                <h2 className={`text-2xl font-bold text-white font-heading`}>
                   Delivery Details
                 </h2>
                 <p className="text-green-100">Your order has been confirmed</p>
@@ -203,7 +196,7 @@ export default function OrderSuccessPage() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 flex-1 flex flex-col">
               <div className="text-center mb-6">
                 <Gift className="w-12 h-12 text-[#C9A35A] mx-auto mb-4" />
-                <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
+                <h3 className={`text-xl font-bold text-gray-900 font-heading`}>
                   Keep Shopping
                 </h3>
                 <p className="text-gray-600 text-sm">Discover more natural products</p>
@@ -224,7 +217,7 @@ export default function OrderSuccessPage() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mt-6 flex-1 flex flex-col">
               <div className="text-center mb-6">
                 <Phone className="w-12 h-12 text-[#C9A35A] mx-auto mb-4" />
-                <h3 className={`text-xl font-bold text-gray-900 ${yeseva_One.className}`}>
+                <h3 className={`text-xl font-bold text-gray-900 font-heading`}>
                   Need Help?
                 </h3>
                 <p className="text-gray-600 text-sm">We&apos;re here to assist you</p>

@@ -54,7 +54,7 @@ export default function BlogDetailPage() {
               <span>Kislay Naturals</span>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl lg:text-4xl font-heading font-semibold text-gray-900 mb-6">
               5 Reasons to Switch from Sugar to <span className="text-green-600">Monk Fruit Sweetener</span> Today
             </h1>
             

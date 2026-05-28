@@ -1,13 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Clock, Users, ChefHat, ArrowLeft, Share2, Heart } from 'lucide-react';
-import { Yeseva_One } from 'next/font/google';
 import Link from 'next/link';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
 
 // Enhanced recipe data with detailed instructions
 const recipes = [
@@ -326,7 +320,7 @@ export default function RecipePage({ params }: PageProps) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <div className="max-w-6xl mx-auto">
-              <h1 className={`text-3xl md:text-5xl font-bold text-white mb-4 ${yeseva_One.className}`}>
+              <h1 className={`text-3xl md:text-5xl font-semibold text-white mb-4 font-heading`}>
                 {recipe.title}
               </h1>
               <p className="text-lg md:text-xl text-white/90 max-w-2xl">
@@ -344,7 +338,7 @@ export default function RecipePage({ params }: PageProps) {
           {/* Recipe Info Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl p-6 sticky top-8 shadow-lg border border-gray-200">
-              <h3 className={`text-2xl font-bold text-gray-900 mb-6 ${yeseva_One.className}`}>
+              <h3 className={`text-2xl font-bold text-gray-900 mb-6 font-heading`}>
                 Recipe Info
               </h3>
               
@@ -413,7 +407,7 @@ export default function RecipePage({ params }: PageProps) {
           <div className="lg:col-span-2">
             {/* Ingredients */}
             <div className="mb-8">
-              <h2 className={`text-3xl font-bold text-gray-900 mb-6 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl font-bold text-gray-900 mb-6 font-heading`}>
                 Ingredients
               </h2>
               <div className="bg-white border border-gray-200 rounded-xl p-6">
@@ -430,7 +424,7 @@ export default function RecipePage({ params }: PageProps) {
 
             {/* Instructions */}
             <div className="mb-8">
-              <h2 className={`text-3xl font-bold text-gray-900 mb-6 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl font-bold text-gray-900 mb-6 font-heading`}>
                 Instructions
               </h2>
               <div className="space-y-4">
@@ -449,7 +443,7 @@ export default function RecipePage({ params }: PageProps) {
 
             {/* Tips */}
             <div className="mb-8">
-              <h2 className={`text-3xl font-bold text-gray-900 mb-6 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl font-bold text-gray-900 mb-6 font-heading`}>
                 Pro Tips
               </h2>
               <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
@@ -466,7 +460,7 @@ export default function RecipePage({ params }: PageProps) {
 
             {/* Call to Action */}
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
-              <h3 className={`text-2xl font-bold text-gray-900 mb-4 ${yeseva_One.className}`}>
+              <h3 className={`text-2xl font-bold text-gray-900 mb-4 font-heading`}>
                 Made with Kislay Monk Fruit Sweetener
               </h3>
               <p className="text-gray-600 mb-6">

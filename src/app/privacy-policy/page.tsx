@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
           <span className="text-sm md:text-base">Back to Home</span>
         </Link>
 
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 md:mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold font-heading leading-tight mb-4 md:mb-6 bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
           Privacy Policy
         </h1>
 

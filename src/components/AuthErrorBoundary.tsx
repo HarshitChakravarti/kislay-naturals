@@ -107,7 +107,7 @@ class AuthErrorBoundaryClass extends Component<AuthErrorBoundaryProps, AuthError
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-                <p className="text-xs text-red-800 font-mono">
+                <p className="text-xs text-red-800 font-sans">
                   {this.state.error.message}
                 </p>
               </div>

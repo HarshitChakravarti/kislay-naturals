@@ -1,13 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, Users, ChefHat } from 'lucide-react';
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 async function getRecipes() {
   try {
     // Use supabaseAdmin to bypass RLS for server-side rendering
@@ -43,7 +36,7 @@ export default async function RecipesPage() {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h1 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   SUGAR-FREE RECIPES
                 </span>
@@ -121,7 +114,7 @@ export default async function RecipesPage() {
       {/* Call to Action */}
       <div className="bg-green-50 py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className={`text-3xl md:text-4xl font-bold text-gray-900 mb-6 ${yeseva_One.className}`}>
+          <h2 className={`text-3xl md:text-4xl font-bold text-gray-900 mb-6 font-heading`}>
             Ready to Start Cooking?
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">

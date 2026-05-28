@@ -112,8 +112,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* Added Yeseva One font family variable */
-  --font-yeseva: "Yeseva One", serif;
+  --font-sans: var(--font-open-sans), sans-serif;
+  --font-heading: var(--font-poppins), sans-serif;
 }
 
 @layer base {

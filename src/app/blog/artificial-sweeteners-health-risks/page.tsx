@@ -53,7 +53,7 @@ export default function ArtificialSweetenersHealthRisksBlog() {
               <span>Kislay Naturals</span>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl lg:text-4xl font-heading font-semibold text-gray-900 mb-6">
               Hidden Health Risks of <span className="text-green-600">Artificial Sweeteners</span> You Should Know
             </h1>
             

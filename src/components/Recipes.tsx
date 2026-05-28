@@ -4,13 +4,6 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, Users, ChevronLeft, ChevronRight } from "lucide-react";
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 const recipes = [
   {
     id: 1,
@@ -138,7 +131,7 @@ export default function Recipes() {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   DELICIOUS SUGAR-FREE RECIPES
                 </span>

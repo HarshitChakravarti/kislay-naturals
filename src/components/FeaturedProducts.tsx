@@ -1,13 +1,7 @@
 "use client";
 
 import { Product } from "@/types"
-import { Yeseva_One } from 'next/font/google'
 import ProductCard from './ProductCard'
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-})
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -33,7 +27,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
         <div className="relative z-10">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center">
-              <h2 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                   CHECK OUT OUR SWEET FAVOURITE!
                 </span>

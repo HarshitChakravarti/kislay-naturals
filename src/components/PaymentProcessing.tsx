@@ -96,7 +96,7 @@ export default function PaymentProcessing({ orderId, orderNumber, isProcessing =
               className="bg-gray-50 rounded-lg p-4 mb-6 text-center"
             >
               <p className="text-sm text-gray-600 text-center">Order Number</p>
-              <p className="font-mono text-lg font-bold text-gray-900 text-center">
+              <p className="font-sans text-lg font-bold text-gray-900 text-center">
                 {orderNumber ? orderNumber : (
                   <span className="inline-flex items-center justify-center gap-2">
                     <span>Loading...</span>

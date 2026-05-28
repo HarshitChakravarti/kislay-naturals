@@ -1,38 +1,15 @@
 import Image from "next/image"
 import { Leaf, Users, Shield, Heart, Target, Globe } from "lucide-react"
-import { Montserrat, Open_Sans, Yeseva_One as Yeseva_One_Font } from 'next/font/google'
-
-// Load fonts
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-montserrat",
-  display: 'swap',
-});
-
-const yeseva_One = Yeseva_One_Font({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-yeseva-one",
-  display: 'swap',
-});
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-open-sans",
-  display: 'swap',
-});
 
 export default function AboutPage() {
   return (
-    <div className={`min-h-screen bg-[#F9F9F9] ${openSans.variable} ${montserrat.variable} ${yeseva_One.variable}`}>
+    <div className="min-h-screen bg-[#F9F9F9]">
       {/* Page Header */}
       <section className="py-12 bg-green-700 text-white relative overflow-hidden">
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
         
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+          <h1 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
             <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
               ABOUT US
             </span>
@@ -49,7 +26,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl md:text-5xl font-semibold text-[#2E7D32] mb-6 font-heading`}>
                 Our Mission
               </h2>
               <div className="w-20 h-1 bg-green-400 mx-auto rounded-full"></div>
@@ -93,7 +70,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+              <h2 className={`text-3xl md:text-5xl font-semibold text-[#2E7D32] mb-6 font-heading`}>
                 Our Values
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -108,7 +85,7 @@ export default function AboutPage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Leaf className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center font-heading`}>
                   Naturally Trusted
                 </h3>
                 <p className="text-gray-600 text-center leading-relaxed text-sm sm:text-base md:text-lg">
@@ -121,7 +98,7 @@ export default function AboutPage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Users className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center font-heading`}>
                   Deeply Connected
                 </h3>
                 <p className="text-gray-600 text-center leading-relaxed text-sm sm:text-base md:text-lg">
@@ -134,7 +111,7 @@ export default function AboutPage() {
                 <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
                   <Shield className="w-10 h-10 text-[#2E7D32]" />
                 </div>
-                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center ${yeseva_One.className}`}>
+                <h3 className={`text-2xl font-bold text-[#2E7D32] mb-4 text-center font-heading`}>
                   Truly Healthy
                 </h3>
                 <p className="text-gray-600 text-center leading-relaxed text-sm sm:text-base md:text-lg">
@@ -150,7 +127,7 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className={`text-3xl md:text-5xl font-bold text-[#2E7D32] mb-6 ${yeseva_One.className}`}>
+            <h2 className={`text-3xl md:text-5xl font-semibold text-[#2E7D32] mb-6 font-heading`}>
               Meet Our Founder
             </h2>
             <div className="w-20 h-1 bg-green-400 mx-auto rounded-full"></div>
@@ -171,7 +148,7 @@ export default function AboutPage() {
                 </div>
                 {/* Founder Name */}
                 <div className="mt-4 sm:mt-6 text-center">
-                  <h3 className={`text-xl sm:text-2xl font-bold text-[#2E7D32] ${yeseva_One.className}`}>
+                  <h3 className={`text-xl sm:text-2xl font-bold text-[#2E7D32] font-heading`}>
                     Nishchoy Gupta
                   </h3>
                 </div>

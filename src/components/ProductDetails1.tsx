@@ -422,7 +422,7 @@ export default function ProductDetails({ product, onOpenCheckout }: ProductDetai
                     Natural Sweetener
                   </div>
                   <div className="space-y-2">
-                    <h1 className="break-words text-[1.55rem] font-bold leading-tight text-slate-900 sm:text-3xl">
+                    <h1 className="break-words text-2xl font-heading font-semibold leading-tight text-slate-900 sm:text-[32px]">
                       {product.name}
                     </h1>
                     <p className="text-sm leading-relaxed text-slate-600 sm:text-base">

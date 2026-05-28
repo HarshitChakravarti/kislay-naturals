@@ -1,12 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { Yeseva_One } from 'next/font/google';
-
-const yeseva_One = Yeseva_One({
-  weight: '400',
-  subsets: ['latin'],
-});
-
 const testimonials = [
   {
     id: 1,
@@ -49,7 +42,7 @@ const Testimonials = () => (
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center">
-            <h2 className={`text-3xl md:text-5xl mb-4 ${yeseva_One.className}`}>
+            <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
                 WHAT OUR CUSTOMERS SAY
               </span>
@@ -127,7 +120,7 @@ const Testimonials = () => (
               
               <div className="flex-grow">
                 <div className="relative">
-                  <div className="before:content-['\201C'] before:absolute before:top-0 before:left-0 before:-top-2 before:text-3xl before:text-green-200 before:opacity-60 before:font-serif before:leading-none" />
+                  <div className="before:content-['\201C'] before:absolute before:top-0 before:left-0 before:-top-2 before:text-3xl before:text-green-200 before:opacity-60 before:font-heading before:leading-none" />
                   <p className="text-green-800 text-sm leading-relaxed pl-6 pr-2 pb-2">&quot;{t.review}&quot;</p>
                 </div>
               </div>
