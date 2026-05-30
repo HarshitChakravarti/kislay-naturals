@@ -526,7 +526,9 @@ export default function ProductPage() {
             </div>
 
             <a
-              href="/lab-report.pdf"
+              href="https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-5 inline-flex h-12 items-center rounded-[50px] border border-[#1a5c38] px-6 text-sm font-semibold text-[#1a5c38] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
             >
               Download Full Lab Report (PDF)
