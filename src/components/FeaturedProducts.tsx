@@ -43,7 +43,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       </div>
       
       <div className="bg-gray-50">
-        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-16">
+        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-8">
           {/* Product Card - Responsive Layout */}
           <ProductCard product={product} />
         </div>

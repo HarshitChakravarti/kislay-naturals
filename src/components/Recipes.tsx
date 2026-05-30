@@ -123,7 +123,7 @@ export default function Recipes() {
   return (
     <div className="w-full bg-white">
       {/* Header with green background and gradient shadow */}
-      <div className="relative bg-green-700 text-white py-12 w-full overflow-hidden">
+      <div className="relative bg-green-700 text-white py-12 md:py-8 w-full overflow-hidden">
         {/* Gradient shadow at the bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
         
@@ -146,7 +146,7 @@ export default function Recipes() {
       </div>
       
       {/* Main Content */}
-      <div className="relative mx-auto px-4 sm:px-6 lg:px-12 py-12">
+      <div className="relative mx-auto px-4 sm:px-6 lg:px-12 py-12 md:py-8">
         <div className="relative">
           <button 
             onClick={scrollLeft}
