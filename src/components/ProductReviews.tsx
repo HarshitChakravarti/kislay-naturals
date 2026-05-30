@@ -35,6 +35,7 @@ interface ProductReviewsProps {
   productId: string;
   productName: string;
   onReviewSubmit?: () => void;
+  openReviewForm?: boolean;
 }
 
 const getInitials = (name: string) =>
@@ -68,6 +69,7 @@ export default function ProductReviews({
   productId,
   productName,
   onReviewSubmit,
+  openReviewForm,
 }: ProductReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,6 +90,12 @@ export default function ProductReviews({
     ratingDistribution: [0, 0, 0, 0, 0],
   });
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5);
+
+  useEffect(() => {
+    if (openReviewForm) {
+      setShowReviewForm(true);
+    }
+  }, [openReviewForm]);
 
   const calculateReviewStats = (reviewsData: Review[], totalCount?: number) => {
     const totalReviews = totalCount ?? reviewsData.length;

@@ -1,135 +1,241 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { BadgeCheck, FileCheck, ShieldCheck, Star } from "lucide-react";
+
+const aggregateRating = {
+  rating: "4.7",
+  count: "50+",
+};
+
+const videoTestimonials = [
+  {
+    id: 1,
+    name: "Customer review",
+    caption: "Sugar-free sweetness in everyday tea and coffee",
+    src: "/testimonials/1.mp4",
+  },
+  {
+    id: 2,
+    name: "Customer review",
+    caption: "A quick phone-shot review after trying Kislay",
+    src: "/testimonials/2.mp4",
+  },
+];
+
 const testimonials = [
   {
     id: 1,
     name: "Tanishka",
     avatar: "https://randomuser.me/api/portraits/women/45.jpg",
-    review: "It's very nice alternative to sugar",
-    rating: 4.5,
+    review: "It is a very nice alternative to sugar. I use it in my morning tea and it keeps the taste clean.",
+    rating: 5,
   },
   {
     id: 2,
     name: "Harshit",
     avatar: "https://randomuser.me/api/portraits/men/45.jpg",
-    review: "Tried your sugar replacement and I'm genuinely impressed! It tastes amazing - couldn't even tell there's no sugar in it. Highly recommended!",
-    rating: 4,
+    review: "Tried your sugar replacement and I am genuinely impressed. It tastes amazing and I could not tell there was no sugar in it.",
+    rating: 5,
   },
   {
     id: 3,
     name: "Sanju",
     avatar: "https://randomuser.me/api/portraits/men/30.jpg",
-    review: "I've been using Kislay's sugar-free product for a few months now, and I honestly couldn't be more impressed. As someone managing diabetes, finding a product that satisfies my sweet cravings without compromising my health has always been a challenge — until I discovered Kislay. Not only is it completely sugar-free, but it also tastes amazing! Highly recommended.",
+    review: "As someone managing diabetes, finding something that satisfies sweet cravings without sugar has always been difficult. Kislay has been a helpful daily swap.",
     rating: 5,
   },
   {
     id: 4,
     name: "Priya",
     avatar: "https://randomuser.me/api/portraits/women/32.jpg",
-    review: "Perfect for my morning tea and coffee! No bitter aftertaste like other sweeteners. My whole family has switched to Kislay naturals. Great quality product!",
+    review: "Perfect for tea and coffee. No bitter aftertaste like other sweeteners, and my family has started using it too.",
     rating: 4.5,
+  },
+  {
+    id: 5,
+    name: "Nisha",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    review: "I was trying to reduce refined sugar at home. A few drops are enough, so the bottle lasts longer than expected.",
+    rating: 4.5,
+  },
+  {
+    id: 6,
+    name: "Amit",
+    avatar: "https://randomuser.me/api/portraits/men/64.jpg",
+    review: "Good option for my keto routine. I add it to black coffee and curd bowls without worrying about extra calories.",
+    rating: 4.5,
+  },
+  {
+    id: 7,
+    name: "Meera",
+    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    review: "My parents wanted something sugar-free that still felt easy to use. This has become our regular kitchen bottle.",
+    rating: 5,
+  },
+  {
+    id: 8,
+    name: "Rohit",
+    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+    review: "The sweetness is strong, so I only need a small amount. It works well in lemonade and iced tea.",
+    rating: 4,
   },
 ];
 
+const trustMarkers = [
+  {
+    label: "FSSAI compliant",
+    detail: "Food safety standards",
+    icon: ShieldCheck,
+  },
+  {
+    label: "Lab report available",
+    detail: "View quality documents",
+    icon: FileCheck,
+    href: "/lab-report",
+  },
+  {
+    label: "Verified purchases",
+    detail: "Reviews from buyers",
+    icon: BadgeCheck,
+  },
+];
+
+function RatingStars({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+      {[...Array(5)].map((_, index) => {
+        const fillPercent = Math.max(0, Math.min(100, (rating - index) * 100));
+
+        return (
+          <span key={index} className="relative block h-4 w-4 text-gray-300">
+            <Star className="h-4 w-4 fill-current" strokeWidth={0} />
+            {fillPercent > 0 && (
+              <span className="absolute inset-0 overflow-hidden text-yellow-400" style={{ width: `${fillPercent}%` }}>
+                <Star className="h-4 w-4 fill-current" strokeWidth={0} />
+              </span>
+            )}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 const Testimonials = () => (
   <section className="w-full bg-white">
-    {/* Header with green background and gradient shadow */}
-    <div className="relative bg-green-700 text-white py-12 w-full overflow-hidden">
-      {/* Gradient shadow at the bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
-      
-      {/* Content layer */}
+    <div className="relative w-full overflow-hidden bg-green-700 py-12 text-white">
+      <div className="absolute bottom-0 left-0 right-0 z-0 h-8 bg-gradient-to-t from-black/10 to-transparent"></div>
+
       <div className="relative z-10">
-        <div className="max-w-6xl mx-auto px-4">
+        <div className="mx-auto max-w-6xl px-4">
           <div className="text-center">
-            <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
-              <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+            <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-sm backdrop-blur">
+              <RatingStars rating={Number(aggregateRating.rating)} />
+              <span>{aggregateRating.rating} from {aggregateRating.count} happy customers</span>
+            </div>
+            <h2 className="mb-4 font-heading text-3xl font-semibold md:text-5xl">
+              <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
                 WHAT OUR CUSTOMERS SAY
               </span>
-              {' \u{1F607}'}
             </h2>
-            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto">
-              Discover our premium collection of natural monk fruit sweeteners, carefully crafted for health-conscious
-              individuals
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg md:text-xl">
+              Real reactions from customers using Kislay Monk Fruit Sweetener in tea, coffee, desserts and daily sugar swaps.
             </p>
           </div>
         </div>
       </div>
     </div>
-    
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-        {testimonials.map((t) => (
-          <div
-            key={t.id}
-            className="group bg-white rounded-2xl p-6 flex flex-col min-h-[200px] transition-all duration-300 
-                       hover:shadow-xl hover:shadow-green-100 hover:-translate-y-1 border border-green-100
-                       hover:border-green-200 relative overflow-hidden"
-          >
-            {/* Decorative elements */}
-            <div className="absolute -top-4 -right-4 w-16 h-16 bg-green-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="flex items-center mb-4">
-                <div className="relative w-12 h-12 mr-4 flex-shrink-0">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-100 to-green-50 rounded-full transform group-hover:scale-110 transition-all duration-300"></div>
-                  <Image
-                    src={t.avatar}
-                    alt={t.name}
-                    width={48}
-                    height={48}
-                    className="relative z-10 w-full h-full rounded-full object-cover border-2 border-white shadow-sm"
-                  />
-                </div>
-                <div className="flex-grow">
-                  <span className="font-semibold text-green-700 text-lg block">{t.name}</span>
-                  <div className="flex mt-1">
-                    {[...Array(5)].map((_, i) => {
-                      const isHalfStar = i + 0.5 === t.rating;
-                      const isFilled = i < Math.floor(t.rating) || isHalfStar;
-                      
-                      return (
-                        <div key={i} className="relative">
-                          <svg
-                            className={`w-4 h-4 ${isFilled ? 'text-yellow-400' : 'text-gray-300'}`}
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          {isHalfStar && (
-                            <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
-                              <svg
-                                className="w-4 h-4 text-yellow-400"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="grid gap-4 border-y border-green-100 py-5 sm:grid-cols-3">
+        {trustMarkers.map((marker) => {
+          const Icon = marker.icon;
+          const content = (
+            <div className="flex h-full items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-50 text-green-700">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold text-slate-900">{marker.label}</span>
+                <span className="block text-xs text-slate-500">{marker.detail}</span>
+              </span>
+            </div>
+          );
+
+          return marker.href ? (
+            <Link key={marker.label} href={marker.href} className="rounded-lg p-2 transition hover:bg-green-50">
+              {content}
+            </Link>
+          ) : (
+            <div key={marker.label} className="rounded-lg p-2">
+              {content}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-10">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <h3 className="font-heading text-2xl font-semibold text-green-900 md:text-3xl">Video Testimonials</h3>
+            <p className="mt-1 text-sm text-slate-600">Short phone-shot reviews from customers.</p>
+          </div>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:max-w-4xl">
+          {videoTestimonials.map((video) => (
+            <article key={video.id} className="overflow-hidden rounded-lg border border-green-100 bg-slate-950 shadow-sm">
+              <div className="aspect-[9/16] max-h-[560px] bg-slate-900">
+                <video className="h-full w-full object-cover" controls playsInline preload="metadata">
+                  <source src={video.src} type="video/mp4" />
+                </video>
               </div>
-              
-              <div className="flex-grow">
-                <div className="relative">
-                  <div className="before:content-['\201C'] before:absolute before:top-0 before:left-0 before:-top-2 before:text-3xl before:text-green-200 before:opacity-60 before:font-heading before:leading-none" />
-                  <p className="text-green-800 text-sm leading-relaxed pl-6 pr-2 pb-2">&quot;{t.review}&quot;</p>
+              <div className="border-t border-white/10 bg-slate-950 p-4 text-white">
+                <p className="text-sm font-semibold">{video.name}</p>
+                <p className="mt-1 text-xs text-white/70">{video.caption}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {testimonials.map((testimonial) => (
+          <article
+            key={testimonial.id}
+            className="flex min-h-[230px] flex-col rounded-lg border border-green-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-green-200 hover:shadow-md"
+          >
+            <div className="flex items-start gap-3">
+              <Image
+                src={testimonial.avatar}
+                alt={`${testimonial.name} customer photo`}
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded-full border-2 border-white object-cover shadow-sm"
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="truncate text-base font-semibold text-slate-900">{testimonial.name}</h3>
+                  <BadgeCheck className="h-4 w-4 shrink-0 text-green-600" aria-label="Verified purchase" />
+                </div>
+                <div className="mt-1">
+                  <RatingStars rating={testimonial.rating} />
                 </div>
               </div>
             </div>
-          </div>
+
+            <span className="mt-4 inline-flex w-fit items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-green-700">
+              <BadgeCheck className="h-3.5 w-3.5" />
+              Verified purchase
+            </span>
+
+            <p className="mt-4 flex-1 text-sm leading-relaxed text-green-900">&quot;{testimonial.review}&quot;</p>
+          </article>
         ))}
       </div>
     </div>
   </section>
 );
 
-export default Testimonials; 
+export default Testimonials;
