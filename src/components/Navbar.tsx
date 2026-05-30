@@ -188,6 +188,13 @@ function Header() {
       }
     }
 
+    // Toggle body scroll lock when mobile menu opens/closes
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
     // Handle scroll for navbar auto-hide
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -312,7 +319,7 @@ function Header() {
 
             {/* Mobile Menu Button */}
             <button
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-full transition-colors z-50 relative"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="w-5 h-5 text-gray-600" /> : <Menu className="w-5 h-5 text-gray-600" />}
@@ -320,10 +327,22 @@ function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Drawer Overlay */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-gray-200 py-4">
-            <nav className="flex flex-col space-y-6 px-4">
+          <div 
+            className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+
+        {/* Mobile Navigation Drawer */}
+        <div 
+          className={`lg:hidden fixed top-0 right-0 h-screen w-64 bg-white z-40 transform transition-transform duration-300 ease-in-out shadow-2xl pt-24 ${
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="h-full overflow-y-auto pb-6">
+            <nav className="flex flex-col space-y-2 px-6">
               <Link href="/" className="group relative font-bold text-gray-700 block py-3 text-base" onClick={() => setIsMenuOpen(false)}>
                 HOME
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
@@ -358,18 +377,15 @@ function Header() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <Settings className="w-5 h-5 mr-2" />
-                      ADMIN DASHBOARD
-                    </div>
-                    <span className="text-xs bg-green-200 text-green-800 px-2 py-1 rounded-full font-medium">
                       ADMIN
-                    </span>
+                    </div>
                   </div>
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               )}
             </nav>
           </div>
-        )}
+        </div>
       </div>
     </header>
   )

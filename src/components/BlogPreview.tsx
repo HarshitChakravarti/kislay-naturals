@@ -98,7 +98,7 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
     <div className="relative bg-green-700 text-white w-full overflow-hidden">
       <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
       <div className="relative z-10">
-        <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
           <div className="text-center">
             <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
               <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
@@ -115,7 +115,7 @@ const BlogPreview = ({ blogPosts = [] }: BlogPreviewProps) => {
       </div>
     </div>
     
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
       <div className="relative hidden lg:block">
         <button
           onClick={prevSlide}

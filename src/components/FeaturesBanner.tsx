@@ -38,7 +38,7 @@ const mobileIconComponents: Record<IconName, ReactNode> = {
 
 export default function FeaturesBanner({ features }: FeaturesBannerProps) {
   return (
-    <div className="w-full bg-gray-50 py-16 px-4">
+    <div className="w-full bg-gray-50 py-8 md:py-10 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Mobile: 2x2 Grid Layout with centered last item */}
         <div className="md:hidden">

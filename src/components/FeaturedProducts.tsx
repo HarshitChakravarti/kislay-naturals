@@ -19,7 +19,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   return (
     <section className="py-0">
       {/* Header with green background and gradient shadow */}
-      <div className="relative bg-green-700 text-white py-12 w-full overflow-hidden">
+      <div className="relative bg-green-700 text-white py-8 md:py-12 w-full overflow-hidden">
         {/* Gradient shadow at the bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
         
@@ -43,7 +43,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       </div>
       
       <div className="bg-gray-50">
-        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-8">
+        <div className="w-full max-w-6xl mx-auto px-4 py-8 md:py-8">
           {/* Product Card - Responsive Layout */}
           <ProductCard product={product} />
         </div>
