@@ -226,18 +226,19 @@ export default function ProductPage() {
         <div className="grid grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] items-center gap-3">
           <div className="min-w-0">
             <p className="truncate text-left text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
-              {selectedVariant.name}
+              {selectedVariant.name} {quantity > 1 ? `(x${quantity})` : ''}
             </p>
             <p className="text-left text-2xl font-bold tracking-tight text-[#1a5c38]">
-              ₹{formatPrice(selectedVariant.price)}
+              ₹{formatPrice(selectedVariant.price * quantity)}
             </p>
           </div>
           <button
             type="button"
             onClick={handleBuyNow}
-            className="h-[52px] w-full items-center justify-center rounded-[50px] bg-[#1a5c38] px-4 text-[15px] font-bold text-white shadow-md transition-all duration-200 ease-in-out hover:bg-[#13472b] active:scale-[0.98]"
+            className="flex h-[52px] w-full items-center justify-center rounded-[50px] bg-[#1a5c38] px-4 text-[15px] font-bold text-white shadow-md transition-all duration-200 ease-in-out hover:bg-[#13472b] active:scale-[0.98]"
           >
-            ⚡ Buy Now
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+            Buy Now
           </button>
         </div>
       </div>
