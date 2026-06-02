@@ -8,6 +8,7 @@ import type { TouchEvent } from 'react';
 import CheckoutModal from '@/components/CheckoutModal';
 import EnquireNowModal from '@/components/EnquireNowModal';
 import ProductReviews from '@/components/ProductReviews';
+import { MessageSquare } from 'lucide-react';
 
 type Variant = {
   id: string;
@@ -95,7 +96,7 @@ const ingredients = [
   {
     icon: '✨',
     name: 'Vitamin C',
-    benefit: 'The active compound responsible for sweetness',
+    benefit: 'The active compound responsible for longer shelf life',
   },
 ];
 
@@ -460,28 +461,32 @@ export default function ProductPage() {
       </section>
 
       {/* Ingredients Spotlight */}
-      <section className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
-        <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
-          What makes it work
-        </h2>
-        <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {ingredients.map((ingredient) => (
-            <div key={ingredient.name} className="rounded-[12px] bg-[#e8f5ee] p-5">
-              <div className="text-[40px] leading-none">{ingredient.icon}</div>
-              <h3 className="mt-4 text-lg font-semibold text-[#1a1a1a]">{ingredient.name}</h3>
-              <p className="mt-2 text-left text-sm font-normal text-[#6b7280]">
-                {ingredient.benefit}
-              </p>
-            </div>
-          ))}
+      <section className="bg-[#e8f5ee]">
+        <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
+          <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
+            What's Inside?
+          </h2>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            {ingredients.map((ingredient) => (
+              <div key={ingredient.name} className="rounded-[12px] bg-white p-5">
+                <div className="text-[40px] leading-none">{ingredient.icon}</div>
+                <h3 className="mt-4 text-lg font-semibold text-[#1a1a1a]">{ingredient.name}</h3>
+                <p className="mt-2 text-left text-sm font-normal text-[#6b7280]">
+                  {ingredient.benefit}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
+      <div className="h-3 bg-white md:h-4" aria-hidden="true" />
 
       {/* Who Is This For */}
       <section className="bg-[#e8f5ee]">
         <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
           <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
-            This is for you if…
+            This is for you if...
           </h2>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {audienceChecklist.map((item) => (
@@ -549,31 +554,37 @@ export default function ProductPage() {
         </div>
       </section>
 
-      {/* Customer Reviews Section */}
-      <section ref={reviewsRef} className="mx-auto max-w-7xl scroll-mt-28 px-4 py-6 md:px-6 md:py-12">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
-              Customer Reviews
-            </h2>
-            <p className="mt-1 text-left text-sm font-normal text-[#6b7280]">
-              Real feedback from customers using this product every day.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={handleReviewsClick}
-            className="h-12 rounded-[50px] bg-[#1a5c38] px-6 text-sm font-semibold text-white transition-colors duration-200 ease-in-out hover:bg-[#13472b]"
-          >
-            Share your experience → Write a Review
-          </button>
-        </div>
+      <div className="h-3 bg-white md:h-4" aria-hidden="true" />
 
-        <ProductReviews
-          productId={params?.id ?? DEFAULT_PRODUCT_ID}
-          productName={PRODUCT_NAME}
-          openReviewForm={isReviewFormOpen}
-        />
+      {/* Customer Reviews Section */}
+      <section ref={reviewsRef} className="scroll-mt-28 bg-[#e8f5ee]">
+        <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
+                Customer Reviews
+              </h2>
+              <p className="mt-1 text-left text-sm font-normal text-[#6b7280]">
+                Real feedback from customers using this product every day.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsReviewFormOpen(true)}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-green-300 bg-white px-5 py-3 text-sm font-semibold text-green-800 transition hover:border-green-500 hover:bg-green-50 sm:w-auto"
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span>Write a Review</span>
+            </button>
+          </div>
+
+          <ProductReviews
+            productId={params?.id ?? DEFAULT_PRODUCT_ID}
+            productName={PRODUCT_NAME}
+            openReviewForm={isReviewFormOpen}
+          />
+        </div>
       </section>
 
       {/* Enquire Now Modal */}
