@@ -464,7 +464,7 @@ export default function ProductPage() {
       <section className="bg-[#e8f5ee]">
         <div className="mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-12">
           <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
-            What's Inside?
+            What&apos;s Inside?
           </h2>
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             {ingredients.map((ingredient) => (
