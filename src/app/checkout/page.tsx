@@ -15,7 +15,9 @@ interface CheckoutFormData {
   email: string;
   mobile: string;
   address: {
-    street: string;
+    flat: string;
+    area: string;
+    landmark?: string;
     city: string;
     state: string;
     zip: string;
@@ -72,7 +74,9 @@ export default function CheckoutPage() {
     email: '',
     mobile: '',
     address: {
-      street: '',
+      flat: '',
+      area: '',
+      landmark: '',
       city: '',
       state: '',
       zip: ''
@@ -97,6 +101,8 @@ export default function CheckoutPage() {
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
   const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
+  const [deliveryEstimate, setDeliveryEstimate] = useState<{ message: string; color: string } | null>(null);
+  const [isCheckingPincode, setIsCheckingPincode] = useState(false);
 
   // Get product data from URL params
   useEffect(() => {
@@ -214,7 +220,8 @@ export default function CheckoutPage() {
     
     if (!formData.mobile) newErrors.mobile = 'Mobile number is required';
     else if (!/^\d{10}$/.test(formData.mobile)) newErrors.mobile = 'Invalid mobile number (must be 10 digits)';
-    if (!formData.address.street) newErrors.street = 'Street is required';
+    if (!formData.address.flat) newErrors.flat = 'Flat/House no. is required';
+    if (!formData.address.area) newErrors.area = 'Area/Street is required';
     if (!formData.address.city) newErrors.city = 'City is required';
     if (!formData.address.state) newErrors.state = 'State is required';
     if (!formData.address.zip) newErrors.zip = 'ZIP code is required';
@@ -225,6 +232,30 @@ export default function CheckoutPage() {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePincodeBlur = () => {
+    const pin = formData.address.zip.trim();
+    if (!pin) {
+      setDeliveryEstimate(null);
+      return;
+    }
+    
+    setIsCheckingPincode(true);
+    setDeliveryEstimate({ message: 'Checking delivery...', color: 'text-gray-500' });
+    
+    setTimeout(() => {
+      setIsCheckingPincode(false);
+      if (!/^\d{6}$/.test(pin)) {
+        setDeliveryEstimate({ message: 'Please enter a valid 6-digit PIN code', color: 'text-red-500' });
+      } else if (pin.startsWith('38') || pin.startsWith('39')) {
+        setDeliveryEstimate({ message: '📦 Estimated delivery: 2–3 business days', color: 'text-[#1a5c38]' });
+      } else if (pin.startsWith('40') || pin.startsWith('11')) {
+        setDeliveryEstimate({ message: '📦 Estimated delivery: 3–4 business days', color: 'text-[#1a5c38]' });
+      } else {
+        setDeliveryEstimate({ message: '📦 Estimated delivery: 5–7 business days', color: 'text-[#1a5c38]' });
+      }
+    }, 600);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -297,7 +328,10 @@ export default function CheckoutPage() {
           discountedPrice: discountedPrice,
           couponCode: couponApplied ? couponCode : null,
           couponDiscount: couponDiscount,
-          shippingAddress: formData.address
+          shippingAddress: {
+            ...formData.address,
+            street: [formData.address.flat, formData.address.area, formData.address.landmark].filter(Boolean).join(', ')
+          }
         };
 
         const createOrderResponse = await fetch('/api/orders/create', {
@@ -701,9 +735,9 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col md:grid md:grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
-          <div className="lg:col-span-2">
+          <div className="order-last md:order-first lg:col-span-2">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -805,25 +839,77 @@ export default function CheckoutPage() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Street Address *
+                        Flat, House no., Building, Company, Apartment
                       </label>
                       <input
                         type="text"
-                        name="address.street"
-                        value={formData.address.street}
+                        name="address.flat"
+                        value={formData.address.flat}
                         onChange={handleInputChange}
                         className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                          errors.street ? 'border-red-500' : 'border-gray-300'
+                          errors.flat ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Enter your street address"
                       />
-                      {errors.street && <p className="text-red-500 text-sm mt-1">{errors.street}</p>}
+                      {errors.flat && <p className="text-red-500 text-sm mt-1">{errors.flat}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Area, Street, Sector, Village
+                      </label>
+                      <input
+                        type="text"
+                        name="address.area"
+                        value={formData.address.area}
+                        onChange={handleInputChange}
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                          errors.area ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                      />
+                      {errors.area && <p className="text-red-500 text-sm mt-1">{errors.area}</p>}
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Landmark
+                      </label>
+                      <input
+                        type="text"
+                        name="address.landmark"
+                        value={formData.address.landmark || ''}
+                        onChange={handleInputChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        placeholder="E.g. near apollo hospital"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          City *
+                          Pincode
+                        </label>
+                        <input
+                          type="text"
+                          name="address.zip"
+                          value={formData.address.zip}
+                          onChange={handleInputChange}
+                          onBlur={handlePincodeBlur}
+                          className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                            errors.zip ? 'border-red-500' : 'border-gray-300'
+                          }`}
+                          placeholder="6-digit Pincode"
+                        />
+                        {errors.zip && <p className="text-red-500 text-sm mt-1">{errors.zip}</p>}
+                        {deliveryEstimate && !errors.zip && (
+                          <p className={`text-[13px] mt-1 ${deliveryEstimate.color}`}>
+                            {deliveryEstimate.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Town/City
                         </label>
                         <input
                           type="text"
@@ -833,49 +919,31 @@ export default function CheckoutPage() {
                           className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
                             errors.city ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="City"
                         />
                         {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
                       </div>
+                    </div>
 
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          State *
-                        </label>
-                        <select
-                          name="address.state"
-                          value={formData.address.state}
-                          onChange={handleInputChange}
-                          className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                            errors.state ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                        >
-                          <option value="">Select State</option>
-                          {INDIAN_STATES.map((state) => (
-                            <option key={state} value={state}>
-                              {state}
-                            </option>
-                          ))}
-                        </select>
-                        {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          ZIP Code *
-                        </label>
-                        <input
-                          type="text"
-                          name="address.zip"
-                          value={formData.address.zip}
-                          onChange={handleInputChange}
-                          className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
-                            errors.zip ? 'border-red-500' : 'border-gray-300'
-                          }`}
-                          placeholder="ZIP Code"
-                        />
-                        {errors.zip && <p className="text-red-500 text-sm mt-1">{errors.zip}</p>}
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        State
+                      </label>
+                      <select
+                        name="address.state"
+                        value={formData.address.state}
+                        onChange={handleInputChange}
+                        className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                          errors.state ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                      >
+                        <option value="">Select</option>
+                        {INDIAN_STATES.map((state) => (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
                     </div>
                   </div>
                 </div>
@@ -884,7 +952,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="lg:col-span-1">
+          <div className="order-first md:order-last lg:col-span-1 mb-6 md:mb-0">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1074,6 +1142,32 @@ export default function CheckoutPage() {
                   </>
                 )}
               </button>
+
+              {/* Payment Methods */}
+              <div className="mt-6 flex flex-col items-center">
+                <span className="text-[11px] text-gray-500 mb-2 uppercase tracking-wide">Accepted payment methods</span>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {/* UPI */}
+                  <div className="bg-white border border-gray-200 rounded-[4px] px-[10px] py-[6px] flex items-center justify-center h-[36px]">
+                    <span className="text-gray-800 font-bold text-sm tracking-wider">UPI</span>
+                  </div>
+                  {/* Visa */}
+                  <div className="bg-white border border-gray-200 rounded-[4px] px-[10px] py-[6px] flex items-center justify-center h-[36px]">
+                    <span className="text-[#1434CB] font-bold text-sm tracking-wider italic">VISA</span>
+                  </div>
+                  {/* Mastercard */}
+                  <div className="bg-white border border-gray-200 rounded-[4px] px-[10px] py-[6px] flex items-center justify-center h-[36px]">
+                    <div className="flex items-center -space-x-2">
+                      <div className="w-[18px] h-[18px] rounded-full bg-[#EB001B] opacity-90"></div>
+                      <div className="w-[18px] h-[18px] rounded-full bg-[#F79E1B] opacity-90"></div>
+                    </div>
+                  </div>
+                  {/* RuPay */}
+                  <div className="bg-white border border-gray-200 rounded-[4px] px-[10px] py-[6px] flex items-center justify-center h-[36px]">
+                    <span className="text-[#F26522] font-bold text-sm italic">RuPay</span>
+                  </div>
+                </div>
+              </div>
 
               {/* Security Notice */}
               <div className="mt-4 text-center">

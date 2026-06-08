@@ -6,6 +6,7 @@ import Hero from '@/components/Hero';
 import FeaturedProducts from '@/components/FeaturedProducts';
 import BlogPreview from '@/components/BlogPreview';
 import FeaturesBanner from '@/components/FeaturesBanner';
+import VideoTestimonials from '@/components/VideoTestimonials';
 import Recipes from '@/components/Recipes';
 import SectionDivider from '@/components/SectionDivider';
 
@@ -49,6 +50,7 @@ export default function HomeClient({ products, blogPosts = [] }: HomeClientProps
       <SectionDivider />
       <FeaturedProducts products={products} />
       <FeaturesBanner features={features} />
+      <VideoTestimonials />
       <Recipes />
       <BlogPreview blogPosts={blogPosts} />
       <WhatsAppButton />

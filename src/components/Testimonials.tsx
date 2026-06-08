@@ -129,17 +129,17 @@ const Testimonials = () => (
 
       <div className="relative z-10">
         <div className="mx-auto max-w-6xl px-4">
-          <div className="text-center">
+          <div className="flex flex-col items-center justify-center text-center w-full">
             <div className="mx-auto mb-5 flex w-fit items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-sm backdrop-blur">
               <RatingStars rating={Number(aggregateRating.rating)} />
               <span>{aggregateRating.rating} from {aggregateRating.count} happy customers</span>
             </div>
-            <h2 className="mb-4 font-heading text-3xl font-semibold md:text-5xl">
-              <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
+            <h2 className="mb-4 font-heading text-3xl font-semibold md:text-5xl text-center">
+              <span className="inline-block bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 bg-clip-text text-transparent">
                 WHAT OUR CUSTOMERS SAY
               </span>
             </h2>
-            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg md:text-xl">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg md:text-xl text-center">
               Real reactions from customers using Kislay Monk Fruit Sweetener in tea, coffee, desserts and daily sugar swaps.
             </p>
           </div>

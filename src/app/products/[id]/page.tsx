@@ -229,14 +229,14 @@ export default function ProductPage() {
             <p className="truncate text-left text-[11px] font-semibold uppercase tracking-wider text-[#6b7280]">
               {selectedVariant.name} {quantity > 1 ? `(x${quantity})` : ''}
             </p>
-            <p className="text-left text-2xl font-bold tracking-tight text-[#1a5c38]">
+            <p className="text-left text-2xl font-bold tracking-tight text-[#16a34a]">
               ₹{formatPrice(selectedVariant.price * quantity)}
             </p>
           </div>
           <button
             type="button"
             onClick={handleBuyNow}
-            className="flex h-[52px] w-full items-center justify-center rounded-[50px] bg-[#1a5c38] px-4 text-[15px] font-bold text-white shadow-md transition-all duration-200 ease-in-out hover:bg-[#13472b] active:scale-[0.98]"
+            className="flex h-[52px] w-full items-center justify-center rounded-[50px] bg-[#16a34a] px-4 text-[15px] font-bold text-white shadow-md transition-all duration-200 ease-in-out hover:bg-[#15803d] active:scale-[0.98]"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
             Buy Now
@@ -245,7 +245,7 @@ export default function ProductPage() {
       </div>
 
       {/* Trust Strip */}
-      <section className="w-full bg-[#1a5c38] text-white">
+      <section className="w-full bg-[#16a34a] text-white">
         <div
           ref={trustTickerRef}
           className="mx-auto flex max-w-7xl gap-8 overflow-hidden whitespace-nowrap px-4 py-2 text-[12px] md:justify-center md:gap-10 md:px-6 md:text-sm"
@@ -294,8 +294,8 @@ export default function ProductPage() {
                 onClick={() => setSelectedImage(index)}
                 className={`relative aspect-square overflow-hidden rounded-[12px] border bg-white transition-colors duration-200 ease-in-out ${
                   selectedImage === index
-                    ? 'border-[#1a5c38]'
-                    : 'border-[#d7eadf] hover:border-[#1a5c38]'
+                    ? 'border-[#16a34a]'
+                    : 'border-[#d7eadf] hover:border-[#16a34a]'
                 }`}
                 aria-label={`View product image ${index + 1}`}
               >
@@ -312,7 +312,7 @@ export default function ProductPage() {
         </div>
 
         <div className="rounded-[12px] border border-[#d7eadf] bg-white p-4 md:p-6">
-          <div className="inline-flex rounded-[8px] bg-[#e8f5ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#1a5c38]">
+          <div className="inline-flex rounded-[8px] bg-[#e8f5ee] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[#16a34a]">
             Natural Sweetener
           </div>
 
@@ -329,14 +329,14 @@ export default function ProductPage() {
           <button
             type="button"
             onClick={handleReviewsClick}
-            className="mt-4 flex items-center gap-2 text-sm font-normal text-[#1a5c38] transition-colors duration-200 ease-in-out hover:text-[#13472b]"
+            className="mt-4 flex items-center gap-2 text-sm font-normal text-[#16a34a] transition-colors duration-200 ease-in-out hover:text-[#15803d]"
           >
             <span className="text-[#c9962a]">★★★★★</span>
             <span>5.0 · 24 reviews</span>
           </button>
 
           <div className="mt-5 flex flex-wrap items-end gap-3">
-            <span className="text-[34px] font-semibold leading-none text-[#1a5c38] md:text-[42px]">
+            <span className="text-[34px] font-semibold leading-none text-[#16a34a] md:text-[42px]">
               ₹{formatPrice(selectedVariant.price)}
             </span>
             <span className="text-lg font-normal text-[#9ca3af] line-through">
@@ -361,7 +361,7 @@ export default function ProductPage() {
                     type="button"
                     onClick={() => setSelectedVariant(variant)}
                     className={`relative flex min-h-[150px] flex-col justify-between rounded-[12px] border bg-white p-3 sm:p-4 text-left transition-colors duration-200 ease-in-out ${
-                      isSelected ? 'border-[#1a5c38] shadow-[0_4px_12px_rgba(26,92,56,0.1)]' : 'border-[#d7eadf] hover:border-[#1a5c38]'
+                      isSelected ? 'border-[#16a34a] shadow-[0_4px_12px_rgba(26,92,56,0.1)]' : 'border-[#d7eadf] hover:border-[#16a34a]'
                     }`}
                   >
                     <div>
@@ -370,13 +370,13 @@ export default function ProductPage() {
                           className={`rounded-[8px] px-2 py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide leading-none ${
                             variant.label === 'Most Popular'
                               ? 'bg-[#fff7e6] text-[#c9962a]'
-                              : 'bg-[#e8f5ee] text-[#1a5c38]'
+                              : 'bg-[#e8f5ee] text-[#16a34a]'
                           }`}
                         >
                           {variant.label}
                         </span>
                         {isSelected && (
-                          <span className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full bg-[#1a5c38] text-[10px] sm:text-xs font-semibold text-white">
+                          <span className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full bg-[#16a34a] text-[10px] sm:text-xs font-semibold text-white">
                             ✓
                           </span>
                         )}
@@ -389,7 +389,7 @@ export default function ProductPage() {
                     
                     <div className="mt-2 sm:mt-3">
                       <div className="flex flex-wrap items-end gap-1.5 sm:gap-2">
-                        <span className="text-lg sm:text-2xl font-semibold leading-none text-[#1a5c38]">
+                        <span className="text-lg sm:text-2xl font-semibold leading-none text-[#16a34a]">
                           ₹{formatPrice(variant.price)}
                         </span>
                         <span className="text-[11px] sm:text-sm font-normal text-[#9ca3af] line-through">
@@ -412,7 +412,7 @@ export default function ProductPage() {
               <button
                 type="button"
                 onClick={() => setQuantity((current) => Math.max(1, current - 1))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d7eadf] text-lg font-normal text-[#1a5c38] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d7eadf] text-lg font-normal text-[#16a34a] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
                 aria-label="Decrease quantity"
               >
                 -
@@ -421,7 +421,7 @@ export default function ProductPage() {
               <button
                 type="button"
                 onClick={() => setQuantity((current) => current + 1)}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d7eadf] text-lg font-normal text-[#1a5c38] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d7eadf] text-lg font-normal text-[#16a34a] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
                 aria-label="Increase quantity"
               >
                 +
@@ -433,7 +433,7 @@ export default function ProductPage() {
             ref={mainCtaRef}
             type="button"
             onClick={handleBuyNow}
-            className="mt-5 flex h-[52px] w-full items-center justify-center rounded-[50px] bg-[#1a5c38] text-base font-semibold text-white transition-colors duration-200 ease-in-out hover:bg-[#13472b]"
+            className="mt-5 flex h-[52px] w-full items-center justify-center rounded-[50px] bg-[#16a34a] text-base font-semibold text-white transition-colors duration-200 ease-in-out hover:bg-[#15803d]"
           >
             ⚡ Buy Now
           </button>
@@ -441,7 +441,7 @@ export default function ProductPage() {
           <button
             type="button"
             onClick={() => setIsEnquireModalOpen(true)}
-            className="mt-3 flex h-[48px] w-full items-center justify-center rounded-[50px] border border-[#1a5c38] bg-white text-sm font-semibold text-[#1a5c38] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
+            className="mt-3 flex h-[48px] w-full items-center justify-center rounded-[50px] border border-[#16a34a] bg-white text-sm font-semibold text-[#16a34a] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
           >
             Have Questions? Enquire Now
           </button>
@@ -452,7 +452,7 @@ export default function ProductPage() {
       <section className="mx-auto grid max-w-7xl gap-3 px-4 pb-6 md:grid-cols-3 md:px-6 md:pb-12">
         {socialProofStats.map((stat) => (
           <div key={stat.label} className="rounded-[12px] bg-[#e8f5ee] p-5 text-center">
-            <p className="text-center text-3xl font-semibold text-[#1a5c38] md:text-4xl">
+            <p className="text-center text-3xl font-semibold text-[#16a34a] md:text-4xl">
               {stat.value}
             </p>
             <p className="mt-1 text-center text-sm font-normal text-[#6b7280]">{stat.label}</p>
@@ -491,7 +491,7 @@ export default function ProductPage() {
           <div className="mt-5 grid gap-3 md:grid-cols-2">
             {audienceChecklist.map((item) => (
               <div key={item} className="flex items-start gap-3 rounded-[12px] bg-white p-4">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#1a5c38] text-xs font-semibold text-white">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#16a34a] text-xs font-semibold text-white">
                   ✓
                 </span>
                 <p className="text-left text-sm font-normal text-[#1a1a1a] md:text-base">{item}</p>
@@ -521,7 +521,7 @@ export default function ProductPage() {
                   <span
                     key={index}
                     className={`aspect-square rounded-full border ${
-                      index < 9 ? 'border-[#1a5c38] bg-[#1a5c38]' : 'border-[#1a5c38] bg-white'
+                      index < 9 ? 'border-[#16a34a] bg-[#16a34a]' : 'border-[#16a34a] bg-white'
                     }`}
                   />
                 ))}
@@ -535,7 +535,7 @@ export default function ProductPage() {
               href="https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex h-12 items-center rounded-[50px] border border-[#1a5c38] px-6 text-sm font-semibold text-[#1a5c38] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
+              className="mt-5 inline-flex h-12 items-center rounded-[50px] border border-[#16a34a] px-6 text-sm font-semibold text-[#16a34a] transition-colors duration-200 ease-in-out hover:bg-[#e8f5ee]"
             >
               Download Full Lab Report (PDF)
             </a>
@@ -572,7 +572,7 @@ export default function ProductPage() {
             <button
               type="button"
               onClick={() => setIsReviewFormOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-green-300 bg-white px-5 py-3 text-sm font-semibold text-green-800 transition hover:border-green-500 hover:bg-green-50 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-green-600 bg-white px-5 py-3 text-sm font-semibold text-green-600 transition hover:border-green-700 hover:bg-green-50 sm:w-auto"
             >
               <MessageSquare className="h-4 w-4" />
               <span>Write a Review</span>

@@ -254,31 +254,31 @@ function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-16">
-            <Link href="/" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               HOME
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/about" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/about" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               ABOUT US
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/products" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/products" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               PRODUCTS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/recipes" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/recipes" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               RECIPES
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/blog" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/blog" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               BLOGS
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="/faq" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="/faq" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               FAQ
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link href="https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf" target="_blank" rel="noopener noreferrer" className="group relative font-semibold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
+            <Link href="https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf" target="_blank" rel="noopener noreferrer" className="group relative font-bold text-gray-700 hover:text-green-600 transition-colors duration-200 py-2 text-[16px]">
               LAB REPORT
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
