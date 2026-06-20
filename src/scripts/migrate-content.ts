@@ -54,7 +54,7 @@ As more Indians shift towards healthy eating, monk fruit sweetener is becoming a
 ## Ready to Make the Switch?
 
 👉 Switch to **Kislay Monk Fruit Sweetener** today for a healthier lifestyle!`,
-    image: '/cover4.jpg',
+    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800',
     author: 'Kislay Naturals',
     category: 'Daily Living',
     read_time: '4 min read',
@@ -99,7 +99,7 @@ Remember, sustainable weight loss is about making small, consistent changes that
 ## Ready to Start Your Weight Loss Journey?
 
 👉 Try **Kislay's premium monk fruit sweetener** and experience the difference natural sweetness can make.`,
-    image: '/herophoto2.png',
+    image: '/desktop hero/herophoto2.png',
     author: 'Kislay Naturals',
     category: 'Weight Loss',
     read_time: '5 min read',
@@ -138,7 +138,7 @@ Remember, sustainable weight loss is about making small, consistent changes that
 ## Ready to Make the Switch?
 
 👉 Try **Kislay Monk Fruit Sweetener** today and experience the difference natural sweetness can make in your life!`,
-    image: '/mcover.png',
+    image: '/desktop hero/mcover.png',
     author: 'Kislay Naturals',
     category: 'Health & Wellness',
     read_time: '6 min read',
@@ -183,7 +183,7 @@ Always consult with your healthcare provider before making significant changes t
 ## Ready to Try Monk Fruit Sweetener?
 
 👉 **Kislay Monk Fruit Sweetener** offers a safe, natural way to enjoy sweetness without compromising your health goals.`,
-    image: '/herophoto.png',
+    image: '/desktop hero/herophoto.png',
     author: 'Kislay Naturals',
     category: 'Health & Diabetes',
     read_time: '4 min read',
@@ -221,7 +221,7 @@ As more Indians shift towards healthy eating, monk fruit sweetener is becoming a
 ## Ready to Make the Switch?
 
 👉 Switch to **Kislay Monk Fruit Sweetener** today for a healthier lifestyle!`,
-    image: '/cover3.jpg',
+    image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800',
     author: 'Kislay Naturals',
     category: 'Health & Nutrition',
     read_time: '5 min read',
@@ -243,7 +243,7 @@ const recipesData = [
     total_time: "5 mins",
     servings: 2,
     difficulty: "Easy",
-    image: "/recipe1.jpg",
+    image: "/recipes/recipe1.jpg",
     ingredients: [
       "2 cups water",
       "4 tbsp lemon juice",
@@ -284,7 +284,7 @@ const recipesData = [
     total_time: "10 mins",
     servings: 1,
     difficulty: "Easy",
-    image: "/oatmeal.jpg",
+    image: "/recipes/oatmeal.jpg",
     ingredients: [
       "1/2 cup rolled oats",
       "1 cup almond milk",
@@ -325,7 +325,7 @@ const recipesData = [
     total_time: "7 mins",
     servings: 2,
     difficulty: "Easy",
-    image: "/recipe3.jpg",
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800",
     ingredients: [
       "1 banana",
       "1 cup mixed berries",
@@ -365,7 +365,7 @@ const recipesData = [
     total_time: "5 mins + chilling",
     servings: 2,
     difficulty: "Easy",
-    image: "/chiapudding.jpg",
+    image: "/recipes/chiapudding.jpg",
     ingredients: [
       "1/4 cup chia seeds",
       "1 cup almond milk",
@@ -405,7 +405,7 @@ const recipesData = [
     total_time: "10 mins",
     servings: 4,
     difficulty: "Easy",
-    image: "/icedtea.jpg",
+    image: "/recipes/icedtea.jpg",
     ingredients: [
       "4 cups water",
       "4 tea bags (black or green tea)",
@@ -447,7 +447,7 @@ const recipesData = [
     total_time: "15 mins",
     servings: 2,
     difficulty: "Medium",
-    image: "/pancakes.jpg",
+    image: "/recipes/pancakes.jpg",
     ingredients: [
       "1 banana (mashed)",
       "2 eggs",

@@ -242,7 +242,7 @@ function Header() {
           <div className="flex items-center h-full">
             <Link href="/" className="flex items-center h-full pt-1 md:pt-2">
               <Image 
-                src="/logonew.png" 
+                src="/logo/logonew.png" 
                 alt="Kislay" 
                 width={200} 
                 height={72} 

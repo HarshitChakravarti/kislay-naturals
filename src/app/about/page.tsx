@@ -51,7 +51,7 @@ export default function AboutPage() {
                 <div className="order-1 md:order-2 flex justify-center">
                   <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-2xl p-8 flex items-center justify-center">
                     <Image
-                      src="/logonew.png"
+                      src="/logo/logonew.png"
                       alt="Kislay Naturals Logo"
                       width={300}
                       height={300}
@@ -140,7 +140,7 @@ export default function AboutPage() {
               <div className="order-2 lg:order-1 flex flex-col items-center">
                 <div className="relative w-80 sm:w-96 h-80 sm:h-[28rem] rounded-2xl overflow-hidden shadow-xl">
                   <Image
-                    src="/founder3.jpg"
+                    src="/about us/founder3.jpg"
                     alt="Nishchoy Gupta, Founder of Kislay Naturals"
                     fill
                     className="object-cover object-center hover:scale-105 transition-transform duration-500"

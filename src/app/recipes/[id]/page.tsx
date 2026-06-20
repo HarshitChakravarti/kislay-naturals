@@ -13,7 +13,7 @@ const recipes = [
     totalTime: "5 mins",
     servings: 2,
     difficulty: "Easy",
-    image: "/recipe1.jpg",
+    image: "/recipes/recipe1.jpg",
     description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener",
     ingredients: [
       "2 cups water",
@@ -53,7 +53,7 @@ const recipes = [
     totalTime: "10 mins",
     servings: 1,
     difficulty: "Easy",
-    image: "/oatmeal.jpg",
+    image: "/recipes/oatmeal.jpg",
     description: "Warm and comforting oatmeal with natural sweetness",
     ingredients: [
       "1/2 cup rolled oats",
@@ -93,7 +93,7 @@ const recipes = [
     totalTime: "7 mins",
     servings: 2,
     difficulty: "Easy",
-    image: "/recipe3.jpg",
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800",
     description: "Creamy fruit smoothie with zero added sugar",
     ingredients: [
       "1 banana",
@@ -133,7 +133,7 @@ const recipes = [
     totalTime: "5 mins + chilling",
     servings: 2,
     difficulty: "Easy",
-    image: "/chiapudding.jpg",
+    image: "/recipes/chiapudding.jpg",
     description: "Protein-packed chia pudding with natural sweetness",
     ingredients: [
       "1/4 cup chia seeds",
@@ -173,7 +173,7 @@ const recipes = [
     totalTime: "10 mins",
     servings: 4,
     difficulty: "Easy",
-    image: "/icedtea.jpg",
+    image: "/recipes/icedtea.jpg",
     description: "Refreshing iced tea with a hint of natural sweetness",
     ingredients: [
       "4 cups water",
@@ -213,7 +213,7 @@ const recipes = [
     totalTime: "15 mins",
     servings: 2,
     difficulty: "Medium",
-    image: "/pancakes.jpg",
+    image: "/recipes/pancakes.jpg",
     description: "Fluffy pancakes with no added sugar",
     ingredients: [
       "1 banana (mashed)",

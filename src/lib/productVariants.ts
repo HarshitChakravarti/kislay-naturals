@@ -1,17 +1,17 @@
 import type { ProductVariant } from '@/types';
 
 export const DEFAULT_PRODUCT_GALLERY = [
-  '/product1.png',
-  '/product2.png',
-  '/product3.png',
-  '/product4.png',
-  '/product5.png',
+  '/sweetener-drops/product1.png',
+  '/sweetener-drops/product2.png',
+  '/sweetener-drops/product3.png',
+  '/sweetener-drops/product4.png',
+  '/sweetener-drops/product5.png',
 ];
 
 export const DEFAULT_PRODUCT_VARIANTS: ProductVariant[] = [
   { size: '10ml', price: 299, originalPrice: 399, unitCount: 1 },
-  { size: '10ml pack of 2', price: 549, originalPrice: 798, image: '/1.png', unitCount: 2 },
-  { size: '10ml pack of 3', price: 799, originalPrice: 1197, image: '/2.png', unitCount: 3 },
+  { size: '10ml pack of 2', price: 549, originalPrice: 798, image: '/sweetener-drops/1.png', unitCount: 2 },
+  { size: '10ml pack of 3', price: 799, originalPrice: 1197, image: '/sweetener-drops/2.png', unitCount: 3 },
   { size: '30ml', price: 699, originalPrice: 999, unitCount: 1 },
 ];
 

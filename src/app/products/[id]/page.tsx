@@ -32,7 +32,7 @@ const PRODUCT_TAGLINE = 'Pure Monk Fruit Sweetener — Zero Calories, Zero Guilt
 const BRAND_TAGLINE = 'Naturally Trusted | Deeply Connected | Truly Healthy';
 const DEFAULT_PRODUCT_ID = 'kislay-monk-fruit-sweetener-drops';
 
-const productImages = ['/product1.png', '/product2.png', '/product3.png', '/product4.png', '/product5.png'];
+const productImages = ['/sweetener-drops/product1.png', '/sweetener-drops/product2.png', '/sweetener-drops/product3.png', '/sweetener-drops/product4.png', '/sweetener-drops/product5.png'];
 
 const variants: Variant[] = [
   {

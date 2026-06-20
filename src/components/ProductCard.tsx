@@ -91,7 +91,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <div className="relative flex h-56 w-full items-center justify-center sm:h-64">
             <Image
-              src="/product1.png"
+              src="/sweetener-drops/product1.png"
               alt={product.name}
               width={400}
               height={400}
@@ -180,7 +180,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </button>
           <div className="relative flex w-full items-center justify-center">
             <Image
-              src="/product1.png"
+              src="/sweetener-drops/product1.png"
               alt={product.name}
               width={520}
               height={520}

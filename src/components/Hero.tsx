@@ -14,32 +14,32 @@ const Hero = () => {
       headline: "The sweetener that's 300x sweeter — with zero sugar, zero guilt.",
       subheadline: "For diabetics, keto eaters & health-first families.",
       proof: "Kislay Monk Fruit Sweetener Drops. 100% natural, zero-calorie monk fruit sweetness.",
-      desktopImage: "/herophoto.png",
-      mobileImage: "/herophoto.png",
+      desktopImage: "/desktop hero/herophoto.png",
+      mobileImage: "/desktop hero/herophoto.png",
       alt: "Kislay Monk Fruit Sweetener Drops"
     },
     {
       headline: "Tired of products that promise results but don't deliver? Meet Kislay Naturals.",
       subheadline: "Say no to sugar without giving up sweetness.",
       proof: "Plant-based monk fruit drops for tea, coffee, desserts and daily sugar swaps.",
-      desktopImage: "/mcover.png",
-      mobileImage: "/mcover.png",
+      desktopImage: "/desktop hero/mcover.png",
+      mobileImage: "/desktop hero/mcover.png",
       alt: "Kislay Naturals monk fruit sweetener in everyday drinks"
     },
     {
       headline: "Sweeten your tea, coffee and desserts without the sugar crash.",
       subheadline: "Made for everyday Indian homes choosing better sweetness.",
       proof: "Zero sugar. Zero calories. No artificial sweeteners.",
-      desktopImage: "/herophoto2.png",
-      mobileImage: "/herophoto2.png",
+      desktopImage: "/desktop hero/herophoto2.png",
+      mobileImage: "/desktop hero/herophoto2.png",
       alt: "Sugar-free recipes made with monk fruit sweetener"
     },
     {
       headline: "One tiny drop. Big natural sweetness.",
       subheadline: "For parents, fitness routines and anyone cutting refined sugar.",
       proof: "Monk fruit is naturally up to 300x sweeter than sugar, so a little goes a long way.",
-      desktopImage: "/cover333.jpg",
-      mobileImage: "/mcover2.png",
+      desktopImage: "/desktop hero/cover333.jpg",
+      mobileImage: "/about us/mcover2.png",
       alt: "Kislay Naturals monk fruit sweetener for healthy families"
     }
   ];

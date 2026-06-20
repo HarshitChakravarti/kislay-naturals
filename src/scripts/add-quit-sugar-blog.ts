@@ -55,7 +55,7 @@ Replace desserts and packaged snacks with monk fruit-based or no-added-sugar opt
 Move into a fully sugar-free lifestyle with better pantry swaps and mindful habits.
 
 Make the transition smooth with Kislay Monk Fruit Sweetener.`,
-  image: '/cover2.jpg',
+  image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=800',
   author: 'Kislay Naturals',
   category: 'Health & Wellness',
   read_time: '5 min read',

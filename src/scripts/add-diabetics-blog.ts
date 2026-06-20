@@ -50,7 +50,7 @@ Excess sugar can spike blood glucose and increase insulin resistance. That's why
 ## Conclusion
 
 👉 If you're diabetic, **Kislay Monk Fruit Sweetener** is your guilt-free way to enjoy sweetness every day.`,
-  image: '/diabetes.jpg',
+  image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&q=80&w=800',
   author: 'Kislay Naturals',
   category: 'Health & Diabetes',
   read_time: '5 min read',

@@ -65,7 +65,7 @@ export default function BlogDetailPage() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/diabetes.jpg"
+              src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?auto=format&fit=crop&q=80&w=800"
               alt="Is Monk Fruit Safe for Diabetics – Cover"
               fill
               className="object-cover"

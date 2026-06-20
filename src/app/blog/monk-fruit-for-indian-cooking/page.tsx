@@ -65,7 +65,7 @@ export default function BlogDetailPage() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/recipe3.jpg"
+              src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800"
               alt="Monk Fruit Sweetener for Indian Cooking – Does It Really Work? – Cover"
               fill
               className="object-cover"

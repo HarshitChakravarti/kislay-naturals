@@ -64,7 +64,7 @@ export default async function RecipesPage() {
               <div className="relative h-48 sm:h-56 lg:h-64 bg-gray-100 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
                 <Image 
-                  src={recipe.image || '/recipe1.jpg'} 
+                  src={recipe.image || '/recipes/recipe1.jpg'} 
                   alt={recipe.title}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"

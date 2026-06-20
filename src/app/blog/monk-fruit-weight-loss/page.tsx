@@ -65,7 +65,7 @@ export default function MonkFruitWeightLossBlog() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/herophoto2.png"
+              src="/desktop hero/herophoto2.png"
               alt="How Monk Fruit Sweetener Supports Weight Loss"
               fill
               className="object-cover"

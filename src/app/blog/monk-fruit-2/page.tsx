@@ -66,7 +66,7 @@ export default function BlogDetailPage() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/herophoto.png"
+              src="/desktop hero/herophoto.png"
               alt="Is Monk Fruit Sweetener Good for Diabetics?"
               fill
               className="object-cover"

@@ -66,7 +66,7 @@ export default function BlogDetailPage() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/mcover.png"
+              src="/desktop hero/mcover.png"
               alt="5 Reasons to Switch from Sugar to Monk Fruit"
               fill
               className="object-cover"

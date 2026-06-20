@@ -61,7 +61,7 @@ Unlike artificial sweeteners that are engineered in labs, mogrosides are extract
 💡 Did you know? Monk fruit has been used in traditional Chinese medicine for centuries and has been generally recognised as safe (GRAS) by the FDA.
 
 👉 Choose safety over shortcuts with **Kislay Monk Fruit Sweetener** — 100% natural, zero calories, and gentle on your body.`,
-  image: '/cover4.jpg',
+  image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800',
   author: 'Kislay Naturals',
   category: 'Health & Wellness',
   read_time: '5 min read',

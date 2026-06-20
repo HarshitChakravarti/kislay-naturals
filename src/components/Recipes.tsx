@@ -10,7 +10,7 @@ const recipes = [
     title: "Sugar-Free Lemonade",
     prepTime: "5 mins",
     servings: 2,
-    image: "/recipe1.jpg",
+    image: "/recipes/recipe1.jpg",
     description: "Refreshing lemonade sweetened naturally with Kislay Monk Fruit Sweetener",
     ingredients: [
       "2 cups water",
@@ -25,7 +25,7 @@ const recipes = [
     title: "Healthy Oatmeal",
     prepTime: "10 mins",
     servings: 1,
-    image: "/oatmeal.jpg",
+    image: "/recipes/oatmeal.jpg",
     description: "Warm and comforting oatmeal with natural sweetness",
     ingredients: [
       "1/2 cup rolled oats",
@@ -40,7 +40,7 @@ const recipes = [
     title: "Fruit Smoothie",
     prepTime: "7 mins",
     servings: 2,
-    image: "/recipe3.jpg",
+    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&q=80&w=800",
     description: "Creamy fruit smoothie with zero added sugar",
     ingredients: [
       "1 banana",
@@ -55,7 +55,7 @@ const recipes = [
     title: "Chia Pudding",
     prepTime: "5 mins + chilling",
     servings: 2,
-    image: "/chiapudding.jpg",
+    image: "/recipes/chiapudding.jpg",
     description: "Protein-packed chia pudding with natural sweetness",
     ingredients: [
       "1/4 cup chia seeds",
@@ -70,7 +70,7 @@ const recipes = [
     title: "Sugar-Free Iced Tea",
     prepTime: "10 mins",
     servings: 4,
-    image: "/icedtea.jpg",
+    image: "/recipes/icedtea.jpg",
     description: "Refreshing iced tea with a hint of natural sweetness",
     ingredients: [
       "4 cups water",
@@ -85,7 +85,7 @@ const recipes = [
     title: "Protein Pancakes",
     prepTime: "15 mins",
     servings: 2,
-    image: "/pancakes.jpg",
+    image: "/recipes/pancakes.jpg",
     description: "Fluffy pancakes with no added sugar",
     ingredients: [
       "1 banana (mashed)",

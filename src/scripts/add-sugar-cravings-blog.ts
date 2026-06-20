@@ -56,7 +56,7 @@ It lets you enjoy sweet flavors while your body adjusts to lower sugar dependenc
 | Chocolate/ sweets | Sugar-free desserts |
 
 👉 Reduce cravings naturally with **Kislay Monk Fruit Sweetener** — sweetness without addiction.`,
-  image: '/cover3.jpg',
+  image: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800',
   author: 'Kislay Naturals',
   category: 'Health & Wellness',
   read_time: '5 min read',

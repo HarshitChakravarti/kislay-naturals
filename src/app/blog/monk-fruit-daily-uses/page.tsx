@@ -66,7 +66,7 @@ export default function MonkFruitDailyUsesPage() {
           {/* Cover Image */}
           <div className="relative w-full h-56 sm:h-72 md:h-80 lg:h-96 mb-6 sm:mb-8 lg:mb-10">
             <Image
-              src="/cover4.jpg"
+              src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800"
               alt="7 Easy Ways to Use Monk Fruit Sweetener"
               fill
               className="object-cover"

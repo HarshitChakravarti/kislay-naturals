@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Logo and Brand Section */}
           <div className="space-y-2 sm:space-y-4">
             <div className="flex items-center">
-              <Image src="/logonew.png" alt="Kislay Logo" width={150} height={80} className="h-16 sm:h-20 md:h-24 w-auto" />
+              <Image src="/logo/logonew.png" alt="Kislay Logo" width={150} height={80} className="h-16 sm:h-20 md:h-24 w-auto" />
             </div>
             <p className="text-gray-600 font-semibold text-xs sm:text-sm leading-relaxed">
               Naturally Trusted | Deeply Connected | <br className="hidden sm:block"></br> Truly Healthy
