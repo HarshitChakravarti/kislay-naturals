@@ -13,7 +13,7 @@ export default async function Home() {
       .from('products')
       .select('*')
       .eq('in_stock', true)
-      .order('created_at', { ascending: false })
+      .order('price', { ascending: true })
       .limit(3); // Show top 3 products as featured
     
     // Ensure originalPrice is set for all products

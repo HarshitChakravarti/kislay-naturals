@@ -92,7 +92,7 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
             <Heart className="h-4 w-4" />
           </button>
 
-          <div className="relative flex h-56 w-full items-center justify-center sm:h-64">
+          <div className="relative flex h-64 w-full items-center justify-center sm:h-72 md:h-80">
             <Image
               src={product.image || "/sweetener-drops/10ml.png"}
               alt={product.name}
