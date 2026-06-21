@@ -971,7 +971,7 @@ export default function CheckoutPage() {
               <div className="flex items-start space-x-4 mb-6">
                 <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
                   <Image
-                    src="/sweetener-drops/product1.png"
+                    src={product.image || selectedVariant?.image || "/sweetener-drops/10ml.png"}
                     alt={product.name}
                     fill
                     className="object-contain"

@@ -148,7 +148,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const [productsResult, blogpostsResult, recipesResult] = await Promise.allSettled([
       supabase
         .from('products')
-        .select('id, created_at, updated_at')
+        .select('id, slug, created_at, updated_at')
         .eq('in_stock', true),
       supabase
         .from('blogposts')
@@ -164,7 +164,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (productsResult.status === 'fulfilled' && productsResult.value.data) {
       const { data: products } = productsResult.value;
       const productPages = products.map((product) => ({
-        url: `${baseUrl}/products/${product.id}`,
+        url: `${baseUrl}/products/${product.slug || product.id}`,
         lastModified: product.updated_at 
           ? new Date(product.updated_at) 
           : (product.created_at ? new Date(product.created_at) : now),

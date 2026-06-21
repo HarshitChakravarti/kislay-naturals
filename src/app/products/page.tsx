@@ -40,7 +40,7 @@ const ProductsPage = async () => {
         name: 'Kislay Monk Fruit Sweetener Drops',
         price: 299,
         originalPrice: 399,
-        image: '/p1.png',
+        image: '/sweetener-drops/10ml.png',
         description: 'The perfect monk fruit sweetener for you',
         in_stock: true,
         badge: 'Featured'
