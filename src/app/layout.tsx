@@ -13,6 +13,7 @@ import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 import SessionManager from '@/components/SessionManager';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { Analytics } from "@vercel/analytics/next";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -105,6 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
         <Suspense fallback={null}>
           <GoogleAnalytics />
+          <Analytics />
           <AuthProvider>
             <AuthErrorBoundary>
               <ReduxProvider>
