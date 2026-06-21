@@ -12,9 +12,6 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
   if (!products || products.length === 0) {
     return null;
   }
-  
-  // For now, just use the first product as featured
-  const product = products[0];
 
   return (
     <section className="py-0">
@@ -44,8 +41,12 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       
       <div className="bg-gray-50">
         <div className="w-full max-w-6xl mx-auto px-4 py-8 md:py-8">
-          {/* Product Card - Responsive Layout */}
-          <ProductCard product={product} />
+          {/* Products - Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} layout="grid" />
+            ))}
+          </div>
         </div>
       </div>
     </section>

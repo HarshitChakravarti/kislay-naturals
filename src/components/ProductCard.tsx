@@ -18,9 +18,10 @@ interface Review {
 
 interface ProductCardProps {
   product: Product;
+  layout?: 'grid' | 'horizontal';
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, layout = 'horizontal' }: ProductCardProps) {
   const router = useRouter();
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
@@ -58,7 +59,9 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className="group w-full md:mx-auto md:max-w-6xl cursor-pointer overflow-hidden rounded-xl bg-white shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600/40 focus-visible:ring-offset-2"
+      className={`group w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600/40 focus-visible:ring-offset-2 ${
+        layout === 'grid' ? '' : 'md:mx-auto md:max-w-6xl'
+      }`}
       role="link"
       tabIndex={0}
       onClick={() => router.push(productHref)}
@@ -69,8 +72,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         }
       }}
     >
-      {/* Mobile */}
-      <div className="md:hidden">
+      {/* Mobile / Grid Card View */}
+      <div className={layout === 'grid' ? 'block' : 'md:hidden'}>
         <div className="relative bg-white px-3 pt-2 sm:px-4 sm:pt-3">
           <div className="absolute left-3 top-2.5 z-10 sm:left-4 sm:top-3">
             {product.badge && (
@@ -160,8 +163,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </div>
 
-      {/* Desktop */}
-      <div className="hidden md:flex">
+      {/* Desktop horizontal row */}
+      <div className={layout === 'grid' ? 'hidden' : 'hidden md:flex'}>
         <div className="relative flex w-5/12 items-center justify-center bg-white p-5">
           <div className="absolute left-4 top-4 z-10">
             {product.badge && (

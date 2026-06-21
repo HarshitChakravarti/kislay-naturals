@@ -159,12 +159,22 @@ export default function ProductDetailClient({ product }: { product: any }) {
         img !== product.image
       );
     } else {
-      // If a single bottle size is selected, exclude the cover image of the OTHER size
+      // If a single bottle or bag size is selected, exclude the cover image of the OTHER size
       const sizeId = selectedVariant?.id || '';
       if (sizeId.includes('10ml')) {
         list = list.filter(img => img !== '/sweetener-drops/30ml.png');
       } else if (sizeId.includes('30ml')) {
         list = list.filter(img => img !== '/sweetener-drops/10ml.png');
+      } else if (sizeId.toLowerCase().includes('200g')) {
+        list = list.filter(img => 
+          img !== '/erythritol/400g.png' && 
+          img !== '/allulose/400g.png'
+        );
+      } else if (sizeId.toLowerCase().includes('400g')) {
+        list = list.filter(img => 
+          img !== '/erythritol/1.png' && 
+          img !== '/allulose/1.png'
+        );
       }
     }
 
