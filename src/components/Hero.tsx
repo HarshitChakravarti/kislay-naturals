@@ -66,7 +66,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative w-full md:aspect-[2.4/1] aspect-[9/16] min-h-[75vh] md:min-h-[550px] max-h-[95vh] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
         {/* Desktop Image - hidden on mobile */}
         <div className="hidden md:block w-full h-full relative">
@@ -109,26 +109,26 @@ const Hero = () => {
         ref={ref}
         className={`relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
       >
-        <div className="min-h-[180px] sm:min-h-[240px] lg:min-h-[220px] flex max-w-5xl flex-col items-center justify-center">
+        <div className="min-h-[180px] sm:min-h-[240px] lg:min-h-[220px] flex w-full max-w-[95vw] lg:max-w-7xl flex-col items-center justify-center">
           <h1 
             className={`font-heading font-semibold text-white mb-4 drop-shadow-2xl leading-tight transition-opacity duration-500 ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
             style={{ 
-              fontSize: 'clamp(36px, 8vw, 64px)'
+              fontSize: 'clamp(42px, 8vw, 84px)'
             }}
             aria-live="polite"
           >
             {banners[currentBanner].headline}
           </h1>
-          <p className={`max-w-3xl px-4 text-xl font-semibold leading-snug text-green-50 drop-shadow-md transition-opacity duration-500 sm:text-2xl md:text-2xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+          <p className={`max-w-[90vw] lg:max-w-6xl px-4 text-2xl font-semibold leading-snug text-green-50 drop-shadow-md transition-opacity duration-500 sm:text-3xl md:text-4xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
             {banners[currentBanner].subheadline}
           </p>
         </div>
-        <p className={`mb-8 max-w-3xl px-4 font-sans leading-relaxed text-green-50 drop-shadow-md transition-opacity duration-500 text-base sm:text-lg md:text-lg ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+        <p className={`mb-10 max-w-[90vw] lg:max-w-6xl px-4 font-sans leading-relaxed text-green-50 drop-shadow-md transition-opacity duration-500 text-lg sm:text-xl md:text-2xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
           {banners[currentBanner].proof}
         </p>
         <Link 
           href="/products/kislay-monk-fruit-sweetener-drop" 
-          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-8 py-3 sm:px-10 sm:py-4 text-lg hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
+          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-10 py-4 sm:px-12 sm:py-5 text-xl hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
         >
           Shop Now
         </Link>
