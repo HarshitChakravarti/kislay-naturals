@@ -45,8 +45,7 @@ const ProductsPage = async () => {
         originalPrice: 399,
         image: '/sweetener-drops/10ml.png',
         description: 'The perfect monk fruit sweetener for you',
-        in_stock: true,
-        badge: 'Featured'
+        in_stock: true
       }];
     } else {
       products = data || [];
@@ -63,8 +62,7 @@ const ProductsPage = async () => {
       description: 'The perfect monk fruit sweetener for you',
       inStock: true,
       rating: 4.5,
-      numReviews: 12,
-      badge: 'Featured'
+      numReviews: 12
     }];
   }
 

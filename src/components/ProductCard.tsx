@@ -60,7 +60,7 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
   return (
     <div
       className={`group w-full cursor-pointer overflow-hidden rounded-xl bg-white shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-green-600/40 focus-visible:ring-offset-2 ${
-        layout === 'grid' ? '' : 'md:mx-auto md:max-w-6xl'
+        layout === 'grid' ? 'flex flex-col h-full' : 'md:mx-auto md:max-w-6xl'
       }`}
       role="link"
       tabIndex={0}
@@ -73,7 +73,7 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
       }}
     >
       {/* Mobile / Grid Card View */}
-      <div className={layout === 'grid' ? 'block' : 'md:hidden'}>
+      <div className={layout === 'grid' ? 'flex flex-col flex-grow' : 'md:hidden'}>
         <div className="relative bg-white px-3 pt-2 sm:px-4 sm:pt-3">
           <div className="absolute left-3 top-2.5 z-10 sm:left-4 sm:top-3">
             {product.badge && (
@@ -104,7 +104,7 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
           </div>
         </div>
 
-        <div className="p-3 pt-2 sm:p-4">
+        <div className="p-3 pt-2 sm:p-4 flex flex-col flex-grow">
           <div className="mb-1 flex items-center gap-2">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => {
@@ -128,37 +128,39 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
 
           <h2 className="text-base font-semibold leading-snug text-gray-900 sm:text-lg">{product.name}</h2>
 
-          <div className="mt-2">
-            <div className="flex items-baseline gap-2">
-              <div className="text-2xl font-extrabold text-green-700 sm:text-3xl">
-                ₹{product.price?.toFixed(2) || '0.00'}
+          <div className="mt-auto">
+            <div className="mt-3">
+              <div className="flex items-baseline gap-2">
+                <div className="text-2xl font-extrabold text-green-700 sm:text-3xl">
+                  ₹{product.price?.toFixed(2) || '0.00'}
+                </div>
+                {product.originalPrice && product.originalPrice > (product.price || 0) && (
+                  <span className="text-sm text-gray-500 line-through">
+                    ₹{product.originalPrice.toFixed(2)}
+                  </span>
+                )}
               </div>
-              {product.originalPrice && product.originalPrice > (product.price || 0) && (
-                <span className="text-sm text-gray-500 line-through">
-                  ₹{product.originalPrice.toFixed(2)}
-                </span>
-              )}
+              <p className="mt-1 text-[11px] text-gray-500">Inclusive of all taxes • Free shipping across India</p>
             </div>
-            <p className="mt-1 text-[11px] text-gray-500">Inclusive of all taxes • Free shipping across India</p>
-          </div>
 
-          <div className="mt-3 flex items-center gap-2">
-            <Link
-              href={productHref}
-              onClick={(event) => event.stopPropagation()}
-              className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-green-700"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              Buy Now
-            </Link>
-            <Link
-              href={productHref}
-              onClick={(event) => event.stopPropagation()}
-              className="inline-flex items-center justify-center gap-1 rounded-lg border border-green-600/30 px-3 py-2 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50"
-            >
-              Details
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+            <div className="mt-4 flex items-center gap-2">
+              <Link
+                href={productHref}
+                onClick={(event) => event.stopPropagation()}
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white transition-all duration-300 hover:bg-green-700"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Buy Now
+              </Link>
+              <Link
+                href={productHref}
+                onClick={(event) => event.stopPropagation()}
+                className="inline-flex items-center justify-center gap-1 rounded-lg border border-green-600/30 px-3 py-2 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50"
+              >
+                Details
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
