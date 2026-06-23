@@ -629,6 +629,11 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
+    // Only allow coupons for Kislay Monk Fruit Sweetener Drops
+    if (product?.id !== 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8') {
+      return { valid: false, discount: 0, type: 'none' };
+    }
+
     const upperCode = code.toUpperCase();
     
     if (upperCode === 'SPECIAL') {

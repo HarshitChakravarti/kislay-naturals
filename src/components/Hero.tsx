@@ -119,7 +119,7 @@ const Hero = () => {
           >
             {banners[currentBanner].headline}
           </h1>
-          <p className={`max-w-[90vw] lg:max-w-6xl px-4 text-2xl font-semibold leading-snug text-green-50 drop-shadow-md transition-opacity duration-500 sm:text-3xl md:text-4xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
+          <p className={`max-w-[90vw] lg:max-w-5xl px-4 text-lg font-medium leading-relaxed text-green-50/90 drop-shadow-md transition-opacity duration-500 sm:text-xl md:text-2xl ${isAnimating ? 'opacity-0' : 'opacity-100'}`}>
             {banners[currentBanner].subheadline}
           </p>
         </div>
