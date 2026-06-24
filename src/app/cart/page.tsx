@@ -31,7 +31,7 @@ export default function CartPage() {
         <div className="text-center bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-md w-full">
           <ShoppingCart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Cart is Empty</h2>
-          <p className="text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
+          <p className="text-gray-500 mb-6">Looks like you haven&apos;t added anything to your cart yet.</p>
           <Link
             href="/products"
             className="inline-flex items-center justify-center w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"

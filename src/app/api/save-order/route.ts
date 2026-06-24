@@ -121,8 +121,8 @@ export async function POST(request: NextRequest) {
       .from('orders')
       .select('*')
       .eq('user_email', orderDetails.user.email)
-      .eq('product_id', orderDetails.product.id)
-      .eq('quantity', orderDetails.quantity)
+      .eq('product_id', orderDetails.product!.id)
+      .eq('quantity', orderDetails.quantity!)
       .or('order_status.eq.created,status.eq.created')
       .gte('created_at', thirtyMinutesAgoIso)
       .order('created_at', { ascending: false })
@@ -145,8 +145,8 @@ export async function POST(request: NextRequest) {
           paid_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           total_amount: orderDetails.totalAmount,
-          unit_price: orderDetails.product.price,
-          product_name: orderDetails.product.name,
+          unit_price: orderDetails.product!.price,
+          product_name: orderDetails.product!.name,
           shipping_street: orderDetails.shippingAddress.street,
           shipping_city: orderDetails.shippingAddress.city,
           shipping_state: orderDetails.shippingAddress.state,
@@ -171,10 +171,10 @@ export async function POST(request: NextRequest) {
       user_name: orderDetails.user.name,
       user_email: orderDetails.user.email,
       user_mobile: orderDetails.user.mobile,
-      product_id: orderDetails.product.id,
-      product_name: orderDetails.product.name,
-      unit_price: orderDetails.product.price,
-      quantity: orderDetails.quantity,
+      product_id: orderDetails.product!.id,
+      product_name: orderDetails.product!.name,
+      unit_price: orderDetails.product!.price,
+      quantity: orderDetails.quantity!,
       total_amount: orderDetails.totalAmount,
       total_price: orderDetails.totalAmount, // Add the missing total_price field that the database expects
       shipping_street: orderDetails.shippingAddress.street,
