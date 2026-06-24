@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 import ProductDetailClient from '@/components/ProductDetailClient';
 
 export const revalidate = 0; // Ensure data is always fresh
@@ -36,5 +36,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
     return notFound();
   }
 
-  return <ProductDetailClient product={product} />;
+  // Fetch reviews to get average rating and total count
+  const { data: reviewsData } = await supabaseAdmin
+    .from('reviews')
+    .select('rating')
+    .eq('product_id', product.id);
+
+  let averageRating = 0;
+  let totalReviews = 0;
+
+  if (reviewsData && reviewsData.length > 0) {
+    const validReviews = reviewsData.filter(r => r.rating != null);
+    totalReviews = validReviews.length;
+    if (totalReviews > 0) {
+      const sum = validReviews.reduce((acc, curr) => acc + curr.rating, 0);
+      averageRating = sum / totalReviews;
+    }
+  }
+
+  return <ProductDetailClient product={product} reviewStats={{ averageRating, totalReviews }} />;
 }

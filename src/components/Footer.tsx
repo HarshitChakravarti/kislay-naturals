@@ -6,19 +6,22 @@ export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 py-6 sm:py-8 md:py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 md:gap-8">
           {/* Logo and Brand Section */}
-          <div className="space-y-2 sm:space-y-4">
-            <div className="flex items-center">
-              <Image src="/logo/logonew.png" alt="Kislay Logo" width={150} height={80} className="h-16 sm:h-20 md:h-24 w-auto" />
+          <div className="lg:col-span-4 flex justify-start">
+            <div className="space-y-2 sm:space-y-4 flex flex-col items-center">
+              <div className="flex flex-col items-center gap-2">
+                <Image src="/logo/favicon.png" alt="Kislay Logo Icon" width={64} height={64} className="h-12 sm:h-16 md:h-20 w-auto" />
+                <Image src="/logo/onlyname.png" alt="Kislay Logo Text" width={150} height={40} className="h-6 sm:h-8 md:h-10 w-auto" />
+              </div>
+              <p className="text-gray-600 font-semibold text-xs sm:text-sm leading-relaxed lg:whitespace-nowrap text-center">
+                Naturally Trusted | Deeply Connected | Truly Healthy
+              </p>
             </div>
-            <p className="text-gray-600 font-semibold text-xs sm:text-sm leading-relaxed">
-              Naturally Trusted | Deeply Connected | <br className="hidden sm:block"></br> Truly Healthy
-            </p>
           </div>
 
           {/* Contact Details Section */}
-          <div className="space-y-2 sm:space-y-4">
+          <div className="space-y-2 sm:space-y-4 lg:col-span-3 lg:pl-4 xl:pl-8">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 uppercase tracking-wide">Contact Details</h3>
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-start space-x-2 sm:space-x-3">
@@ -41,7 +44,7 @@ export default function Footer() {
           </div>
 
           {/* Our Company Section */}
-          <div className="space-y-2 sm:space-y-4">
+          <div className="space-y-2 sm:space-y-4 lg:col-span-2 lg:justify-self-center">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 uppercase tracking-wide">Our Company</h3>
             <ul className="space-y-1 sm:space-y-2">
               <li>
@@ -73,7 +76,7 @@ export default function Footer() {
           </div>
 
           {/* Newsletter and Social Section */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-4 sm:space-y-6 lg:col-span-3">
             {/* Newsletter */}
             <div className="space-y-2 sm:space-y-4">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 uppercase tracking-wide">Our Newsletter</h3>

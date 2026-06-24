@@ -8,7 +8,7 @@ import type { TouchEvent } from 'react';
 import CheckoutModal from '@/components/CheckoutModal';
 import EnquireNowModal from '@/components/EnquireNowModal';
 import ProductReviews from '@/components/ProductReviews';
-import { MessageSquare, ShoppingCart } from 'lucide-react';
+import { MessageSquare, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/store/slices/cartSlice';
 import { toast } from 'react-toastify';
@@ -32,12 +32,6 @@ const trustItems = [
   { icon: '0️⃣', text: 'Zero Calories · Zero Carbs' },
 ];
 
-const socialProofStats = [
-  { value: '1k+', label: 'Happy Customers' },
-  { value: '5.0★', label: 'Average Rating' },
-  { value: '300x', label: 'Sweeter Than Sugar' },
-];
-
 // ingredients array is now computed inside ProductDetailClient based on the product
 
 const audienceChecklist = [
@@ -59,7 +53,7 @@ function formatPrice(price: number) {
   return new Intl.NumberFormat('en-IN').format(price);
 }
 
-export default function ProductDetailClient({ product }: { product: any }) {
+export default function ProductDetailClient({ product, reviewStats }: { product: any, reviewStats?: { averageRating: number; totalReviews: number } }) {
   const router = useRouter();
 
   const productNameLower = product?.name?.toLowerCase() || '';
@@ -73,13 +67,13 @@ export default function ProductDetailClient({ product }: { product: any }) {
     thirdIngredient = {
       icon: '❄️',
       name: 'Erythritol',
-      benefit: 'A natural sugar alcohol that provides bulk and sweetness without calories',
+      benefit: 'A naturally sourced sugar substitute to provide bulk and sweetness without any calories',
     };
   } else if (productNameLower.includes('allulose')) {
     thirdIngredient = {
       icon: '🍯',
       name: 'Allulose',
-      benefit: 'A rare sugar that tastes like sugar but has almost no calories',
+      benefit: 'A rare sugar found in figs that tastes like sugar but has almost no calories',
     };
   }
 
@@ -150,6 +144,17 @@ export default function ProductDetailClient({ product }: { product: any }) {
   const PRODUCT_TAGLINE = product.tagline || 'Pure Monk Fruit Sweetener — Zero Calories, Zero Guilt';
   const PRODUCT_ID = product.id;
 
+  const averageRating = reviewStats?.averageRating || 0;
+  const totalReviews = reviewStats?.totalReviews || 0;
+  const hasReviews = totalReviews > 0;
+  const formattedRating = averageRating.toFixed(1);
+
+  const dynamicSocialProofStats = [
+    { value: '1k+', label: 'Happy Customers' },
+    { value: hasReviews ? `${formattedRating}★` : 'New', label: 'Average Rating' },
+    { value: '300x', label: 'Sweeter Than Sugar' },
+  ];
+
   // 2. Dynamic variants mapping
   const mappedVariants: Variant[] = (product.variants || []).map((v: any, index: number) => {
     let label = 'Base Price';
@@ -168,6 +173,12 @@ export default function ProductDetailClient({ product }: { product: any }) {
     } else if (v.size.toLowerCase().includes('10ml')) {
       label = 'Base Price';
       name = '10ml Single';
+    } else if (v.size.toLowerCase().includes('200g')) {
+      label = 'Most Popular';
+      name = v.size;
+    } else if (v.size.toLowerCase().includes('400g')) {
+      label = 'Longer Lasting';
+      name = v.size;
     } else {
       // Fallbacks for other dynamic products
       if (index === 0) label = 'Base Price';
@@ -249,15 +260,23 @@ export default function ProductDetailClient({ product }: { product: any }) {
       } else if (sizeId.includes('30ml')) {
         list = list.filter(img => img !== '/sweetener-drops/10ml.png');
       } else if (sizeId.toLowerCase().includes('200g')) {
-        list = list.filter(img => 
-          img !== '/erythritol/400g.png' && 
-          img !== '/allulose/400g.png'
-        );
+        list = list.filter(img => {
+          if (img === '/erythritol/400g.png' || img === '/allulose/400g.png') return false;
+          // Hide 2.png for allulose as 200g2.png is used instead
+          if (img === '/allulose/2.png') return false;
+          // Hide 400g2.png for erythritol as it is the 400g specific backside
+          if (img === '/erythritol/400g2.png') return false;
+          return true;
+        });
       } else if (sizeId.toLowerCase().includes('400g')) {
-        list = list.filter(img => 
-          img !== '/erythritol/1.png' && 
-          img !== '/allulose/1.png'
-        );
+        list = list.filter(img => {
+          if (img === '/erythritol/1.png' || img === '/allulose/1.png') return false;
+          // Hide 200g specific images for any product
+          if (img.includes('200g')) return false;
+          // Hide 2.png for erythritol as 400g2.png is used instead
+          if (img === '/erythritol/2.png') return false;
+          return true;
+        });
       }
     }
 
@@ -277,6 +296,14 @@ export default function ProductDetailClient({ product }: { product: any }) {
   const reviewsRef = useRef<HTMLElement | null>(null);
   const trustTickerRef = useRef<HTMLDivElement | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const thumbnailContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollThumbnails = (direction: 'left' | 'right') => {
+    if (thumbnailContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -150 : 150;
+      thumbnailContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const target = mainCtaRef.current;
@@ -411,7 +438,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
       {/* Main Product Section */}
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-6 md:grid-cols-[minmax(0,1fr)_minmax(420px,0.86fr)] md:px-6 md:py-12">
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           <div
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
@@ -427,19 +454,33 @@ export default function ProductDetailClient({ product }: { product: any }) {
             />
           </div>
 
-          <div className="grid grid-cols-5 gap-2 md:gap-3">
-            {productImages.map((image, index) => (
-              <button
-                key={image}
-                type="button"
-                onClick={() => setSelectedImage(index)}
-                className={`relative aspect-square overflow-hidden rounded-[12px] border bg-white transition-colors duration-200 ease-in-out ${
-                  selectedImage === index
-                    ? '${t.borderMain}'
-                    : '${t.borderLight} hover:${t.borderMain}'
-                }`}
-                aria-label={`View product image ${index + 1}`}
-              >
+          <div className="relative group w-full">
+            {/* Left Navigation (Desktop) */}
+            <button
+              onClick={() => scrollThumbnails('left')}
+              className={`absolute -left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md border ${t.borderLight} text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity`}
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+
+            {/* Carousel Container */}
+            <div 
+              ref={thumbnailContainerRef}
+              className="flex w-full overflow-x-auto snap-x snap-mandatory gap-2 md:gap-3 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            >
+              {productImages.map((image, index) => (
+                <button
+                  key={image}
+                  type="button"
+                  onClick={() => setSelectedImage(index)}
+                  className={`relative flex-none w-[72px] sm:w-[84px] md:w-[96px] snap-center shrink-0 aspect-square overflow-hidden rounded-[12px] border bg-white transition-colors duration-200 ease-in-out ${
+                    selectedImage === index
+                      ? '${t.borderMain}'
+                      : '${t.borderLight} hover:${t.borderMain}'
+                  }`}
+                  aria-label={`View product image ${index + 1}`}
+                >
                 <Image
                   src={image}
                   alt={`${PRODUCT_NAME} thumbnail ${index + 1}`}
@@ -449,6 +490,16 @@ export default function ProductDetailClient({ product }: { product: any }) {
                 />
               </button>
             ))}
+            </div>
+
+            {/* Right Navigation (Desktop) */}
+            <button
+              onClick={() => scrollThumbnails('right')}
+              className={`absolute -right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md border ${t.borderLight} text-gray-600 hover:text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity`}
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
 
@@ -472,8 +523,14 @@ export default function ProductDetailClient({ product }: { product: any }) {
             onClick={handleReviewsClick}
             className={`mt-4 flex items-center gap-2 text-sm font-normal ${t.textMain} transition-colors duration-200 ease-in-out ${t.textHover}`}
           >
-            <span className="text-[#c9962a]">★★★★★</span>
-            <span>5.0 · 24 reviews</span>
+            <span className="text-[#c9962a]">
+              {hasReviews ? '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating)) : '★★★★★'}
+            </span>
+            <span>
+              {hasReviews 
+                ? `${formattedRating} · ${totalReviews} review${totalReviews === 1 ? '' : 's'}` 
+                : 'No reviews yet - Be the first!'}
+            </span>
           </button>
 
           <div className="mt-5 flex flex-wrap items-end gap-3">
@@ -502,7 +559,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
                     type="button"
                     onClick={() => setSelectedVariant(variant)}
                     className={`relative flex min-h-[120px] sm:min-h-[150px] flex-col justify-between rounded-[12px] border bg-white p-3 sm:p-4 text-left transition-colors duration-200 ease-in-out ${
-                      isSelected ? '${t.borderMain} ${t.shadow}' : '${t.borderLight} hover:${t.borderMain}'
+                      isSelected ? `${t.borderMain} ${t.shadow}` : `${t.borderLight} hover:${t.borderMain}`
                     }`}
                   >
                     <div>
@@ -511,7 +568,9 @@ export default function ProductDetailClient({ product }: { product: any }) {
                           className={`rounded-[8px] px-2 py-1 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide leading-none ${
                             variant.label === 'Most Popular'
                               ? 'bg-[#fff7e6] text-[#c9962a]'
-                              : '${t.bgLight} ${t.textMain}'
+                              : variant.label === 'Longer Lasting'
+                              ? 'bg-[#e0e7ff] text-[#4338ca]'
+                              : `${t.bgLight} ${t.textMain}`
                           }`}
                         >
                           {variant.label}
@@ -601,7 +660,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
 
       {/* Social Proof Bar */}
       <section className="mx-auto grid max-w-7xl gap-3 px-4 pb-6 md:grid-cols-3 md:px-6 md:pb-12">
-        {socialProofStats.map((stat) => (
+        {dynamicSocialProofStats.map((stat) => (
           <div key={stat.label} className={`rounded-[12px] ${t.bgLight} p-5 text-center`}>
             <p className={`text-center text-3xl font-semibold ${t.textMain} md:text-4xl`}>
               {stat.value}
@@ -672,7 +731,7 @@ export default function ProductDetailClient({ product }: { product: any }) {
                   <span
                     key={index}
                     className={`aspect-square rounded-full border ${
-                      index < 9 ? '${t.borderMain} ${t.bgMain}' : '${t.borderMain} bg-white'
+                      index < 9 ? `${t.borderMain} ${t.bgMain}` : `${t.borderMain} bg-white`
                     }`}
                   />
                 ))}
