@@ -61,6 +61,7 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
     icon: '✨',
     name: 'Vitamin C',
     benefit: 'The active compound responsible for longer shelf life',
+    image: '/ingredientcards/vitamin_c.png'
   };
 
   if (productNameLower.includes('erythritol')) {
@@ -68,12 +69,14 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
       icon: '❄️',
       name: 'Erythritol',
       benefit: 'A naturally sourced sugar substitute to provide bulk and sweetness without any calories',
+      image: '/ingredientcards/erythritol.png'
     };
   } else if (productNameLower.includes('allulose')) {
     thirdIngredient = {
       icon: '🍯',
       name: 'Allulose',
       benefit: 'A rare sugar found in figs that tastes like sugar but has almost no calories',
+      image: '/ingredientcards/allulose.png'
     };
   }
 
@@ -82,14 +85,20 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
       icon: '🍈',
       name: 'Monk Fruit Extract',
       benefit: 'The natural sweetness source, 0 glycemic index',
+      image: '/ingredientcards/monk_fruit.png'
     },
-    {
+  ];
+
+  if (!productNameLower.includes('erythritol') && !productNameLower.includes('allulose')) {
+    ingredients.push({
       icon: '💧',
       name: 'Purified Water',
       benefit: 'Clean base, no fillers, no additives',
-    },
-    thirdIngredient,
-  ];
+      image: '/ingredientcards/water.png'
+    });
+  }
+
+  ingredients.push(thirdIngredient);
 
   // --- DYNAMIC THEME SETUP ---
   const themeColor = product.theme_color || 'green'; // Fetch from DB!
@@ -676,14 +685,22 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
           <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
             What&apos;s Inside?
           </h2>
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
+          <div className={`mt-5 grid gap-4 ${ingredients.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
             {ingredients.map((ingredient) => (
-              <div key={ingredient.name} className="rounded-[12px] bg-white p-5">
-                <div className="text-[40px] leading-none">{ingredient.icon}</div>
-                <h3 className="mt-4 text-lg font-semibold text-[#1a1a1a]">{ingredient.name}</h3>
-                <p className="mt-2 text-left text-sm font-normal text-[#6b7280]">
-                  {ingredient.benefit}
-                </p>
+              <div key={ingredient.name} className="flex flex-row overflow-hidden rounded-[12px] bg-white">
+                <div className="flex w-1/2 flex-col justify-center p-5 pr-4">
+                  <h3 className="text-lg font-semibold text-[#1a1a1a]">{ingredient.name}</h3>
+                  <p className="mt-2 text-left text-sm font-normal text-[#6b7280]">
+                    {ingredient.benefit}
+                  </p>
+                </div>
+                <div className="relative flex w-1/2 min-h-[180px] items-center justify-center bg-gray-100 border-l border-gray-200 overflow-hidden">
+                  {ingredient.image ? (
+                    <Image src={ingredient.image} alt={ingredient.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
+                  ) : (
+                    <span className="text-center text-xs text-gray-400">Image Placeholder</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>
