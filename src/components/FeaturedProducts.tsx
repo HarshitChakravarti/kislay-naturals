@@ -2,6 +2,7 @@
 
 import { Product } from "@/types"
 import ProductCard from './ProductCard'
+import ProductCarousel from './ProductCarousel'
 
 interface FeaturedProductsProps {
   products: Product[];
@@ -19,14 +20,14 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       <div className="relative bg-green-700 text-white py-8 md:py-12 w-full overflow-hidden">
         {/* Gradient shadow at the bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0"></div>
-        
+
         {/* Content layer */}
         <div className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h2 className={`text-3xl md:text-5xl font-semibold mb-4 font-heading`}>
                 <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
-                  CHECK OUT OUR SWEET FAVOURITE!
+                  CHECK OUT OUR SWEET FAVOURITES!
                 </span>
                 {' \u{1F970}'}
               </h2>
@@ -38,15 +39,11 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
           </div>
         </div>
       </div>
-      
+
       <div className="bg-gray-50">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-          {/* Products - Grid Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} layout="grid" />
-            ))}
-          </div>
+          {/* Products - Carousel Layout */}
+          <ProductCarousel products={products} />
         </div>
       </div>
     </section>

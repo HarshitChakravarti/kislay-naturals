@@ -14,6 +14,8 @@ import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 import SessionManager from '@/components/SessionManager';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { Analytics } from "@vercel/analytics/next";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -112,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ReduxProvider>
                 {/* <DiwaliBanner /> */}
                 <Navbar />
+                <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} />
                 {children}
                 <Footer />
                 <AdminAccessDeniedWrapper />

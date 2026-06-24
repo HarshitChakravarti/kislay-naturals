@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const body: OrderDetails = await request.json();
     console.log(' Request body received:', JSON.stringify(body, null, 2));
 
-    if (!body || !body.user || !body.product || !body.quantity || !body.totalAmount || !body.shippingAddress) {
+    if (!body || !body.user || !body.totalAmount || !body.shippingAddress || (!body.product && !body.cartItems)) {
       console.log(' Invalid payload - missing required fields');
       return NextResponse.json({ success: false, message: 'Invalid order payload.' }, { status: 400 });
     }
@@ -29,7 +29,12 @@ export async function POST(request: NextRequest) {
     const payload = body;
 
     // Calculate pricing with coupon discount
-    const itemsPrice = payload.product.price * payload.quantity;
+    let itemsPrice = 0;
+    if (payload.cartItems && payload.cartItems.length > 0) {
+      itemsPrice = payload.cartItems.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+    } else if (payload.product && payload.quantity) {
+      itemsPrice = payload.product.price * payload.quantity;
+    }
     const originalPrice = payload.originalPrice || itemsPrice;
     const discountedPrice = payload.discountedPrice || itemsPrice;
     const couponDiscount = payload.couponDiscount || 0;
@@ -41,10 +46,10 @@ export async function POST(request: NextRequest) {
       user_name: payload.user.name,
       user_email: payload.user.email,
       user_mobile: payload.user.mobile,
-      product_id: payload.product.id,
-      product_name: payload.product.name,
-      unit_price: payload.product.price,
-      quantity: payload.quantity,
+      product_id: payload.product ? payload.product.id : payload.cartItems?.[0]?.product || 'multi-item',
+      product_name: payload.product ? payload.product.name : 'Multi-item Order',
+      unit_price: payload.product ? payload.product.price : 0,
+      quantity: payload.quantity || payload.cartItems?.reduce((acc: number, item: any) => acc + item.quantity, 0) || 1,
       total_amount: totalPrice,
       total_price: totalPrice, // Add the missing total_price field that the database expects
       items_price: itemsPrice,
@@ -78,20 +83,34 @@ export async function POST(request: NextRequest) {
     console.log(' Order created successfully:', orderData);
 
     // Insert into order_items table
-    const paidOrderItem = {
-      order_id: orderData.id,
-      product_id: payload.product.id,
-      name: payload.product.name,
-      image: payload.product.image || null,
-      price: payload.product.price,
-      quantity: payload.quantity,
-      variant_size: (payload.product as any).variantSize || null, // Store variant size
-      description: payload.product.description || null,
-      category: payload.product.category || null,
-      sku: payload.product.sku || null
-    };
-
-    const orderItemsToInsert = [paidOrderItem];
+    let orderItemsToInsert: any[] = [];
+    if (payload.cartItems && payload.cartItems.length > 0) {
+      orderItemsToInsert = payload.cartItems.map((item: any) => ({
+        order_id: orderData.id,
+        product_id: item.product,
+        name: item.name,
+        image: item.image || null,
+        price: item.price,
+        quantity: item.quantity,
+        variant_size: item.variantSize || null,
+        description: null,
+        category: null,
+        sku: null
+      }));
+    } else if (payload.product) {
+      orderItemsToInsert = [{
+        order_id: orderData.id,
+        product_id: payload.product.id,
+        name: payload.product.name,
+        image: payload.product.image || null,
+        price: payload.product.price,
+        quantity: payload.quantity || 1,
+        variant_size: (payload.product as any).variantSize || null,
+        description: payload.product.description || null,
+        category: payload.product.category || null,
+        sku: payload.product.sku || null
+      }];
+    }
 
     console.log('📦 Attempting to insert order items:', JSON.stringify(orderItemsToInsert, null, 2));
     console.log('💰 Coupon details - Code:', payload.couponCode, 'Discount:', payload.couponDiscount, 'Type:', payload.couponCode === 'SPECIAL' ? 'fixed' : 'percentage');

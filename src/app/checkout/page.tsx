@@ -9,6 +9,8 @@ import Image from 'next/image';
 
 import { Product } from '@/types';
 import { findProductVariant, getVariantCouponPrice, normalizeProductVariants } from '@/lib/productVariants';
+import { useSelector } from 'react-redux';
+import { selectCartItems, selectCartSubtotal } from '@/store/slices/cartSlice';
 
 interface CheckoutFormData {
   name: string;
@@ -103,6 +105,9 @@ export default function CheckoutPage() {
   const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
   const [deliveryEstimate, setDeliveryEstimate] = useState<{ message: string; color: string } | null>(null);
   const [isCheckingPincode, setIsCheckingPincode] = useState(false);
+  const cartItems = useSelector(selectCartItems);
+  const cartSubtotal = useSelector(selectCartSubtotal);
+  const isCartCheckout = searchParams.get('fromCart') === 'true';
 
   // Get product data from URL params
   useEffect(() => {
@@ -127,8 +132,11 @@ export default function CheckoutPage() {
       });
       setQuantity(parseInt(productQuantity || '1'));
       setVariantSize(productVariantSize || '');
+    } else if (searchParams.get('fromCart') === 'true') {
+      // Allow checkout without URL product params if it's from the cart
+      setProduct(null);
     } else {
-      // Redirect back if no product data
+      // Redirect back if no product data and not from cart
       router.push('/products');
     }
   }, [searchParams, router]);
@@ -226,9 +234,11 @@ export default function CheckoutPage() {
     if (!formData.address.state) newErrors.state = 'State is required';
     if (!formData.address.zip) newErrors.zip = 'ZIP code is required';
     
-    // Quantity validation
-    if (quantity < 1) newErrors.quantity = 'Quantity must be at least 1';
-    if (quantity > 100) newErrors.quantity = 'Maximum quantity is 100';
+    // Quantity validation (only if single product)
+    if (!isCartCheckout) {
+      if (quantity < 1) newErrors.quantity = 'Quantity must be at least 1';
+      if (quantity > 100) newErrors.quantity = 'Maximum quantity is 100';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -297,7 +307,7 @@ export default function CheckoutPage() {
   };
 
   const handlePayment = async () => {
-    if (!validateForm() || !product) {
+    if (!validateForm() || (!product && !isCartCheckout)) {
       setIsProcessingPayment(false);
       return;
     }
@@ -318,11 +328,13 @@ export default function CheckoutPage() {
             email: formData.email,
             mobile: formData.mobile
           },
-          product: {
-            ...product,
-            variantSize: variantSize // Include variant size in product data
-          },
-          quantity: quantity,
+          ...(isCartCheckout ? { cartItems } : {
+            product: {
+              ...product,
+              variantSize: variantSize // Include variant size in product data
+            },
+            quantity: quantity,
+          }),
           totalAmount: finalTotal, // Use final total with coupon discount
           originalPrice: originalPrice,
           discountedPrice: discountedPrice,
@@ -419,7 +431,7 @@ export default function CheckoutPage() {
         amount: razorpayResult.data.amount,
         currency: razorpayResult.data.currency,
         name: 'Kislay Naturals',
-        description: `Payment for ${product.name}`,
+        description: `Payment for ${isCartCheckout ? 'Multiple Items' : product?.name}`,
         order_id: razorpayResult.data.id,
         handler: async function (response: any) {
           console.log('Payment successful:', response);
@@ -597,12 +609,25 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!product) {
+  if (!product && !isCartCheckout) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading checkout...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isCartCheckout && (!cartItems || cartItems.length === 0)) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Your cart is empty.</p>
+          <Link href="/products" className="text-green-600 font-semibold hover:underline">
+            Go back to products
+          </Link>
         </div>
       </div>
     );
@@ -629,6 +654,11 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
+    // Disable coupons for multi-product cart checkout for now to prevent issues
+    if (isCartCheckout) {
+       return { valid: false, discount: 0, type: 'none' };
+    }
+
     // Only allow coupons for Kislay Monk Fruit Sweetener Drops
     if (product?.id !== 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8') {
       return { valid: false, discount: 0, type: 'none' };
@@ -682,16 +712,24 @@ export default function CheckoutPage() {
     setCouponError('');
   };
 
-  const selectedVariant = findProductVariant(variantSize, product.variants);
+  const selectedVariant = product ? findProductVariant(variantSize, product.variants) : null;
 
   // Determine original MRP per unit based on selected variant or product data
-  const originalPricePerUnit =
-    selectedVariant?.originalPrice ??
-    product.originalPrice ??
-    399;
+  let originalPrice = 0;
+  let discountedPrice = 0;
+  let totalItemsCount = 0;
 
-  const originalPrice = originalPricePerUnit * quantity; // Original MRP total
-  const discountedPrice = product.price * quantity; // Price after Kislay Naturals discount (before coupon)
+  if (isCartCheckout) {
+    originalPrice = cartItems.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+    discountedPrice = cartSubtotal;
+    totalItemsCount = cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
+  } else if (product) {
+    const originalPricePerUnit = selectedVariant?.originalPrice ?? product.originalPrice ?? 399;
+    originalPrice = originalPricePerUnit * quantity;
+    discountedPrice = product.price * quantity;
+    totalItemsCount = quantity;
+  }
+  
   const kislayDiscount = Math.max(0, originalPrice - discountedPrice); // Base discount provided by us
   
   // Calculate final total based on coupon type
@@ -699,16 +737,16 @@ export default function CheckoutPage() {
   let couponDiscount: number;
   
   if (couponApplied && couponType === 'special') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'special');
-    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'special');
+    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
     couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'holi') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'holi');
-    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'holi');
+    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
     couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'sweetsmart') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant, 'sweetsmart');
-    finalTotal = (discountedPricePerUnit ?? product.price) * quantity;
+    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'sweetsmart');
+    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
     couponDiscount = discountedPrice - finalTotal;
   } else if (couponApplied && couponType === 'percentage') {
     // Percentage-based coupon
@@ -968,69 +1006,100 @@ export default function CheckoutPage() {
                 <ShoppingCart className="h-5 w-5 mr-2 text-green-600" />
                 Order Summary
                 <span className="ml-2 text-sm font-normal text-gray-500">
-                  ({quantity} item{quantity !== 1 ? 's' : ''})
+                  ({totalItemsCount} item{totalItemsCount !== 1 ? 's' : ''})
                 </span>
               </h2>
 
               {/* Product Details */}
-              <div className="flex items-start space-x-4 mb-6">
-                <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
-                  <Image
-                    src={product.image || selectedVariant?.image || "/sweetener-drops/10ml.png"}
-                    alt={product.name}
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-gray-900 text-sm leading-tight">{product.name}</h3>
-                  
-                  {/* Variant Size Display */}
-                  {variantSize && (
-                    <div className="mt-2">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        {variantSize}
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* Quantity Selector */}
-                  <div className="mt-3">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-sm text-gray-500">Quantity:</span>
-                      <div className={`flex items-center border rounded-lg ${
-                        errors.quantity ? 'border-red-500' : 'border-gray-300'
-                      }`}>
-                        <button
-                          onClick={() => handleQuantityChange(Math.max(1, quantity - 1))}
-                          className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={quantity <= 1}
-                        >
-                          <Minus className="h-4 w-4 text-gray-600" />
-                        </button>
-                        <motion.span 
-                          key={quantity}
-                          initial={{ scale: 1.1 }}
-                          animate={{ scale: 1 }}
-                          className="px-4 py-2 text-sm font-medium text-gray-900 min-w-[3rem] text-center"
-                        >
-                          {quantity}
-                        </motion.span>
-                        <button
-                          onClick={() => handleQuantityChange(Math.min(100, quantity + 1))}
-                          className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                          disabled={quantity >= 100}
-                        >
-                          <Plus className="h-4 w-4 text-gray-600" />
-                        </button>
+              {isCartCheckout ? (
+                <div className="space-y-4 mb-6">
+                  {cartItems.map((item: any, idx: number) => (
+                    <div key={idx} className="flex items-start space-x-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                      <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50 border border-gray-100">
+                        <Image
+                          src={item.image || "/sweetener-drops/10ml.png"}
+                          alt={item.name}
+                          fill
+                          className="object-contain p-1"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-gray-900 text-sm leading-tight truncate">{item.name}</h3>
+                        {item.variantSize && (
+                          <div className="mt-1">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">
+                              {item.variantSize}
+                            </span>
+                          </div>
+                        )}
+                        <div className="mt-1 text-xs text-gray-500 flex justify-between">
+                          <span>Qty: {item.quantity}</span>
+                          <span className="font-medium text-green-700">₹{(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
                       </div>
                     </div>
-                    {errors.quantity && (
-                      <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-start space-x-4 mb-6">
+                  <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
+                    <Image
+                      src={product?.image || selectedVariant?.image || "/sweetener-drops/10ml.png"}
+                      alt={product?.name || 'Product'}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-gray-900 text-sm leading-tight">{product?.name}</h3>
+                    
+                    {/* Variant Size Display */}
+                    {variantSize && (
+                      <div className="mt-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {variantSize}
+                        </span>
+                      </div>
                     )}
+                    
+                    {/* Quantity Selector */}
+                    <div className="mt-3">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm text-gray-500">Quantity:</span>
+                        <div className={`flex items-center border rounded-lg ${
+                          errors.quantity ? 'border-red-500' : 'border-gray-300'
+                        }`}>
+                          <button
+                            onClick={() => handleQuantityChange(Math.max(1, quantity - 1))}
+                            className="p-2 hover:bg-gray-100 transition-colors rounded-l-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={quantity <= 1}
+                          >
+                            <Minus className="h-4 w-4 text-gray-600" />
+                          </button>
+                          <motion.span 
+                            key={quantity}
+                            initial={{ scale: 1.1 }}
+                            animate={{ scale: 1 }}
+                            className="px-4 py-2 text-sm font-medium text-gray-900 min-w-[3rem] text-center"
+                          >
+                            {quantity}
+                          </motion.span>
+                          <button
+                            onClick={() => handleQuantityChange(Math.min(100, quantity + 1))}
+                            className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={quantity >= 100}
+                          >
+                            <Plus className="h-4 w-4 text-gray-600" />
+                          </button>
+                        </div>
+                      </div>
+                      {errors.quantity && (
+                        <p className="text-red-500 text-xs mt-1">{errors.quantity}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Coupon Code Section */}
               <div className="mb-6">

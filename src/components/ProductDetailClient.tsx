@@ -8,7 +8,10 @@ import type { TouchEvent } from 'react';
 import CheckoutModal from '@/components/CheckoutModal';
 import EnquireNowModal from '@/components/EnquireNowModal';
 import ProductReviews from '@/components/ProductReviews';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, ShoppingCart } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/store/slices/cartSlice';
+import { toast } from 'react-toastify';
 
 type Variant = {
   id: string;
@@ -202,6 +205,19 @@ export default function ProductDetailClient({ product }: { product: any }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState<Variant>(defaultSelected);
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({
+      product: product.id,
+      name: product.name,
+      price: selectedVariant.price,
+      image: product.image,
+      variantSize: selectedVariant.id,
+      quantity,
+    }));
+    toast.success(`${product.name} added to cart!`);
+  };
 
   // Reset selected image to 0 when variant changes
   useEffect(() => {
@@ -348,14 +364,24 @@ export default function ProductDetailClient({ product }: { product: any }) {
               ₹{formatPrice(selectedVariant.price * quantity)}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleBuyNow}
-            className={`flex h-[52px] w-full items-center justify-center rounded-[50px] ${t.bgMain} px-4 text-[15px] font-bold text-white shadow-md transition-all duration-200 ease-in-out ${t.bgHover} active:scale-[0.98]`}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
-            Buy Now
-          </button>
+          <div className="flex w-full gap-2">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className={`flex h-[52px] flex-1 items-center justify-center rounded-[50px] border-2 ${t.borderMain} bg-white px-2 text-[14px] font-bold ${t.textMain} shadow-sm transition-all duration-200 ease-in-out hover:${t.bgLight} active:scale-[0.98]`}
+            >
+              <ShoppingCart className="mr-1.5 h-4 w-4" />
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className={`flex h-[52px] flex-1 items-center justify-center rounded-[50px] ${t.bgMain} px-2 text-[14px] font-bold text-white shadow-md transition-all duration-200 ease-in-out ${t.bgHover} active:scale-[0.98]`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
 
@@ -544,14 +570,24 @@ export default function ProductDetailClient({ product }: { product: any }) {
             </div>
           </div>
 
-          <button
-            ref={mainCtaRef}
-            type="button"
-            onClick={handleBuyNow}
-            className={`mt-5 flex h-[52px] w-full items-center justify-center rounded-[50px] ${t.bgMain} text-base font-semibold text-white transition-colors duration-200 ease-in-out ${t.bgHover}`}
-          >
-            ⚡ Buy Now
-          </button>
+          <div className="mt-5 flex w-full gap-3">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className={`flex h-[52px] flex-1 items-center justify-center rounded-[50px] border-2 ${t.borderMain} bg-white text-base font-semibold ${t.textMain} transition-colors duration-200 ease-in-out hover:${t.bgLight}`}
+            >
+              <ShoppingCart className="mr-2 h-5 w-5" />
+              Add to Cart
+            </button>
+            <button
+              ref={mainCtaRef}
+              type="button"
+              onClick={handleBuyNow}
+              className={`flex h-[52px] flex-1 items-center justify-center rounded-[50px] ${t.bgMain} text-base font-semibold text-white transition-colors duration-200 ease-in-out ${t.bgHover}`}
+            >
+              ⚡ Buy Now
+            </button>
+          </div>
 
           <button
             type="button"

@@ -94,8 +94,9 @@ export type OrderDetails = {
     email: string;
     mobile: string;
   };
-  product: Product; // Use the full Product type
-  quantity: number;
+  product?: Product; // Make optional to support cart checkout
+  cartItems?: any[]; // Allow cart checkout payload
+  quantity?: number; // Make optional
   totalAmount: number;
   originalPrice?: number;
   discountedPrice?: number;

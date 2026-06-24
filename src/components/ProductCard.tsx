@@ -6,6 +6,9 @@ import type { Product } from "@/types";
 import Link from "next/link";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/store/slices/cartSlice';
+import { toast } from 'react-toastify';
 
 interface Review {
   id: string;
@@ -23,6 +26,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, layout = 'horizontal' }: ProductCardProps) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
     totalReviews: 0,
@@ -56,6 +60,25 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
   }, [product.id]);
 
   const productHref = `/products/${product.slug || product.id}`;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    const variantSize = product.variants && product.variants.length > 0 
+      ? product.variants[0].size 
+      : '10ml'; // Default fallback
+
+    dispatch(addToCart({
+      product: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      variantSize,
+      quantity: 1,
+    }));
+    
+    toast.success(`${product.name} added to cart!`);
+  };
 
   return (
     <div
@@ -152,14 +175,14 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
                 <ShoppingCart className="h-4 w-4" />
                 Buy Now
               </Link>
-              <Link
-                href={productHref}
-                onClick={(event) => event.stopPropagation()}
+              <button
+                type="button"
+                onClick={handleAddToCart}
                 className="inline-flex items-center justify-center gap-1 rounded-lg border border-green-600/30 px-3 py-2 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50"
               >
-                Details
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                Add to Cart
+                <ShoppingCart className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
@@ -243,14 +266,14 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
                 <ShoppingCart className="h-4 w-4" />
                 Buy Now
               </Link>
-              <Link
-                href={productHref}
-                onClick={(event) => event.stopPropagation()}
+              <button
+                type="button"
+                onClick={handleAddToCart}
                 className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-green-600 px-5 py-3 text-base font-semibold text-green-600 transition-colors duration-300 hover:bg-green-50"
               >
-                View Details
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+                Add to Cart
+                <ShoppingCart className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>

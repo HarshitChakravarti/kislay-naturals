@@ -7,6 +7,8 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
 import ClientOnly from '@/components/ClientOnly';
+import { useSelector } from 'react-redux';
+import { selectCartItemsCount } from '@/store/slices/cartSlice';
 
 // interface UserData {
 //   _id: string;
@@ -26,6 +28,7 @@ function Header() {
   const { user, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const cartItemsCount = useSelector(selectCartItemsCount);
 
   // Callback to close dropdown
   const closeDropdown = useCallback(() => {
@@ -286,6 +289,15 @@ function Header() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-6">
+            <Link href="/cart" className="relative p-2 text-gray-700 hover:text-green-600 transition-colors">
+              <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
+              {cartItemsCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center min-w-[1.25rem] h-5 text-[10px] font-bold text-white bg-green-600 rounded-full px-1 translate-x-1/4 -translate-y-1/4 border-2 border-white">
+                  {cartItemsCount}
+                </span>
+              )}
+            </Link>
+
             {/* User Account Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button 
