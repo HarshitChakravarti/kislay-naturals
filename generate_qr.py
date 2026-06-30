@@ -3,7 +3,7 @@ from qrcode.image.svg import SvgPathImage
 import xml.etree.ElementTree as ET
 
 # The lab report URL
-url = "https://www.kislaynaturals.com/lab-report"
+url = "https://www.kislaynaturals.com/manufacturer-details"
 
 # Create QR code instance with high quality settings
 qr = qrcode.QRCode(
@@ -67,9 +67,9 @@ ET.register_namespace('', 'http://www.w3.org/2000/svg')
 svg_with_bg = ET.tostring(root, encoding='unicode', method='xml')
 
 # Save the modified SVG
-with open("lab_report_qr.svg", "w") as f:
+with open("manufacturer_details_qr.svg", "w") as f:
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     f.write(svg_with_bg)
 
-print("High-quality SVG QR code with white background generated: lab_report_qr.svg")
+print("High-quality SVG QR code with white background generated: manufacturer_details_qr.svg")
 

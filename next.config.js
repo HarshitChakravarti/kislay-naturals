@@ -24,6 +24,11 @@ const nextConfig = {
         destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf', // The actual file
         permanent: false, // Keep this FALSE so you can change it later!
       },
+      {
+        source: '/manufacturer-details',
+        destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/Batch%20-%20Manufacturer%20Details.pdf',
+        permanent: false,
+      },
     ];
   },
 };
