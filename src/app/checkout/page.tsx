@@ -691,13 +691,12 @@ export default function CheckoutPage() {
     }
 
     const upperCode = code.toUpperCase();
-    
-    if (upperCode === 'SPECIAL' && isDrops) {
+    if (upperCode === 'SPECIAL' && hasDrops) {
       // Special discount: 30ml → ₹699, 10ml packs have fixed bundle prices
       return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
     }
 
-    if (upperCode === 'HOLI26' && isDrops) {
+    if (upperCode === 'HOLI26' && hasDrops) {
       // Holi discount: 10ml → ₹269, 30ml → ₹699
       return { valid: true, discount: 0, type: 'holi' };
     }
@@ -1147,7 +1146,7 @@ export default function CheckoutPage() {
                       className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
                     />
                     <button
-                      onClick={handleApplyCoupon}
+                      onClick={() => handleApplyCoupon()}
                       className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
                     >
                       Apply
