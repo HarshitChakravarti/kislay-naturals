@@ -829,6 +829,7 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
           id: PRODUCT_ID,
           name: PRODUCT_NAME,
           price: selectedVariant.price,
+          originalPrice: selectedVariant.mrp,
           image: productImages[0],
           description: PRODUCT_TAGLINE
         } as any}

@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -8,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { selectCartItems, selectCartSubtotal, addToCart, removeFromCart } from '@/store/slices/cartSlice';
+import { getVariantCouponPrice } from '@/lib/productVariants';
 
 export default function CartPage() {
   const router = useRouter();
@@ -15,6 +18,83 @@ export default function CartPage() {
   
   const cartItems = useSelector(selectCartItems);
   const cartSubtotal = useSelector(selectCartSubtotal);
+
+  const [couponCode, setCouponCode] = useState('');
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState('');
+  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
+
+  const validateCoupon = (code: string) => {
+    let hasDrops = false;
+    let hasErythritol = false;
+    let hasAllulose = false;
+
+    if (!cartItems || cartItems.length === 0) return { valid: false, discount: 0, type: 'none' };
+    cartItems.forEach((item: any) => {
+      const nameLower = item.name?.toLowerCase() || '';
+      if (item.product === 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' || nameLower.includes('drops')) hasDrops = true;
+      if (nameLower.includes('erythritol')) hasErythritol = true;
+      if (nameLower.includes('allulose')) hasAllulose = true;
+    });
+
+    if (!hasDrops && !hasErythritol && !hasAllulose) {
+      return { valid: false, discount: 0, type: 'none' };
+    }
+
+    const upperCode = code.toUpperCase();
+    
+    if (upperCode === 'SPECIAL' && hasDrops) return { valid: true, discount: 0, type: 'special' };
+    if (upperCode === 'HOLI26' && hasDrops) return { valid: true, discount: 0, type: 'holi' };
+    if (upperCode === 'SWEETSMART') return { valid: true, discount: 0, type: 'sweetsmart' };
+
+    return { valid: false, discount: 0, type: 'none' };
+  };
+
+  const handleApplyCoupon = () => {
+    setCouponError('');
+    if (!couponCode.trim()) {
+      setCouponError('Please enter a coupon code');
+      return;
+    }
+
+    const validation = validateCoupon(couponCode.trim());
+    if (validation.valid) {
+      setCouponApplied(true);
+      setCouponType(validation.type as any);
+      setCouponError('');
+    } else {
+      setCouponApplied(false);
+      setCouponType('none');
+      setCouponError('Invalid coupon code');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode('');
+    setCouponApplied(false);
+    setCouponType('none');
+    setCouponError('');
+  };
+
+  let finalTotal: number = cartSubtotal;
+  let couponDiscount: number = 0;
+  
+  if (couponApplied) {
+    let tempFinalTotal = 0;
+    cartItems.forEach((item: any) => {
+      const itemVariant = { size: item.variantSize || '', price: item.price, originalPrice: item.price, unitCount: 1 };
+      const discountedPricePerUnit = getVariantCouponPrice(itemVariant as any, couponType as any, { name: item.name });
+      tempFinalTotal += (discountedPricePerUnit ?? item.price) * item.quantity;
+    });
+    if (couponType === 'percentage') {
+      const totalItemsCount = cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
+      couponDiscount = 30 * totalItemsCount;
+      finalTotal = cartSubtotal - couponDiscount;
+    } else {
+      finalTotal = tempFinalTotal;
+      couponDiscount = cartSubtotal - finalTotal;
+    }
+  }
 
   const handleQuantityChange = (item: any, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -147,11 +227,56 @@ export default function CartPage() {
                 Order Summary
               </h2>
 
+              {/* Coupon Code Section */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">Coupon Code</h3>
+                {!couponApplied ? (
+                  <div className="flex space-x-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                    />
+                    <button
+                      onClick={handleApplyCoupon}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex items-center">
+                      <span className="text-green-600 text-sm font-medium">{couponCode.toUpperCase()}</span>
+                      <span className="ml-2 text-green-600 text-xs">Applied</span>
+                    </div>
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="text-green-600 hover:text-green-700 text-sm font-medium"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                {couponError && (
+                  <p className="text-red-500 text-xs mt-1">{couponError}</p>
+                )}
+              </div>
+
               <div className="space-y-4 text-sm mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal ({cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0)} items)</span>
                   <span className="text-gray-900 font-medium">₹{cartSubtotal.toFixed(2)}</span>
                 </div>
+
+                {couponApplied && couponDiscount > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-green-600">Coupon Discount</span>
+                    <span className="text-green-600 font-medium">-₹{couponDiscount.toFixed(2)}</span>
+                  </div>
+                )}
 
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
@@ -161,14 +286,14 @@ export default function CartPage() {
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between items-end">
                     <span className="text-base font-bold text-gray-900">Total</span>
-                    <span className="text-2xl font-bold text-green-700">₹{cartSubtotal.toFixed(2)}</span>
+                    <span className="text-2xl font-bold text-green-700">₹{finalTotal.toFixed(2)}</span>
                   </div>
                   <p className="text-xs text-gray-500 mt-1 text-right">Inclusive of all taxes</p>
                 </div>
               </div>
 
               <button
-                onClick={() => router.push('/checkout?fromCart=true')}
+                onClick={() => router.push(`/checkout?fromCart=true${couponApplied ? `&coupon=${couponCode}` : ''}`)}
                 className="w-full py-4 px-6 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center"
               >
                 Proceed to Checkout

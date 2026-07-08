@@ -20,7 +20,7 @@ export type VariantCouponType = 'special' | 'holi' | 'sweetsmart';
 const THIRTY_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
   special: 699,
   holi: 699,
-  sweetsmart: 669,
+  sweetsmart: 679,
 };
 
 const TEN_ML_COUPON_PRICE: Record<VariantCouponType, number> = {
@@ -35,8 +35,8 @@ const FIXED_BUNDLE_COUPON_PRICE_BY_TYPE: Partial<Record<VariantCouponType, Recor
     3: 769,
   },
   sweetsmart: {
-    2: 519,
-    3: 769,
+    2: 549,
+    3: 779,
   },
 };
 
@@ -110,13 +110,26 @@ export function getProductGalleryForVariant(variant?: ProductVariant) {
 
 export function getVariantCouponPrice(
   variant: ProductVariant | undefined,
-  couponType: VariantCouponType
+  couponType: VariantCouponType,
+  product?: { name: string }
 ): number | null {
   if (!variant) {
     return null;
   }
 
   const normalizedSize = normalizeVariantKey(variant.size);
+  const productNameLower = product?.name?.toLowerCase() || '';
+
+  if (couponType === 'sweetsmart') {
+    if (productNameLower.includes('erythritol')) {
+      if (normalizedSize === '200gm' || normalizedSize === '200g') return Math.min(variant.price, 299);
+      if (normalizedSize === '400gm' || normalizedSize === '400g') return Math.min(variant.price, 529);
+    }
+    if (productNameLower.includes('allulose')) {
+      if (normalizedSize === '200gm' || normalizedSize === '200g') return Math.min(variant.price, 479);
+      if (normalizedSize === '400gm' || normalizedSize === '400g') return Math.min(variant.price, 879);
+    }
+  }
 
   if (normalizedSize === '30ml') {
     // Never allow coupon pricing to raise the current selling price.

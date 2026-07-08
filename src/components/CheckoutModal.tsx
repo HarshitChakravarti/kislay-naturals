@@ -32,6 +32,10 @@ export default function CheckoutModal({ isOpen, onClose, product, quantity, vari
         params.set('variantSize', variantSize);
       }
       
+      if (product.originalPrice) {
+        params.set('productOriginalPrice', product.originalPrice.toString());
+      }
+      
       router.push(`/checkout?${params.toString()}`);
       onClose(); // Close the modal after redirect
     }

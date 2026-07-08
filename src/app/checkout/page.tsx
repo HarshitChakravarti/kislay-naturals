@@ -118,6 +118,7 @@ export default function CheckoutPage() {
     const productDescription = searchParams.get('productDescription');
     const productQuantity = searchParams.get('quantity');
     const productVariantSize = searchParams.get('variantSize');
+    const productOriginalPrice = searchParams.get('productOriginalPrice');
     const selectedVariant = findProductVariant(productVariantSize || undefined);
 
     if (productId && productName && productPrice && productImage) {
@@ -127,7 +128,7 @@ export default function CheckoutPage() {
         price: parseFloat(productPrice),
         image: productImage,
         description: productDescription || '',
-        originalPrice: selectedVariant?.originalPrice,
+        originalPrice: productOriginalPrice ? parseFloat(productOriginalPrice) : selectedVariant?.originalPrice,
         variants: normalizeProductVariants()
       });
       setQuantity(parseInt(productQuantity || '1'));
@@ -139,7 +140,19 @@ export default function CheckoutPage() {
       // Redirect back if no product data and not from cart
       router.push('/products');
     }
+
+    const initialCoupon = searchParams.get('coupon');
+    if (initialCoupon) {
+      setCouponCode(initialCoupon);
+    }
   }, [searchParams, router]);
+
+  // Auto-apply coupon from URL if present and product/cart is ready
+  useEffect(() => {
+    if (couponCode && !couponApplied && (product || (isCartCheckout && cartItems.length > 0))) {
+      handleApplyCoupon(couponCode);
+    }
+  }, [product, isCartCheckout, cartItems, couponCode, couponApplied]);
 
   // Cleanup timeout and razorpay instance on unmount
   useEffect(() => {
@@ -654,24 +667,37 @@ export default function CheckoutPage() {
 
   // Coupon validation function
   const validateCoupon = (code: string) => {
-    // Disable coupons for multi-product cart checkout for now to prevent issues
+    let hasDrops = false;
+    let hasErythritol = false;
+    let hasAllulose = false;
+
     if (isCartCheckout) {
-       return { valid: false, discount: 0, type: 'none' };
+      if (!cartItems || cartItems.length === 0) return { valid: false, discount: 0, type: 'none' };
+      cartItems.forEach((item: any) => {
+        const nameLower = item.name.toLowerCase();
+        if (item.product === 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' || nameLower.includes('drops')) hasDrops = true;
+        if (nameLower.includes('erythritol')) hasErythritol = true;
+        if (nameLower.includes('allulose')) hasAllulose = true;
+      });
+    } else {
+      const productNameLower = product?.name.toLowerCase() || '';
+      if (product?.id === 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' || productNameLower.includes('drops')) hasDrops = true;
+      if (productNameLower.includes('erythritol')) hasErythritol = true;
+      if (productNameLower.includes('allulose')) hasAllulose = true;
     }
 
-    // Only allow coupons for Kislay Monk Fruit Sweetener Drops
-    if (product?.id !== 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8') {
+    if (!hasDrops && !hasErythritol && !hasAllulose) {
       return { valid: false, discount: 0, type: 'none' };
     }
 
     const upperCode = code.toUpperCase();
     
-    if (upperCode === 'SPECIAL') {
+    if (upperCode === 'SPECIAL' && isDrops) {
       // Special discount: 30ml → ₹699, 10ml packs have fixed bundle prices
       return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
     }
 
-    if (upperCode === 'HOLI26') {
+    if (upperCode === 'HOLI26' && isDrops) {
       // Holi discount: 10ml → ₹269, 30ml → ₹699
       return { valid: true, discount: 0, type: 'holi' };
     }
@@ -685,14 +711,15 @@ export default function CheckoutPage() {
   };
 
   // Apply coupon
-  const handleApplyCoupon = () => {
+  const handleApplyCoupon = (codeToApply?: string) => {
+    const code = typeof codeToApply === 'string' ? codeToApply : couponCode;
     setCouponError('');
-    if (!couponCode.trim()) {
+    if (!code.trim()) {
       setCouponError('Please enter a coupon code');
       return;
     }
 
-    const validation = validateCoupon(couponCode.trim());
+    const validation = validateCoupon(code.trim());
     if (validation.valid) {
       setCouponApplied(true);
       setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none');
@@ -713,6 +740,7 @@ export default function CheckoutPage() {
   };
 
   const selectedVariant = product ? findProductVariant(variantSize, product.variants) : null;
+  const effectiveVariant = selectedVariant || (product && variantSize ? { size: variantSize, price: product.price, originalPrice: product.originalPrice ?? 399, unitCount: 1 } : undefined);
 
   // Determine original MRP per unit based on selected variant or product data
   let originalPrice = 0;
@@ -724,7 +752,7 @@ export default function CheckoutPage() {
     discountedPrice = cartSubtotal;
     totalItemsCount = cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
   } else if (product) {
-    const originalPricePerUnit = selectedVariant?.originalPrice ?? product.originalPrice ?? 399;
+    const originalPricePerUnit = effectiveVariant?.originalPrice ?? product.originalPrice ?? 399;
     originalPrice = originalPricePerUnit * quantity;
     discountedPrice = product.price * quantity;
     totalItemsCount = quantity;
@@ -733,29 +761,34 @@ export default function CheckoutPage() {
   const kislayDiscount = Math.max(0, originalPrice - discountedPrice); // Base discount provided by us
   
   // Calculate final total based on coupon type
-  let finalTotal: number;
-  let couponDiscount: number;
+  let finalTotal: number = discountedPrice;
+  let couponDiscount: number = 0;
   
-  if (couponApplied && couponType === 'special') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'special');
-    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
-    couponDiscount = discountedPrice - finalTotal;
-  } else if (couponApplied && couponType === 'holi') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'holi');
-    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
-    couponDiscount = discountedPrice - finalTotal;
-  } else if (couponApplied && couponType === 'sweetsmart') {
-    const discountedPricePerUnit = getVariantCouponPrice(selectedVariant || undefined, 'sweetsmart');
-    finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
-    couponDiscount = discountedPrice - finalTotal;
-  } else if (couponApplied && couponType === 'percentage') {
-    // Percentage-based coupon
-    couponDiscount = 30 * quantity;
-    finalTotal = discountedPrice - couponDiscount;
-  } else {
-    // No coupon applied
-    couponDiscount = 0;
-    finalTotal = discountedPrice;
+  if (couponApplied) {
+    if (isCartCheckout) {
+      let tempFinalTotal = 0;
+      cartItems.forEach((item: any) => {
+        const itemVariant = { size: item.variantSize || '', price: item.price, originalPrice: item.price, unitCount: 1 };
+        const discountedPricePerUnit = getVariantCouponPrice(itemVariant as any, couponType as any, { name: item.name });
+        tempFinalTotal += (discountedPricePerUnit ?? item.price) * item.quantity;
+      });
+      if (couponType === 'percentage') {
+        couponDiscount = 30 * totalItemsCount;
+        finalTotal = discountedPrice - couponDiscount;
+      } else {
+        finalTotal = tempFinalTotal;
+        couponDiscount = discountedPrice - finalTotal;
+      }
+    } else {
+      if (couponType === 'percentage') {
+        couponDiscount = 30 * quantity;
+        finalTotal = discountedPrice - couponDiscount;
+      } else {
+        const discountedPricePerUnit = getVariantCouponPrice(effectiveVariant || undefined, couponType as any, product || undefined);
+        finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
+        couponDiscount = discountedPrice - finalTotal;
+      }
+    }
   }
 
   return (
