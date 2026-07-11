@@ -16,13 +16,12 @@ const nextConfig = {
   // Explicitly set trailingSlash to false to match sitemap URLs
   // This ensures consistency between sitemap and actual URLs
   trailingSlash: false,
-  // Add any other Next.js config options here
   async redirects() {
     return [
       {
-        source: '/lab-report', // The URL on the box
-        destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/lab-report.pdf', // The actual file
-        permanent: false, // Keep this FALSE so you can change it later!
+        source: '/lab-report',
+        destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/lab-report.pdf',
+        permanent: false,
       },
       {
         source: '/manufacturer-details',
