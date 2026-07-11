@@ -759,7 +759,7 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
             </div>
 
             <a
-              href="https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/labreport.pdf"
+              href="/lab-report"
               target="_blank"
               rel="noopener noreferrer"
               className={`mt-5 inline-flex h-12 items-center rounded-[50px] border ${t.borderMain} px-6 text-sm font-semibold ${t.textMain} transition-colors duration-200 ease-in-out hover:${t.bgLight}`}
