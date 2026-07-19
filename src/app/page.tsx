@@ -19,7 +19,9 @@ export default async function Home() {
     // Ensure originalPrice is set for all products
     if (data) {
       data.forEach(product => {
-        if (!product.originalPrice) {
+        if (product.original_price) {
+          product.originalPrice = product.original_price;
+        } else if (!product.originalPrice) {
           product.originalPrice = 399; // Set default original price
         }
       });
