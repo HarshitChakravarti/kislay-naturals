@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import ClientOnly from '@/components/ClientOnly';
+import { createClient } from '@/utils/supabase/client';
 
 interface LoginFormData {
   emailOrUsername: string;
@@ -22,62 +23,27 @@ interface ValidationErrors {
 }
 
 function LoginForm() {
-  const { login, isLoading, error } = useAuth();
+  const { showToast } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>({
     emailOrUsername: '',
     password: '',
   });
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [showPassword, setShowPassword] = useState(false);
-  const [csrfToken, setCsrfToken] = useState<string>('');
-  const [isLoadingToken, setIsLoadingToken] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Generate CSRF token on component mount
-  useEffect(() => {
-    const generateCSRFToken = async () => {
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'GET',
-          headers: {
-            'x-session-id': 'login-form',
-          },
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        if (data.csrfToken) {
-          setCsrfToken(data.csrfToken);
-          setIsLoadingToken(false);
-        } else {
-          console.error('No CSRF token received from server');
-          setIsLoadingToken(false);
-        }
-      } catch (error) {
-        console.error('Failed to generate CSRF token:', error);
-        setIsLoadingToken(false);
-        // Retry after a short delay
-        setTimeout(() => {
-          generateCSRFToken();
-        }, 2000);
-      }
-    };
-
-    generateCSRFToken();
-  }, []);
+  const supabase = createClient();
 
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
 
-    // Email/Username validation
     if (!formData.emailOrUsername) {
       errors.emailOrUsername = 'Email or username is required';
     }
 
-    // Password validation
     if (!formData.password) {
       errors.password = 'Password is required';
     }
@@ -88,29 +54,32 @@ function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
-    if (!validateForm()) {
-      return;
-    }
-
-    if (!csrfToken) {
-      alert('CSRF token not available. Please refresh the page and try again.');
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
+      setIsLoading(true);
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.emailOrUsername,
+        password: formData.password,
+      });
+
+      if (signInError) throw signInError;
+
+      showToast('Successfully logged in', 'success');
       const callbackUrl = searchParams?.get('callbackUrl') || '/';
-      await login(formData.emailOrUsername, formData.password, callbackUrl);
-    } catch (error) {
-      // Error is handled by the auth context
-      console.error('Login error:', error);
+      router.push(callbackUrl);
+    } catch (err: any) {
+      setError(err.message || 'Failed to login');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleInputChange = (field: keyof LoginFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear validation error for this field when user starts typing
     if (validationErrors[field]) {
       setValidationErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -133,13 +102,13 @@ function LoginForm() {
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="emailOrUsername">Email or Username</Label>
+            <Label htmlFor="emailOrUsername">Email</Label>
             <Input
               id="emailOrUsername"
-              type="text"
+              type="email"
               value={formData.emailOrUsername}
               onChange={(e) => handleInputChange('emailOrUsername', e.target.value)}
-              placeholder="Enter your email or username"
+              placeholder="Enter your email"
               className={validationErrors.emailOrUsername ? 'border-red-500' : ''}
               disabled={isLoading}
             />
@@ -177,17 +146,12 @@ function LoginForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || isLoadingToken || !csrfToken}
+            disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Signing In...
-              </>
-            ) : isLoadingToken ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
               </>
             ) : (
               'Sign In'
@@ -205,4 +169,4 @@ export default function LoginFormWrapper() {
       <LoginForm />
     </ClientOnly>
   );
-} 
+}

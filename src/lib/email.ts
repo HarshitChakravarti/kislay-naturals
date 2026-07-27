@@ -204,7 +204,7 @@ function generateOrderConfirmationEmailHTML(data: OrderConfirmationEmailData): s
     <body>
       <div class="container">
         <div class="logo">
-          <img src="https://kislaynaturals.com/logo.png" alt="Kislay Naturals" />
+          <img src="https://kislaynaturals.com/logo/logonew.png" alt="Kislay Naturals" />
         </div>
         
         <div class="greeting">

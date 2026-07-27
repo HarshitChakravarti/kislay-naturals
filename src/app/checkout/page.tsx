@@ -639,7 +639,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (isCartCheckout && (!cartItems || cartItems.length === 0)) {
+  if (isCartCheckout && (!cartItems || cartItems.length === 0) && !isPaymentCompleted && !isProcessingPayment) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

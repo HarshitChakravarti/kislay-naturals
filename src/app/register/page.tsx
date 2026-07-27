@@ -12,11 +12,11 @@ export default function RegisterPage() {
         <div className="flex justify-center">
           <Link href="/">
             <Image
-              src="/logo-transparent.png"
+              src="/logo/logonew.png"
               alt="Kislay Naturals"
-              width={200}
-              height={72}
-              className="h-16 w-auto"
+              width={300}
+              height={108}
+              className="h-24 w-auto"
             />
           </Link>
         </div>

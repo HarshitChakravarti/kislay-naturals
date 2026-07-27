@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '../supabase'
+import { createClient } from '@/utils/supabase/server'
 
 export interface AuthenticatedRequest extends NextRequest {
   user?: { id: string; email: string | null | undefined; role?: string; [key: string]: unknown }
@@ -7,13 +7,12 @@ export interface AuthenticatedRequest extends NextRequest {
 
 export async function authenticateUser(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token || typeof token !== 'string' || token.trim() === '') return null
+    const supabase = await createClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
+    
+    if (error || !user) return null
 
-    const { data, error } = await supabase.auth.getUser(token)
-    if (error || !data?.user) return null
-
-    return { id: data.user.id, email: data.user.email, role: (data.user.user_metadata as any)?.role }
+    return { id: user.id, email: user.email, role: (user.user_metadata as any)?.role }
   } catch (error) {
     console.error('Authentication error:', error)
     return null
@@ -30,4 +29,4 @@ export function requireAuth(handler: (request: AuthenticatedRequest) => Promise<
     authenticatedRequest.user = user
     return handler(authenticatedRequest)
   }
-} 
+}

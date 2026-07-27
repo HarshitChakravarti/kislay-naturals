@@ -13,9 +13,8 @@ interface AdminLayoutProps {
 }
 
 function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, isLoading, checkAuth, validateAdminAccess, isAdmin, getUserRole, validateServerAuth } = useAuth();
+  const { user, isLoading, isAdmin } = useAuth();
   const router = useRouter();
-  const [isChecking, setIsChecking] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -27,40 +26,17 @@ function AdminLayout({ children }: AdminLayoutProps) {
         return;
       }
       
-      // Enhanced admin role validation
-      const adminValidation = validateAdminAccess();
-      if (!adminValidation.isValid) {
-        console.log(`Admin layout: ${adminValidation.error}`);
+      if (!isAdmin()) {
+        console.log(`Admin layout: Access denied`);
         // Redirect non-admin users to home with error message
         router.push('/?error=admin_access_denied');
         return;
       }
-      
-      // User is admin, allow access
-      console.log('Admin layout: Admin access granted');
-      setIsChecking(false);
     }
-  }, [user, isLoading, router, validateAdminAccess]);
-
-  // Add periodic server-side validation for admin users
-  useEffect(() => {
-    if (user && isAdmin()) {
-      // Force server validation every 2 minutes for admin users
-      const interval = setInterval(async () => {
-        console.log('Admin layout: Periodic server validation');
-        const result = await validateServerAuth();
-        if (!result.success) {
-          console.log('Admin layout: Server validation failed, redirecting to login');
-          router.push('/login?redirect=/admin');
-        }
-      }, 2 * 60 * 1000);
-
-      return () => clearInterval(interval);
-    }
-  }, [user, isAdmin, validateServerAuth, router]);
+  }, [user, isLoading, router, isAdmin]);
 
   // Show loading while checking authentication
-  if (isLoading || isChecking) {
+  if (isLoading || !user || !isAdmin()) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

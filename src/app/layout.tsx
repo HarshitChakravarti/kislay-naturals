@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { AuthProvider } from '@/contexts/AuthContext';
 import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
-import SessionManager from '@/components/SessionManager';
+
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { Analytics } from "@vercel/analytics/next";
 import { ToastContainer } from 'react-toastify';
@@ -118,7 +118,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 {children}
                 <Footer />
                 <AdminAccessDeniedWrapper />
-                <SessionManager />
+
                 <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
               </ReduxProvider>
             </AuthErrorBoundary>

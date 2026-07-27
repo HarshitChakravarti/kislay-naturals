@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import ClientOnly from '@/components/ClientOnly';
+import { createClient } from '@/utils/supabase/client';
 
 interface SignupFormData {
   username: string;
@@ -25,7 +27,8 @@ interface ValidationErrors {
 }
 
 function SignupForm() {
-  const { register, isLoading, error } = useAuth();
+  const { showToast } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState<SignupFormData>({
     username: '',
     email: '',
@@ -35,49 +38,14 @@ function SignupForm() {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [csrfToken, setCsrfToken] = useState<string>('');
-  const [isLoadingToken, setIsLoadingToken] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Generate CSRF token on component mount
-  useEffect(() => {
-    const generateCSRFToken = async () => {
-      try {
-        const response = await fetch('/api/auth/signup', {
-          method: 'GET',
-          headers: {
-            'x-session-id': 'signup-form',
-          },
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        if (data.csrfToken) {
-          setCsrfToken(data.csrfToken);
-          setIsLoadingToken(false);
-        } else {
-          console.error('No CSRF token received from server');
-          setIsLoadingToken(false);
-        }
-      } catch (error) {
-        console.error('Failed to generate CSRF token:', error);
-        setIsLoadingToken(false);
-        // Retry after a short delay
-        setTimeout(() => {
-          generateCSRFToken();
-        }, 2000);
-      }
-    };
-
-    generateCSRFToken();
-  }, []);
+  const supabase = createClient();
 
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
 
-    // Username validation
     if (!formData.username) {
       errors.username = 'Username is required';
     } else if (formData.username.length < 3) {
@@ -88,27 +56,18 @@ function SignupForm() {
       errors.username = 'Username can only contain letters, numbers, and underscores';
     }
 
-    // Email validation
     if (!formData.email) {
       errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Please enter a valid email address';
     }
 
-    // Password validation
     if (!formData.password) {
       errors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       errors.password = 'Password must be at least 8 characters long';
-    } else if (!/(?=.*[a-z])/.test(formData.password)) {
-      errors.password = 'Password must contain at least one lowercase letter';
-    } else if (!/(?=.*[A-Z])/.test(formData.password)) {
-      errors.password = 'Password must contain at least one uppercase letter';
-    } else if (!/(?=.*\d)/.test(formData.password)) {
-      errors.password = 'Password must contain at least one number';
     }
 
-    // Confirm password validation
     if (!formData.confirmPassword) {
       errors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
@@ -121,28 +80,38 @@ function SignupForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
-    if (!validateForm()) {
-      return;
-    }
-
-    if (!csrfToken) {
-      alert('CSRF token not available. Please refresh the page and try again.');
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      await register(formData.username, formData.email, formData.password, csrfToken);
-    } catch (error) {
-      // Error is handled by the auth context
-      console.error('Registration error:', error);
+      setIsLoading(true);
+      
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            username: formData.username,
+            name: formData.username,
+          },
+        },
+      });
+
+      if (signUpError) throw signUpError;
+
+      showToast('Account created successfully!', 'success');
+      router.push('/login?registered=true');
+    } catch (err: any) {
+      setError(err.message || 'Failed to register');
+      console.error('Registration error:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleInputChange = (field: keyof SignupFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear validation error for this field when user starts typing
     if (validationErrors[field]) {
       setValidationErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -251,17 +220,12 @@ function SignupForm() {
           <Button
             type="submit"
             className="w-full"
-            disabled={isLoading || isLoadingToken || !csrfToken}
+            disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Creating Account...
-              </>
-            ) : isLoadingToken ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
               </>
             ) : (
               'Create Account'
@@ -279,4 +243,4 @@ export default function SignupFormWrapper() {
       <SignupForm />
     </ClientOnly>
   );
-} 
+}
