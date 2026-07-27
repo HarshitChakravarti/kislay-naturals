@@ -9,8 +9,8 @@ import Image from 'next/image';
 
 import { Product } from '@/types';
 import { findProductVariant, getVariantCouponPrice, normalizeProductVariants } from '@/lib/productVariants';
-import { useSelector } from 'react-redux';
-import { selectCartItems, selectCartSubtotal } from '@/store/slices/cartSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectCartItems, selectCartSubtotal, clearCart } from '@/store/slices/cartSlice';
 
 interface CheckoutFormData {
   name: string;
@@ -105,6 +105,7 @@ export default function CheckoutPage() {
   const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
   const [deliveryEstimate, setDeliveryEstimate] = useState<{ message: string; color: string } | null>(null);
   const [isCheckingPincode, setIsCheckingPincode] = useState(false);
+  const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const cartSubtotal = useSelector(selectCartSubtotal);
   const isCartCheckout = searchParams.get('fromCart') === 'true';
@@ -359,7 +360,7 @@ export default function CheckoutPage() {
           }
         };
 
-        const createOrderResponse = await fetch('/api/orders/create', {
+        const createOrderResponse = await fetch('/api/orders', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -478,6 +479,11 @@ export default function CheckoutPage() {
             console.log('Payment update result:', updateResult);
 
             if (updateResult.success) {
+              // Clear cart on successful order
+              if (isCartCheckout) {
+                dispatch(clearCart());
+              }
+
               // Add a delay to show loading circle prominently
               setPaymentStep('Order confirmed! Redirecting to success page...');
               await new Promise(resolve => setTimeout(resolve, 2000)); // 2 second delay
