@@ -38,7 +38,7 @@ export default function HomeClient({ products, blogPosts = [] }: HomeClientProps
       icon: 'CheckCircle',
     },
     {
-      title: "FOR ALL AGE GROUP",
+      title: "FOR ALL AGE GROUPS",
       description: "Universal Age Appeal",
       icon: 'Users',
     },
