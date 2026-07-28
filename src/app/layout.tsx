@@ -95,8 +95,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head />
       <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
-        <Suspense fallback={null}>
-          <GoogleAnalytics />
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           <Analytics />
           <AuthProvider>
             <AuthErrorBoundary>
@@ -106,13 +107,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} />
                 {children}
                 <Footer />
-                <AdminAccessDeniedWrapper />
+                
+                <Suspense fallback={null}>
+                  <AdminAccessDeniedWrapper />
+                </Suspense>
 
                 <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
               </ReduxProvider>
             </AuthErrorBoundary>
           </AuthProvider>
-        </Suspense>
       </body>
     </html>
   );
