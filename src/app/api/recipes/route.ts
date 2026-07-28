@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 
 // GET /api/recipes - Get all published recipes
 export async function GET(request: NextRequest) {
+  const supabase = await createClient();
   try {
     const { searchParams } = new URL(request.url);
     const difficulty = searchParams.get('difficulty');
@@ -36,6 +38,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/recipes - Create a new recipe
 export async function POST(request: NextRequest) {
+  const supabase = await createClient();
   try {
     const body = await request.json();
     const {

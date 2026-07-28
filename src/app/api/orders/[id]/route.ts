@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 import { authenticateUser } from '@/lib/middleware/auth';
 
 // Force dynamic rendering for this route
@@ -9,6 +9,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {
@@ -52,6 +53,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {
@@ -128,6 +130,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {

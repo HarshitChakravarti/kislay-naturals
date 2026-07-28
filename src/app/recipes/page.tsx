@@ -4,7 +4,7 @@ import { Clock, Users, ChefHat } from 'lucide-react';
 async function getRecipes() {
   try {
     // Use supabaseAdmin to bypass RLS for server-side rendering
-    const { supabaseAdmin } = await import('@/lib/supabase');
+    const { supabaseAdmin } = await import('@/lib/supabaseAdmin');
     const { data, error } = await supabaseAdmin
       .from('recipes')
       .select('*')

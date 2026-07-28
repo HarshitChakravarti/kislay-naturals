@@ -14,17 +14,10 @@ const rootReducer = {
 export const makeStore = () => {
   return configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        serializableCheck: false,
-      }),
   });
 };
 
-// Create the store instance
-export const store = makeStore();
-
 // Export types
-export type RootState = ReturnType<typeof store.getState>;
 export type AppStore = ReturnType<typeof makeStore>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<AppStore['getState']>;
+export type AppDispatch = AppStore['dispatch'];

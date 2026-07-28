@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 import { authenticateUser } from '@/lib/middleware/auth';
 
 export const dynamic = 'force-dynamic';

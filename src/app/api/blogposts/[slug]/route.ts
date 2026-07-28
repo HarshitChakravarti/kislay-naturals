@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 
 // GET /api/blogposts/[slug] - Get a specific blog post by slug
 export async function GET(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  const supabase = await createClient();
   try {
     const { slug } = params;
 
@@ -42,6 +44,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  const supabase = await createClient();
   try {
     const { slug } = params;
     const body = await request.json();
@@ -73,6 +76,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { slug: string } }
 ) {
+  const supabase = await createClient();
   try {
     const { slug } = params;
 

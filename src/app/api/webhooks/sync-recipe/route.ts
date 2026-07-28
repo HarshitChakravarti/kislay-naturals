@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 // POST /api/webhooks/sync-recipe - Sync recipe from file system to database
 export async function POST(request: NextRequest) {

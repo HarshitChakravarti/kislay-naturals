@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Star, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 import ProductCard from '../../components/ProductCard';
 import ProductCarousel from '../../components/ProductCarousel';
 
@@ -10,6 +10,7 @@ export const revalidate = 0; // Disable caching to ensure fresh data
 export const dynamic = 'force-dynamic';
 
 const ProductsPage = async () => {
+  const supabase = await createClient();
   // Fetch all products from database
   let products: any[] = [];
   

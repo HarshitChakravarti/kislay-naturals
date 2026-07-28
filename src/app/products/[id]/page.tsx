@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 import ProductDetailClient from '@/components/ProductDetailClient';
 
 export const revalidate = 0; // Ensure data is always fresh
@@ -11,6 +12,7 @@ interface ProductPageProps {
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
+  const supabase = await createClient();
   const { id } = params;
 
   if (!id) {

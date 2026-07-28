@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { authenticateUser } from '@/lib/middleware/auth';
 
 export const dynamic = 'force-dynamic';

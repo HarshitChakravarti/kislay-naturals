@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 import { authenticateUser } from '@/lib/middleware/auth';
 import type { Product } from '@/types';
 
@@ -9,6 +9,7 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createClient();
   const { id } = params;
 
   try {
@@ -37,6 +38,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {
@@ -89,6 +91,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {

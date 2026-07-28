@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/server';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const supabase = await createClient();
   // Ensure baseUrl has no trailing slash and uses https
   // This must match your canonical domain exactly
   let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://kislaynaturals.com';

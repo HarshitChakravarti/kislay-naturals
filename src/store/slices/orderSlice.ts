@@ -1,30 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// Helper to handle fetch with JSON and errors
-async function fetchJSON(url, options = {}) {
-  const res = await fetch(url, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  });
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : {};
-  if (!res.ok) {
-    const message = data?.message || data?.error || `Request failed with ${res.status}`;
-    throw new Error(message);
-  }
-  return data;
-}
+import { fetchJSON } from '@/utils/fetchJSON';
 
 // Orders API wrappers using relative URLs for Vercel compatibility
-function apiCreateOrder(orderData) {
+function apiCreateOrder(orderData: any) {
   return fetchJSON('/api/orders', {
     method: 'POST',
     body: JSON.stringify(orderData),
   });
 }
 
-function apiGetOrderById(orderId) {
+function apiGetOrderById(orderId: string) {
   return fetchJSON(`/api/orders/${orderId}`);
 }
 
@@ -34,11 +19,11 @@ function apiGetMyOrders() {
 
 export const createNewOrder = createAsyncThunk(
   'orders/create',
-  async (orderData, { rejectWithValue }) => {
+  async (orderData: any, { rejectWithValue }) => {
     try {
       const data = await apiCreateOrder(orderData);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -46,11 +31,11 @@ export const createNewOrder = createAsyncThunk(
 
 export const fetchOrderDetails = createAsyncThunk(
   'orders/details',
-  async (orderId, { rejectWithValue }) => {
+  async (orderId: string, { rejectWithValue }) => {
     try {
       const data = await apiGetOrderById(orderId);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -62,21 +47,31 @@ export const fetchMyOrders = createAsyncThunk(
     try {
       const data = await apiGetMyOrders();
       return data.orders;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
 );
 
+export interface OrderState {
+  order: any | null;
+  orders: any[];
+  loading: boolean;
+  error: string | null;
+  success: boolean;
+}
+
+const initialState: OrderState = {
+  order: null,
+  orders: [],
+  loading: false,
+  error: null,
+  success: false,
+};
+
 const orderSlice = createSlice({
   name: 'orders',
-  initialState: {
-    order: null,
-    orders: [],
-    loading: false,
-    error: null,
-    success: false,
-  },
+  initialState,
   reducers: {
     clearOrderError: (state) => {
       state.error = null;
@@ -103,7 +98,7 @@ const orderSlice = createSlice({
       })
       .addCase(createNewOrder.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
         state.success = false;
       })
       // Fetch Order Details
@@ -117,7 +112,7 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrderDetails.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
       })
       // Fetch User Orders
       .addCase(fetchMyOrders.pending, (state) => {
@@ -130,7 +125,7 @@ const orderSlice = createSlice({
       })
       .addCase(fetchMyOrders.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
       });
   },
 });

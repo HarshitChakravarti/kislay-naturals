@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 import { authenticateUser } from '@/lib/middleware/auth';
 import type { OrderItem, OrderDetails } from '@/types';
 
@@ -7,6 +8,7 @@ import type { OrderItem, OrderDetails } from '@/types';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  const supabase = await createClient();
   try {
     const user = await authenticateUser(request);
     if (!user) {
@@ -35,6 +37,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const supabase = await createClient();
   try {
     console.log(' Create order endpoint called');
     

@@ -1,10 +1,12 @@
 import HomeClient from '@/components/HomeClient';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { createClient } from '@/utils/supabase/server';
 import type { Product } from '@/types';
 
 export const revalidate = 0; // Disable caching to ensure fresh data
 
 export default async function Home() {
+  const supabase = await createClient();
   // Fetch featured products from database
   let featuredProducts: Product[] = [];
   

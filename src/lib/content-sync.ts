@@ -1,4 +1,4 @@
-import { supabaseAdmin } from './supabase';
+import { supabaseAdmin } from './supabaseAdmin';
 
 // Utility functions for content synchronization
 

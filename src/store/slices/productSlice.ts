@@ -1,32 +1,18 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// Helper to handle fetch with JSON and errors
-async function fetchJSON(url, options = {}) {
-  const res = await fetch(url, {
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options,
-  });
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : {};
-  if (!res.ok) {
-    const message = data?.message || data?.error || `Request failed with ${res.status}`;
-    throw new Error(message);
-  }
-  return data;
-}
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import type { Product } from '@/types';
+import { fetchJSON } from '@/utils/fetchJSON';
 
 // Products API wrappers using relative URLs
-function apiGetProducts(params) {
+function apiGetProducts(params?: Record<string, string>) {
   const query = params ? `?${new URLSearchParams(params).toString()}` : '';
   return fetchJSON(`/api/products${query}`);
 }
 
-function apiGetProductById(id) {
+function apiGetProductById(id: string) {
   return fetchJSON(`/api/products/${id}`);
 }
 
-function apiCreateProduct(productData) {
+function apiCreateProduct(productData: any) {
   return fetchJSON('/api/products', {
     method: 'POST',
     body: JSON.stringify(productData),
@@ -35,11 +21,11 @@ function apiCreateProduct(productData) {
 
 export const fetchProducts = createAsyncThunk(
   'products/fetchAll',
-  async (params, { rejectWithValue }) => {
+  async (params: Record<string, string> | undefined, { rejectWithValue }) => {
     try {
       const data = await apiGetProducts(params);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -47,11 +33,11 @@ export const fetchProducts = createAsyncThunk(
 
 export const fetchProductDetails = createAsyncThunk(
   'products/fetchDetails',
-  async (id, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
       const data = await apiGetProductById(id);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
@@ -59,25 +45,35 @@ export const fetchProductDetails = createAsyncThunk(
 
 export const addNewProduct = createAsyncThunk(
   'products/create',
-  async (productData, { rejectWithValue }) => {
+  async (productData: any, { rejectWithValue }) => {
     try {
       const data = await apiCreateProduct(productData);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.message);
     }
   }
 );
 
+export interface ProductState {
+  products: Product[];
+  product: Product | null;
+  loading: boolean;
+  error: string | null;
+  success: boolean;
+}
+
+const initialState: ProductState = {
+  products: [],
+  product: null,
+  loading: false,
+  error: null,
+  success: false,
+};
+
 const productSlice = createSlice({
   name: 'products',
-  initialState: {
-    products: [],
-    product: null,
-    loading: false,
-    error: null,
-    success: false,
-  },
+  initialState,
   reducers: {
     clearProductError: (state) => {
       state.error = null;
@@ -99,7 +95,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
       })
       // Fetch Product Details
       .addCase(fetchProductDetails.pending, (state) => {
@@ -113,7 +109,7 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductDetails.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
       })
       // Add New Product
       .addCase(addNewProduct.pending, (state) => {
@@ -128,7 +124,7 @@ const productSlice = createSlice({
       })
       .addCase(addNewProduct.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload;
+        state.error = payload as string;
         state.success = false;
       });
   },

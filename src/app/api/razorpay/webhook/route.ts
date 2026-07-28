@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyWebhookSignature } from '@/lib/razorpay'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/server';
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
+  const supabase = await createClient();
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || ''
     if (!webhookSecret) {
