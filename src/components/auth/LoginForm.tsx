@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 'use client';
 
 import { useState } from 'react';
@@ -23,7 +24,7 @@ interface ValidationErrors {
 }
 
 function LoginForm() {
-  const { showToast } = useAuth();
+  
   const searchParams = useSearchParams();
   const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>({
@@ -67,7 +68,7 @@ function LoginForm() {
 
       if (signInError) throw signInError;
 
-      showToast('Successfully logged in', 'success');
+      toast.success('Successfully logged in');
       const callbackUrl = searchParams?.get('callbackUrl') || '/';
       router.push(callbackUrl);
     } catch (err: any) {

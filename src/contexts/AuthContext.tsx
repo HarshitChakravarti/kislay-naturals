@@ -1,15 +1,10 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { UserData } from '@/types';
 import { createClient } from '@/utils/supabase/client';
-
-interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error';
-}
 
 interface AuthContextType {
   user: UserData | null;
@@ -17,7 +12,6 @@ interface AuthContextType {
   isVerifying: boolean;
   error: string | null;
   logout: () => Promise<void>;
-  showToast: (message: string, type: 'success' | 'error') => void;
   isAdmin: () => boolean;
   getUserRole: () => string;
 }
@@ -29,17 +23,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [toasts, setToasts] = useState<Toast[]>([]);
   const router = useRouter();
   const supabase = createClient();
 
-  const showToast = useCallback((message: string, type: 'success' | 'error') => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts(prev => [...prev, { id, message, type }]);
-    setTimeout(() => {
-      setToasts(prev => prev.filter(toast => toast.id !== id));
-    }, 5000);
-  }, []);
 
   const clearAuthData = useCallback(() => {
     setUser(null);
@@ -62,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             username: session.user.user_metadata?.username || session.user.email?.split('@')[0] || 'User',
             name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
             email: session.user.email!,
-            role: session.user.user_metadata?.role || 'user',
+            role: session.user.app_metadata?.role || 'user',
             createdAt: session.user.created_at,
             updatedAt: session.user.updated_at
           };
@@ -88,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             username: session.user.user_metadata?.username || session.user.email?.split('@')[0] || 'User',
             name: session.user.user_metadata?.full_name || session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
             email: session.user.email!,
-            role: session.user.user_metadata?.role || 'user',
+            role: session.user.app_metadata?.role || 'user',
             createdAt: session.user.created_at,
             updatedAt: session.user.updated_at
           };
@@ -112,15 +98,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       await supabase.auth.signOut();
       clearAuthData();
-      showToast('Successfully logged out', 'success');
+      toast.success('Successfully logged out');
       router.push('/login');
     } catch (err: any) {
       console.error('Logout error:', err);
-      showToast(err.message || 'Failed to logout', 'error');
+      toast.error(err.message || 'Failed to logout');
     } finally {
       setIsLoading(false);
     }
-  }, [supabase, router, showToast, clearAuthData]);
+  }, [supabase, router, clearAuthData]);
 
   const isAdmin = useCallback(() => {
     return user?.role === 'admin';
@@ -138,26 +124,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isVerifying,
         error,
         logout,
-        showToast,
         isAdmin,
         getUserRole
       }}
     >
       {children}
-      {toasts.length > 0 && (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-          {toasts.map((toast) => (
-            <div
-              key={toast.id}
-              className={`p-4 rounded-md shadow-lg ${
-                toast.type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-              }`}
-            >
-              {toast.message}
-            </div>
-          ))}
-        </div>
-      )}
     </AuthContext.Provider>
   );
 }

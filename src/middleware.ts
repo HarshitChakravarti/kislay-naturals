@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    const role = user.user_metadata?.role;
+    const role = user.app_metadata?.role;
     if (isAdminRoute && role !== 'admin') {
       const homeUrl = new URL('/', request.url);
       homeUrl.searchParams.set('error', 'admin_access_denied');

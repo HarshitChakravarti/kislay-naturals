@@ -13,7 +13,12 @@ export function verifyPaymentSignature(params: {
     .createHmac('sha256', secret)
     .update(body)
     .digest('hex')
-  return expected === razorpay_signature
+    
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(razorpay_signature))
+  } catch (e) {
+    return false
+  }
 }
 
 export function verifyWebhookSignature(payloadRaw: string, signature: string, webhookSecret: string): boolean {
@@ -22,7 +27,12 @@ export function verifyWebhookSignature(payloadRaw: string, signature: string, we
     .createHmac('sha256', webhookSecret)
     .update(payloadRaw)
     .digest('hex')
-  return expected === signature
+    
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))
+  } catch (e) {
+    return false; // Will throw if lengths don't match
+  }
 }
 
 

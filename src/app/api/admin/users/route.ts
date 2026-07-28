@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       id: user.id,
       email: user.email,
       name: user.user_metadata?.name || user.email,
-      role: user.user_metadata?.role || 'user',
+      role: user.app_metadata?.role || 'user',
       created_at: user.created_at,
       last_sign_in_at: user.last_sign_in_at,
       email_confirmed_at: user.email_confirmed_at,

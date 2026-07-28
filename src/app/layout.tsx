@@ -94,17 +94,7 @@ export const viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/logo/favicon.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/logo/favicon.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/logo/favicon.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/logo/favicon.png" />
-        <meta property="og:image" content="/logo-transparent.png" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta name="twitter:image" content="/logo-transparent.png" />
-      </head>
+      <head />
       <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
         <Suspense fallback={null}>
           <GoogleAnalytics />

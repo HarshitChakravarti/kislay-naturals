@@ -12,7 +12,7 @@ export async function authenticateAdmin(request: NextRequest) {
     
     if (error || !user) return null
 
-    const role = (user.user_metadata as any)?.role;
+    const role = (user.app_metadata as any)?.role;
     if (role !== 'admin') {
       console.log('User does not have admin role');
       return null;

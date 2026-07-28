@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 'use client';
 
 import { useState } from 'react';
@@ -27,7 +28,7 @@ interface ValidationErrors {
 }
 
 function SignupForm() {
-  const { showToast } = useAuth();
+  
   const router = useRouter();
   const [formData, setFormData] = useState<SignupFormData>({
     username: '',
@@ -100,7 +101,7 @@ function SignupForm() {
 
       if (signUpError) throw signUpError;
 
-      showToast('Account created successfully!', 'success');
+      toast.success('Account created successfully!');
       router.push('/login?registered=true');
     } catch (err: any) {
       setError(err.message || 'Failed to register');
