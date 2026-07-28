@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { withAdminAuthDynamic, AdminRequest } from '@/lib/middleware/admin';
+import { authenticateAdmin } from '@/lib/middleware/admin';
 
 export const dynamic = 'force-dynamic';
 
-export const GET = withAdminAuthDynamic(async (request: AdminRequest, { params }: { params: { id: string } }) => {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  const user = await authenticateAdmin(request);
+  if (!user) {
+    return NextResponse.json({ success: false, message: 'Admin authentication required' }, { status: 401 });
+  }
   try {
     const { id } = params;
 
@@ -107,9 +111,13 @@ export const GET = withAdminAuthDynamic(async (request: AdminRequest, { params }
       message: 'Internal server error' 
     }, { status: 500 });
   }
-});
+}
 
-export const PUT = withAdminAuthDynamic(async (request: AdminRequest, { params }: { params: { id: string } }) => {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const user = await authenticateAdmin(request);
+  if (!user) {
+    return NextResponse.json({ success: false, message: 'Admin authentication required' }, { status: 401 });
+  }
   try {
     const { id } = params;
 
@@ -189,9 +197,13 @@ export const PUT = withAdminAuthDynamic(async (request: AdminRequest, { params }
       message: 'Internal server error' 
     }, { status: 500 });
   }
-});
+}
 
-export const DELETE = withAdminAuthDynamic(async (request: AdminRequest, { params }: { params: { id: string } }) => {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const user = await authenticateAdmin(request);
+  if (!user) {
+    return NextResponse.json({ success: false, message: 'Admin authentication required' }, { status: 401 });
+  }
   try {
     const { id } = params;
 
@@ -245,4 +257,4 @@ export const DELETE = withAdminAuthDynamic(async (request: AdminRequest, { param
       message: 'Internal server error' 
     }, { status: 500 });
   }
-});
+}

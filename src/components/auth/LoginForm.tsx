@@ -1,6 +1,5 @@
-import { toast } from 'react-toastify';
 'use client';
-
+import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
