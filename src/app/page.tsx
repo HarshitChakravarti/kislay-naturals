@@ -3,6 +3,13 @@ import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { createClient } from '@/utils/supabase/server';
 import type { Product } from '@/types';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Kislay Naturals – Monk Fruit Sweeteners & Zero Calorie Sugar Substitutes",
+  description: "Shop Kislay Naturals for pure monk fruit-based sweeteners. The best zero-calorie, diabetic-friendly sugar alternatives for a healthy lifestyle in India.",
+};
+
 export const revalidate = 0; // Disable caching to ensure fresh data
 
 export default async function Home() {

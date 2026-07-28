@@ -2,6 +2,13 @@ import React from 'react';
 import { ArrowLeft, MapPin, Phone, Mail, Building, Clock, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Contact Us | Kislay Naturals",
+  description: "Get in touch with Kislay Naturals. We're here to answer your questions about our natural monk fruit sweeteners.",
+};
+
 export default function ContactUsPage() {
   return (
     <article className="max-w-6xl mx-auto px-2 md:px-4 py-8 md:py-12">

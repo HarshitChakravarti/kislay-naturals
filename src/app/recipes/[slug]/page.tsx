@@ -13,12 +13,16 @@ interface RecipePageProps {
 
 async function getRecipe(slug: string) {
   try {
-    const { data, error } = await supabaseAdmin
-      .from('recipes')
-      .select('*')
-      .eq('slug', slug)
-      .eq('is_published', true)
-      .single();
+    let query = supabaseAdmin.from('recipes').select('*');
+
+    const isNumericId = /^\d+$/.test(slug);
+    if (isNumericId) {
+      query = query.eq('id', slug);
+    } else {
+      query = query.eq('slug', slug);
+    }
+
+    const { data, error } = await query.eq('is_published', true).single();
 
     if (error || !data) return null;
     return data;

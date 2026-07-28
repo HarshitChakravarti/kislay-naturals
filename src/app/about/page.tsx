@@ -1,6 +1,13 @@
 import Image from "next/image"
 import { Leaf, Users, Shield, Heart, Target, Globe } from "lucide-react"
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "About Us | Kislay Naturals",
+  description: "Learn about Kislay Naturals' mission to provide 100% natural, low-carb products and zero-calorie monk fruit sweeteners.",
+};
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">

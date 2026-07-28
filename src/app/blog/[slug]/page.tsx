@@ -15,12 +15,16 @@ interface BlogPostProps {
 
 async function getBlogPost(slug: string) {
   try {
-    const { data, error } = await supabaseAdmin
-      .from('blogposts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('is_published', true)
-      .single();
+    let query = supabaseAdmin.from('blogposts').select('*');
+
+    const isNumericId = /^\d+$/.test(slug);
+    if (isNumericId) {
+      query = query.eq('id', slug);
+    } else {
+      query = query.eq('slug', slug);
+    }
+
+    const { data, error } = await query.eq('is_published', true).single();
 
     if (error || !data) {
       return null;
