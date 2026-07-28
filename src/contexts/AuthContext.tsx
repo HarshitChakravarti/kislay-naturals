@@ -30,9 +30,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearAuthData = useCallback(() => {
     setUser(null);
     setError(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('user');
-    }
   }, []);
 
   useEffect(() => {
@@ -53,7 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             updatedAt: session.user.updated_at
           };
           setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
         }
       } catch (err) {
         console.error('Error fetching session:', err);
@@ -79,7 +75,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             updatedAt: session.user.updated_at
           };
           setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
         }
       } else if (event === 'SIGNED_OUT') {
         clearAuthData();

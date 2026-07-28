@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
-import { withAdminAuth, AdminRequest } from '@/lib/middleware/admin';
+import { authenticateAdmin } from '@/lib/middleware/admin';
 
 // Force dynamic rendering for this API route
 export const dynamic = 'force-dynamic';
 
-export const GET = withAdminAuth(async (request: AdminRequest) => {
+export async function GET(request: NextRequest) {
+  const user = await authenticateAdmin(request);
+  if (!user) {
+    return NextResponse.json({ success: false, message: 'Admin authentication required' }, { status: 401 });
+  }
   try {
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate');
@@ -102,7 +106,7 @@ export const GET = withAdminAuth(async (request: AdminRequest) => {
       message: 'Internal server error' 
     }, { status: 500 });
   }
-});
+}
 
 function generateCSV(orders: any[]) {
   // Define CSV headers

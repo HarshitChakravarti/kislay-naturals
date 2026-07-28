@@ -32,6 +32,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kislaynaturals.com'),
   title: "Kislay Naturals – Monk Fruit Sweeteners",
   description: "Kislay Naturals offers pure monk fruit-based sweeteners for a healthy, sustainable lifestyle.",
   verification: {
@@ -87,8 +88,6 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

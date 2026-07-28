@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { fetchJSON } from '@/utils/fetchJSON';
+import type { Order, OrderDetails } from '@/types';
 
 // Orders API wrappers using relative URLs for Vercel compatibility
-function apiCreateOrder(orderData: any) {
+function apiCreateOrder(orderData: Partial<OrderDetails> | Partial<Order>) {
   return fetchJSON('/api/orders', {
     method: 'POST',
     body: JSON.stringify(orderData),
@@ -19,7 +20,7 @@ function apiGetMyOrders() {
 
 export const createNewOrder = createAsyncThunk(
   'orders/create',
-  async (orderData: any, { rejectWithValue }) => {
+  async (orderData: Partial<OrderDetails> | Partial<Order>, { rejectWithValue }) => {
     try {
       const data = await apiCreateOrder(orderData);
       return data;
@@ -54,8 +55,8 @@ export const fetchMyOrders = createAsyncThunk(
 );
 
 export interface OrderState {
-  order: any | null;
-  orders: any[];
+  order: Order | null;
+  orders: Order[];
   loading: boolean;
   error: string | null;
   success: boolean;

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ShoppingCart, CreditCard, MapPin, User, Mail, Phone, Plus, Minus } from 'lucide-react';
+import { toast } from 'react-toastify';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -410,13 +411,13 @@ export default function CheckoutPage() {
         if (razorpayResponse.status === 410) {
           // Order expired - reset order ID and show message
           setCurrentOrderId(null);
-          alert('Your order has expired. Please try again with a fresh checkout.');
+          toast.error('Your order has expired. Please try again with a fresh checkout.');
           setIsProcessingPayment(false);
           return;
         } else if (razorpayResponse.status === 400 && errorData.message?.includes('Maximum payment attempts')) {
           // Max attempts exceeded
           setCurrentOrderId(null);
-          alert('Maximum payment attempts exceeded. Starting fresh checkout...');
+          toast.error('Maximum payment attempts exceeded. Starting fresh checkout...');
           setIsProcessingPayment(false);
           return;
         }
@@ -495,7 +496,7 @@ export default function CheckoutPage() {
             }
           } catch (error) {
             console.error('Error updating payment:', error);
-            alert('Payment successful but failed to update order. Please contact support.');
+            toast.error('Payment successful but failed to update order. Please contact support.');
           }
         },
         prefill: {
@@ -552,7 +553,7 @@ export default function CheckoutPage() {
           userMessage = 'Network error. Please check your connection and try again.';
         }
         
-        alert(userMessage);
+        toast.error(userMessage);
         setIsProcessingPayment(false);
         setPaymentStep('');
         if (paymentTimeout) {
@@ -618,7 +619,7 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error('Error during payment:', error);
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      alert(`Checkout Error: ${errorMessage}`);
+      toast.error(`Checkout Error: ${errorMessage}`);
       setIsProcessingPayment(false);
       setPaymentStep('');
       if (paymentTimeout) {

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { verifyPaymentSignature } from '@/lib/razorpay';
+import { processOrderNotifications } from '@/lib/orderNotifications';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,7 +30,7 @@ export async function PUT(request: NextRequest) {
     // Get order details from Razorpay
     const rpOrder = await fetch(`https://api.razorpay.com/v1/orders/${paymentDetails.razorpay_order_id}`, {
       headers: {
-        'Authorization': `Basic ${Buffer.from(`${process.env.RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`).toString('base64')}`
+        'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`).toString('base64')}`
       }
     }).then(res => res.json());
 
@@ -83,45 +85,25 @@ export async function PUT(request: NextRequest) {
 
     console.log('✅ Order updated successfully:', data);
 
-    // Trigger background notification processing (non-blocking)
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL || 'http://localhost:3000';
-    const notificationUrl = `${baseUrl}/api/orders/process-notifications`;
+    // Trigger notifications directly without an HTTP self-call
+    console.log('📧 Triggering notifications for order:', data.id);
     
-    console.log('📧 Triggering notifications for order:', data.id, 'URL:', notificationUrl);
-    
-    // Use a more robust fetch implementation with proper error handling
     try {
-      const notificationResponse = await fetch(notificationUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ orderId: data.id }),
-        // Add timeout to prevent hanging requests
-        signal: AbortSignal.timeout(30000) // 30 second timeout
-      });
-
-      if (!notificationResponse.ok) {
-        throw new Error(`Notification API returned ${notificationResponse.status}: ${notificationResponse.statusText}`);
-      }
-
-      const result = await notificationResponse.json();
+      const result = await processOrderNotifications(data.id);
       console.log('✅ Notifications triggered successfully:', result);
     } catch (error) {
       console.error('❌ Failed to trigger background notifications:', error);
       // Log to database for monitoring
       try {
-        await supabase
+        await supabaseAdmin
           .from('orders')
           .update({
-            email_error: `Notification trigger failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            email_error_type: 'notification_trigger_failed',
-            email_should_retry: true
+            email_error: 'Notification trigger failed',
+            whatsapp_error: 'Notification trigger failed',
           })
           .eq('id', data.id);
-        console.log('📝 Logged notification trigger failure to database');
-      } catch (dbError) {
-        console.error('❌ Failed to log notification trigger failure:', dbError);
+      } catch (logError) {
+        console.error('❌ Failed to log notification error:', logError);
       }
     }
 

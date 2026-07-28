@@ -1,16 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 import { sendOrderConfirmationWhatsApp } from '@/lib/whatsapp';
 
-export const dynamic = 'force-dynamic';
-
-export async function POST(request: NextRequest) {
+export async function processOrderNotifications(orderId: string) {
   try {
-    const { orderId } = await request.json();
-
     if (!orderId) {
-      return NextResponse.json({ success: false, message: 'Order ID is required' }, { status: 400 });
+      return { success: false, message: 'Order ID is required' };
     }
 
     // Get order details
@@ -21,7 +16,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (orderError || !order) {
-      return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 });
+      return { success: false, message: 'Order not found' };
     }
 
     // Process notifications in background
@@ -103,13 +98,13 @@ export async function POST(request: NextRequest) {
       })
       .eq('id', orderId);
 
-    return NextResponse.json({
+    return {
       success: true,
       results: notificationResults
-    });
+    };
 
   } catch (error) {
     console.error('Error processing notifications:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    return { success: false, message: 'Internal server error' };
   }
 }

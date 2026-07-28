@@ -5,7 +5,7 @@ import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 export async function POST(request: NextRequest) {
   try {
-    const rl = rateLimit(request, 10, 60 * 1000);
+    const rl = await rateLimit(request, 10, 60 * 1000);
     if (!rl.success) {
       return NextResponse.json({ 
         success: false, 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Check if order exists and get current state
     const { data: existingOrder, error: orderError } = await supabaseAdmin
       .from('orders')
-      .select('id, status, order_status, payment_attempts, expires_at, razorpay_order_id, order_number')
+      .select('id, status, order_status, payment_attempts, expires_at, razorpay_order_id, order_number, total_amount')
       .eq('id', orderId)
       .single();
 
@@ -69,6 +69,16 @@ export async function POST(request: NextRequest) {
         message: 'Maximum payment attempts exceeded. Please create a new order.' 
       }, { status: 400 });
     }
+
+    // Verify the amount requested matches the order in the database
+    const expectedPaise = Math.round(existingOrder.total_amount * 100);
+    if (Math.abs(expectedPaise - Math.round(amount)) > 1) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Amount mismatch detected. Payment request rejected.' 
+      }, { status: 400 });
+    }
+
 
     // If we already have a razorpay_order_id, check if amount matches
     if (existingOrder.razorpay_order_id) {
@@ -134,7 +144,7 @@ export async function POST(request: NextRequest) {
     const razorpay = new Razorpay({ key_id, key_secret });
 
     const options = {
-      amount: Math.round(amount),
+      amount: expectedPaise,
       currency: cur,
       receipt: String(existingOrder?.order_number || orderId || `receipt_order_${Date.now()}`),
       notes: (orderId || existingOrder?.order_number)
