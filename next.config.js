@@ -19,17 +19,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.kislaynaturals.com',
-          },
-        ],
-        destination: 'https://kislaynaturals.com/:path*',
-        permanent: true,
-      },
-      {
         source: '/lab-report',
         destination: 'https://qbubtexkhvhrrakoohiu.supabase.co/storage/v1/object/public/public_docs/lab-report.pdf',
         permanent: false,
