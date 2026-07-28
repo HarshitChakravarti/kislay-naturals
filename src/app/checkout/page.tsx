@@ -9,7 +9,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Product } from '@/types';
-import { findProductVariant, getVariantCouponPrice, normalizeProductVariants } from '@/lib/productVariants';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCartItems, selectCartSubtotal, clearCart } from '@/store/slices/cartSlice';
 
@@ -103,7 +102,12 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
-  const [couponType, setCouponType] = useState<'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none'>('none');
+  const [couponType, setCouponType] = useState<'special' | 'holi' | 'sweetsmart' | 'none'>('none');
+  // Server-calculated totals — never derived from URL params
+  const [serverBaseTotal, setServerBaseTotal] = useState<number>(0);
+  const [serverFinalTotal, setServerFinalTotal] = useState<number>(0);
+  const [serverCouponDiscount, setServerCouponDiscount] = useState<number>(0);
+  const [isFetchingPrice, setIsFetchingPrice] = useState(false);
   const [deliveryEstimate, setDeliveryEstimate] = useState<{ message: string; color: string } | null>(null);
   const [isCheckingPincode, setIsCheckingPincode] = useState(false);
   const dispatch = useDispatch();
@@ -111,50 +115,74 @@ export default function CheckoutPage() {
   const cartSubtotal = useSelector(selectCartSubtotal);
   const isCartCheckout = searchParams.get('fromCart') === 'true';
 
-  // Get product data from URL params
+  // Get product data from URL params and fetch real price from server
   useEffect(() => {
     const productId = searchParams.get('productId');
     const productName = searchParams.get('productName');
-    const productPrice = searchParams.get('productPrice');
     const productImage = searchParams.get('productImage');
     const productDescription = searchParams.get('productDescription');
     const productQuantity = searchParams.get('quantity');
     const productVariantSize = searchParams.get('variantSize');
-    const productOriginalPrice = searchParams.get('productOriginalPrice');
-    const selectedVariant = findProductVariant(productVariantSize || undefined);
 
-    if (productId && productName && productPrice && productImage) {
-      setProduct({
-        id: productId,
-        name: productName,
-        price: parseFloat(productPrice),
-        image: productImage,
-        description: productDescription || '',
-        originalPrice: productOriginalPrice ? parseFloat(productOriginalPrice) : selectedVariant?.originalPrice,
-        variants: normalizeProductVariants()
-      });
-      setQuantity(parseInt(productQuantity || '1'));
+    if (productId && productName && productImage) {
+      const qty = parseInt(productQuantity || '1');
+      setQuantity(qty);
       setVariantSize(productVariantSize || '');
+
+      // Fetch the real variant price from the server
+      setIsFetchingPrice(true);
+      fetch(`/api/products/${productId}`)
+        .then(r => r.json())
+        .then(data => {
+          const prod = data.product;
+          if (!prod) { router.push('/products'); return; }
+
+          const variants: any[] = prod.variants || [];
+          const variant = variants.find(
+            (v: any) => v.size?.trim().toLowerCase() === (productVariantSize || '').trim().toLowerCase()
+          );
+          const unitPrice: number = variant?.price ?? prod.price;
+          const unitOriginalPrice: number = variant?.originalPrice ?? prod.original_price ?? unitPrice;
+
+          setProduct({
+            id: prod.id,
+            name: prod.name || productName,
+            price: unitPrice,
+            image: prod.image || productImage,
+            description: prod.description || productDescription || '',
+            originalPrice: unitOriginalPrice,
+            variants: prod.variants || [],
+          });
+          setServerBaseTotal(unitPrice * qty);
+          setServerFinalTotal(unitPrice * qty);
+        })
+        .catch(() => router.push('/products'))
+        .finally(() => setIsFetchingPrice(false));
     } else if (searchParams.get('fromCart') === 'true') {
-      // Allow checkout without URL product params if it's from the cart
       setProduct(null);
     } else {
-      // Redirect back if no product data and not from cart
       router.push('/products');
     }
 
     const initialCoupon = searchParams.get('coupon');
-    if (initialCoupon) {
-      setCouponCode(initialCoupon);
-    }
+    if (initialCoupon) setCouponCode(initialCoupon);
   }, [searchParams, router]);
+
+  // Compute server base total for cart checkout whenever cartItems changes
+  useEffect(() => {
+    if (isCartCheckout && cartItems.length > 0) {
+      setServerBaseTotal(cartSubtotal);
+      setServerFinalTotal(cartSubtotal);
+    }
+  }, [isCartCheckout, cartItems, cartSubtotal]);
 
   // Auto-apply coupon from URL if present and product/cart is ready
   useEffect(() => {
     if (couponCode && !couponApplied && (product || (isCartCheckout && cartItems.length > 0))) {
       handleApplyCoupon(couponCode);
     }
-  }, [product, isCartCheckout, cartItems, couponCode, couponApplied]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product, isCartCheckout, cartItems, couponCode]);
 
   // Cleanup timeout and razorpay instance on unmount
   useEffect(() => {
@@ -672,52 +700,8 @@ export default function CheckoutPage() {
     );
   }
 
-  // Coupon validation function
-  const validateCoupon = (code: string) => {
-    let hasDrops = false;
-    let hasErythritol = false;
-    let hasAllulose = false;
-
-    if (isCartCheckout) {
-      if (!cartItems || cartItems.length === 0) return { valid: false, discount: 0, type: 'none' };
-      cartItems.forEach((item: any) => {
-        const nameLower = item.name.toLowerCase();
-        if (item.product === 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' || nameLower.includes('drops')) hasDrops = true;
-        if (nameLower.includes('erythritol')) hasErythritol = true;
-        if (nameLower.includes('allulose')) hasAllulose = true;
-      });
-    } else {
-      const productNameLower = product?.name.toLowerCase() || '';
-      if (product?.id === 'e60c3e2e-083b-4da2-8cb4-6789f934f7a8' || productNameLower.includes('drops')) hasDrops = true;
-      if (productNameLower.includes('erythritol')) hasErythritol = true;
-      if (productNameLower.includes('allulose')) hasAllulose = true;
-    }
-
-    if (!hasDrops && !hasErythritol && !hasAllulose) {
-      return { valid: false, discount: 0, type: 'none' };
-    }
-
-    const upperCode = code.toUpperCase();
-    if (upperCode === 'SPECIAL' && hasDrops) {
-      // Special discount: 30ml → ₹699, 10ml packs have fixed bundle prices
-      return { valid: true, discount: 0, type: 'special' }; // Discount calculated based on variant
-    }
-
-    if (upperCode === 'HOLI26' && hasDrops) {
-      // Holi discount: 10ml → ₹269, 30ml → ₹699
-      return { valid: true, discount: 0, type: 'holi' };
-    }
-
-    if (upperCode === 'SWEETSMART') {
-      // Sweetsmart discount
-      return { valid: true, discount: 0, type: 'sweetsmart' };
-    }
-
-    return { valid: false, discount: 0, type: 'none' };
-  };
-
-  // Apply coupon
-  const handleApplyCoupon = (codeToApply?: string) => {
+  // Apply coupon via server-side validation
+  const handleApplyCoupon = async (codeToApply?: string) => {
     const code = typeof codeToApply === 'string' ? codeToApply : couponCode;
     setCouponError('');
     if (!code.trim()) {
@@ -725,15 +709,33 @@ export default function CheckoutPage() {
       return;
     }
 
-    const validation = validateCoupon(code.trim());
-    if (validation.valid) {
-      setCouponApplied(true);
-      setCouponType(validation.type as 'percentage' | 'fixed' | 'special' | 'holi' | 'sweetsmart' | 'none');
-      setCouponError('');
-    } else {
-      setCouponApplied(false);
-      setCouponType('none');
-      setCouponError('Invalid coupon code');
+    const body = isCartCheckout
+      ? { couponCode: code.trim(), cartItems: cartItems.map((i: any) => ({ productId: i.product, variantSize: i.variantSize, quantity: i.quantity })) }
+      : { couponCode: code.trim(), productId: product?.id, variantSize, quantity };
+
+    try {
+      const res = await fetch('/api/validate-coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      if (data.valid) {
+        setCouponApplied(true);
+        setCouponType(data.couponType as any);
+        setServerFinalTotal(data.finalTotal);
+        setServerCouponDiscount(data.couponDiscount);
+        setCouponError('');
+      } else {
+        setCouponApplied(false);
+        setCouponType('none');
+        setServerFinalTotal(serverBaseTotal);
+        setServerCouponDiscount(0);
+        setCouponError(data.message || 'Invalid coupon code');
+      }
+    } catch {
+      setCouponError('Could not validate coupon. Please try again.');
     }
   };
 
@@ -743,59 +745,18 @@ export default function CheckoutPage() {
     setCouponApplied(false);
     setCouponType('none');
     setCouponError('');
+    setServerFinalTotal(serverBaseTotal);
+    setServerCouponDiscount(0);
   };
 
-  const selectedVariant = product ? findProductVariant(variantSize, product.variants) : null;
-  const effectiveVariant = selectedVariant || (product && variantSize ? { size: variantSize, price: product.price, originalPrice: product.originalPrice ?? 399, unitCount: 1 } : undefined);
-
-  // Determine original MRP per unit based on selected variant or product data
-  let originalPrice = 0;
-  let discountedPrice = 0;
-  let totalItemsCount = 0;
-
-  if (isCartCheckout) {
-    originalPrice = cartItems.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
-    discountedPrice = cartSubtotal;
-    totalItemsCount = cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0);
-  } else if (product) {
-    const originalPricePerUnit = effectiveVariant?.originalPrice ?? product.originalPrice ?? 399;
-    originalPrice = originalPricePerUnit * quantity;
-    discountedPrice = product.price * quantity;
-    totalItemsCount = quantity;
-  }
-  
-  const kislayDiscount = Math.max(0, originalPrice - discountedPrice); // Base discount provided by us
-  
-  // Calculate final total based on coupon type
-  let finalTotal: number = discountedPrice;
-  let couponDiscount: number = 0;
-  
-  if (couponApplied) {
-    if (isCartCheckout) {
-      let tempFinalTotal = 0;
-      cartItems.forEach((item: any) => {
-        const itemVariant = { size: item.variantSize || '', price: item.price, originalPrice: item.price, unitCount: 1 };
-        const discountedPricePerUnit = getVariantCouponPrice(itemVariant as any, couponType as any, { name: item.name });
-        tempFinalTotal += (discountedPricePerUnit ?? item.price) * item.quantity;
-      });
-      if (couponType === 'percentage') {
-        couponDiscount = 30 * totalItemsCount;
-        finalTotal = discountedPrice - couponDiscount;
-      } else {
-        finalTotal = tempFinalTotal;
-        couponDiscount = discountedPrice - finalTotal;
-      }
-    } else {
-      if (couponType === 'percentage') {
-        couponDiscount = 30 * quantity;
-        finalTotal = discountedPrice - couponDiscount;
-      } else {
-        const discountedPricePerUnit = getVariantCouponPrice(effectiveVariant || undefined, couponType as any, product || undefined);
-        finalTotal = (discountedPricePerUnit ?? (product?.price || 0)) * quantity;
-        couponDiscount = discountedPrice - finalTotal;
-      }
-    }
-  }
+  // Use server-computed values for display and payment
+  const originalPrice = isCartCheckout
+    ? cartItems.reduce((acc: number, item: any) => acc + ((item.originalPrice || item.price) * item.quantity), 0)
+    : (product ? (product.originalPrice ?? product.price) * quantity : 0);
+  const discountedPrice = serverBaseTotal;
+  const finalTotal = serverFinalTotal;
+  const couponDiscount = serverCouponDiscount;
+  const kislayDiscount = Math.max(0, originalPrice - discountedPrice);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1045,7 +1006,9 @@ export default function CheckoutPage() {
                 <ShoppingCart className="h-5 w-5 mr-2 text-green-600" />
                 Order Summary
                 <span className="ml-2 text-sm font-normal text-gray-500">
-                  ({totalItemsCount} item{totalItemsCount !== 1 ? 's' : ''})
+                  ({isCartCheckout
+                    ? cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0)
+                    : quantity} item{(isCartCheckout ? cartItems.reduce((acc: number, item: any) => acc + item.quantity, 0) : quantity) !== 1 ? 's' : ''})
                 </span>
               </h2>
 
@@ -1083,7 +1046,7 @@ export default function CheckoutPage() {
                 <div className="flex items-start space-x-4 mb-6">
                   <div className="relative w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
                     <Image
-                      src={product?.image || selectedVariant?.image || "/sweetener-drops/10ml.png"}
+                      src={product?.image || "/sweetener-drops/10ml.png"}
                       alt={product?.name || 'Product'}
                       fill
                       className="object-contain"

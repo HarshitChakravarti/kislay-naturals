@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { createClient } from '@/utils/supabase/server';
 import { authenticateUser } from '@/lib/middleware/auth';
-import type { OrderItem, OrderDetails } from '@/types';
+import { validateCouponData } from '@/lib/coupon';
+import type { OrderDetails } from '@/types';
 
 // Force dynamic rendering for this route
 export const dynamic = 'force-dynamic';
@@ -59,17 +60,89 @@ export async function POST(request: NextRequest) {
 
     const payload = body;
 
-    // Calculate pricing with coupon discount
+    // ── Server-side price recalculation ──────────────────────────────────────
+    // Never trust the client's totalAmount. Fetch real prices from the DB.
     let itemsPrice = 0;
+
     if (payload.cartItems && payload.cartItems.length > 0) {
-      itemsPrice = payload.cartItems.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
+      // Cart checkout: look up each product's variant price
+      const productIds: string[] = [...new Set(payload.cartItems.map((i: any) => String(i.product)))];
+      const { data: products, error: productsError } = await supabaseAdmin
+        .from('products')
+        .select('id, price, variants')
+        .in('id', productIds);
+
+      if (productsError || !products) {
+        return NextResponse.json({ success: false, message: 'Could not verify product prices.' }, { status: 500 });
+      }
+
+      const productMap = new Map(products.map((p: any) => [p.id, p]));
+
+      for (const item of payload.cartItems) {
+        const prod = productMap.get(String(item.product));
+        if (!prod) {
+          return NextResponse.json({ success: false, message: `Product ${item.product} not found.` }, { status: 400 });
+        }
+        const variants: any[] = prod.variants || [];
+        const variant = variants.find(
+          (v: any) => v.size?.trim().toLowerCase() === (item.variantSize || '').trim().toLowerCase()
+        );
+        const unitPrice = variant?.price ?? prod.price;
+        itemsPrice += unitPrice * item.quantity;
+      }
     } else if (payload.product && payload.quantity) {
-      itemsPrice = payload.product.price * payload.quantity;
+      // Single product checkout: look up variant price from DB
+      const { data: prod, error: prodError } = await supabaseAdmin
+        .from('products')
+        .select('id, price, variants')
+        .eq('id', payload.product.id)
+        .single();
+
+      if (prodError || !prod) {
+        return NextResponse.json({ success: false, message: 'Product not found.' }, { status: 400 });
+      }
+
+      const variants: any[] = prod.variants || [];
+      const variantSize = (payload.product as any).variantSize || '';
+      const variant = variants.find(
+        (v: any) => v.size?.trim().toLowerCase() === variantSize.trim().toLowerCase()
+      );
+      const unitPrice = variant?.price ?? prod.price;
+      itemsPrice = unitPrice * payload.quantity;
+    } else {
+      return NextResponse.json({ success: false, message: 'Invalid order payload.' }, { status: 400 });
     }
-    const originalPrice = payload.originalPrice || itemsPrice;
-    const discountedPrice = payload.discountedPrice || itemsPrice;
-    const couponDiscount = payload.couponDiscount || 0;
-    const totalPrice = payload.totalAmount; // Use the final total from frontend
+
+    // Validate coupon server-side if provided
+    let serverCouponDiscount = 0;
+    if (payload.couponCode) {
+      try {
+        const couponResult = await validateCouponData(
+          payload.couponCode,
+          payload.product ? String(payload.product.id) : undefined,
+          payload.product ? (payload.product as any).variantSize : undefined,
+          payload.quantity,
+          payload.cartItems ? payload.cartItems.map((i: any) => ({
+            productId: i.product,
+            variantSize: i.variantSize,
+            quantity: i.quantity
+          })) : undefined
+        );
+        
+        if (couponResult.valid) {
+          serverCouponDiscount = couponResult.couponDiscount ?? 0;
+          itemsPrice = itemsPrice - serverCouponDiscount;
+        }
+      } catch (couponErr) {
+        console.error('Error verifying coupon locally:', couponErr);
+      }
+    }
+
+    const totalPrice = Math.round(itemsPrice * 100) / 100;
+    const originalPrice = payload.originalPrice || (totalPrice + serverCouponDiscount);
+    const discountedPrice = totalPrice + serverCouponDiscount; // pre-coupon selling price
+    const couponDiscount = serverCouponDiscount;
+    // ─────────────────────────────────────────────────────────────────────────
 
     // Normalize key fields for easier querying; also store full payload
     const insertRow = {

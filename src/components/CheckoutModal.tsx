@@ -15,32 +15,26 @@ interface CheckoutModalProps {
 export default function CheckoutModal({ isOpen, onClose, product, quantity, variantSize }: CheckoutModalProps) {
   const router = useRouter();
 
-  // Redirect to checkout page when modal opens
   useEffect(() => {
     if (isOpen) {
+      // Only pass IDs and display metadata — never prices.
+      // The checkout page fetches real prices server-side.
       const params = new URLSearchParams({
         productId: product.id.toString(),
         productName: product.name,
-        productPrice: product.price.toString(),
         productImage: product.image,
         productDescription: product.description || '',
         quantity: quantity.toString()
       });
-      
-      // Add variant size if available
+
       if (variantSize) {
         params.set('variantSize', variantSize);
       }
-      
-      if (product.originalPrice) {
-        params.set('productOriginalPrice', product.originalPrice.toString());
-      }
-      
+
       router.push(`/checkout?${params.toString()}`);
-      onClose(); // Close the modal after redirect
+      onClose();
     }
   }, [isOpen, product, quantity, variantSize, router, onClose]);
 
-  // This component doesn't render anything as it just redirects
   return null;
 }
