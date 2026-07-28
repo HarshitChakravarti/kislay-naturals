@@ -157,7 +157,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .eq('is_published', true),
       supabase
         .from('recipes')
-        .select('id, updated_at, created_at')
+        .select('id, slug, updated_at, created_at')
         .eq('is_published', true)
     ]);
 
@@ -201,7 +201,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (recipesResult.status === 'fulfilled' && recipesResult.value.data) {
       const { data: recipes } = recipesResult.value;
       const recipePages = recipes.map((recipe) => ({
-        url: `${baseUrl}/recipes/${recipe.id}`,
+        url: `${baseUrl}/recipes/${recipe.slug || recipe.id}`,
         lastModified: recipe.updated_at 
           ? new Date(recipe.updated_at) 
           : (recipe.created_at ? new Date(recipe.created_at) : now),

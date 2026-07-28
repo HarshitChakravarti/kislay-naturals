@@ -58,7 +58,7 @@ export default async function RecipesPage() {
           {recipes.map((recipe: any) => (
             <Link
               key={recipe.id}
-              href={`/recipes/${recipe.id}`}
+              href={`/recipes/${recipe.slug || recipe.id}`}
               className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-50 hover:border-green-50"
             >
               <div className="relative h-48 sm:h-56 lg:h-64 bg-gray-100 overflow-hidden">
