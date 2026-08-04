@@ -1,19 +1,19 @@
 'use client';
 
 /**
- * useMetaPixel — Client-Side Hook
+ * useMetaPixel — Unified Client-Side Hook
  *
- * Provides typed helpers to fire Facebook Conversions API events
- * by calling POST /api/meta-pixel (server-side relay).
+ * Each helper fires TWO signals simultaneously:
+ *   1. fbq()  — browser-side Meta Pixel (for retargeting audiences)
+ *   2. POST /api/meta-pixel — server-side CAPI (bypass ad blockers)
  *
- * Each helper:
- *  - generates a unique event_id for deduplication
- *  - reads _fbp / _fbc cookies automatically
- *  - sends the current page URL as event_source_url
+ * Both calls share the SAME eventId so Facebook deduplicates them
+ * and counts only one event, not two.
  */
 
 import { useCallback } from 'react';
-// ─── Cookie helpers ──────────────────────────────────────────────────────────
+
+// ─── Cookie helpers ───────────────────────────────────────────────────────────
 
 function getCookie(name: string): string | undefined {
   if (typeof document === 'undefined') return undefined;
@@ -21,9 +21,17 @@ function getCookie(name: string): string | undefined {
   return match ? decodeURIComponent(match[1]) : undefined;
 }
 
-// ─── Base fire function ──────────────────────────────────────────────────────
+// ─── Browser pixel helper (fbq) ───────────────────────────────────────────────
 
-async function fireEvent(payload: Record<string, unknown>): Promise<void> {
+function fireFbq(eventName: string, data: Record<string, unknown>, eventId: string): void {
+  if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+    window.fbq('track', eventName, data, { eventID: eventId });
+  }
+}
+
+// ─── CAPI helper (server-side relay) ─────────────────────────────────────────
+
+async function fireCapi(payload: Record<string, unknown>): Promise<void> {
   try {
     await fetch('/api/meta-pixel', {
       method: 'POST',
@@ -31,42 +39,71 @@ async function fireEvent(payload: Record<string, unknown>): Promise<void> {
       body: JSON.stringify(payload),
     });
   } catch (err) {
-    console.warn('[MetaPixel] Failed to send event:', err);
+    console.warn('[MetaPixel] CAPI call failed:', err);
   }
 }
 
-// ─── Hook ────────────────────────────────────────────────────────────────────
+// ─── Combined fire — browser pixel + CAPI with shared eventId ────────────────
+
+function fireEvent(
+  eventName: string,
+  fbqData: Record<string, unknown>,
+  capiPayload: Record<string, unknown>
+): void {
+  const eventId = crypto.randomUUID();
+
+  // 1. Browser pixel (instant, synchronous)
+  fireFbq(eventName, fbqData, eventId);
+
+  // 2. CAPI relay (async, non-blocking)
+  fireCapi({ ...capiPayload, eventName, eventId });
+}
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useMetaPixel() {
-  const getBasePayload = useCallback(() => {
-    return {
-      eventTime: Math.floor(Date.now() / 1000),
-      eventSourceUrl: typeof window !== 'undefined' ? window.location.href : undefined,
-      actionSource: 'website' as const,
-      customer: {
-        fbp: getCookie('_fbp'),
-        fbc: getCookie('_fbc'),
-      },
-    };
-  }, []);
-
-  // ── ViewContent ────────────────────────────────────────────────────────────
-  const trackViewContent = useCallback(
-    (params: { contentName: string; contentIds?: string[]; value?: number; currency?: string }) => {
-      fireEvent({
-        eventName: 'ViewContent',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        contentName: params.contentName,
-        contentIds: params.contentIds,
-        value: params.value,
-        currency: params.currency ?? 'INR',
-      });
+  const getBaseCapiPayload = useCallback(() => ({
+    eventTime: Math.floor(Date.now() / 1000),
+    eventSourceUrl: typeof window !== 'undefined' ? window.location.href : undefined,
+    actionSource: 'website' as const,
+    customer: {
+      fbp: getCookie('_fbp'),
+      fbc: getCookie('_fbc'),
     },
-    [getBasePayload]
+  }), []);
+
+  // ── ViewContent ─────────────────────────────────────────────────────────────
+  const trackViewContent = useCallback(
+    (params: {
+      contentName: string;
+      contentIds?: string[];
+      value?: number;
+      currency?: string;
+    }) => {
+      fireEvent(
+        'ViewContent',
+        // fbq data
+        {
+          content_name: params.contentName,
+          content_ids: params.contentIds,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          content_type: 'product',
+        },
+        // CAPI payload
+        {
+          ...getBaseCapiPayload(),
+          contentName: params.contentName,
+          contentIds: params.contentIds,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+        }
+      );
+    },
+    [getBaseCapiPayload]
   );
 
-  // ── AddToCart ──────────────────────────────────────────────────────────────
+  // ── AddToCart ───────────────────────────────────────────────────────────────
   const trackAddToCart = useCallback(
     (params: {
       contentName: string;
@@ -76,22 +113,31 @@ export function useMetaPixel() {
       currency?: string;
       contentType?: string;
     }) => {
-      fireEvent({
-        eventName: 'AddToCart',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        contentName: params.contentName,
-        contentIds: params.contentIds,
-        contents: params.contents,
-        value: params.value,
-        currency: params.currency ?? 'INR',
-        contentType: params.contentType ?? 'product',
-      });
+      fireEvent(
+        'AddToCart',
+        {
+          content_name: params.contentName,
+          content_ids: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          content_type: params.contentType ?? 'product',
+        },
+        {
+          ...getBaseCapiPayload(),
+          contentName: params.contentName,
+          contentIds: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          contentType: params.contentType ?? 'product',
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── InitiateCheckout ───────────────────────────────────────────────────────
+  // ── InitiateCheckout ────────────────────────────────────────────────────────
   const trackInitiateCheckout = useCallback(
     (params: {
       contentName?: string;
@@ -102,41 +148,59 @@ export function useMetaPixel() {
       contentType?: string;
       orderId?: string;
       searchString?: string;
+      customer?: Record<string, unknown>;
     }) => {
-      fireEvent({
-        eventName: 'InitiateCheckout',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        contentName: params.contentName,
-        contentIds: params.contentIds,
-        contents: params.contents,
-        value: params.value,
-        currency: params.currency ?? 'INR',
-        contentType: params.contentType ?? 'product',
-        orderId: params.orderId,
-        searchString: params.searchString,
-      });
+      fireEvent(
+        'InitiateCheckout',
+        {
+          content_name: params.contentName,
+          content_ids: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          content_type: params.contentType ?? 'product',
+          order_id: params.orderId,
+          search_string: params.searchString,
+        },
+        {
+          ...getBaseCapiPayload(),
+          contentName: params.contentName,
+          contentIds: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          contentType: params.contentType ?? 'product',
+          orderId: params.orderId,
+          searchString: params.searchString,
+          customer: {
+            ...getBaseCapiPayload().customer,
+            ...(params.customer || {}),
+          },
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── AddPaymentInfo ─────────────────────────────────────────────────────────
+  // ── AddPaymentInfo ──────────────────────────────────────────────────────────
   const trackAddPaymentInfo = useCallback(
     (params?: { customer?: Record<string, unknown> }) => {
-      fireEvent({
-        eventName: 'AddPaymentInfo',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        customer: {
-          ...getBasePayload().customer,
-          ...(params?.customer || {}),
-        },
-      });
+      fireEvent(
+        'AddPaymentInfo',
+        {},
+        {
+          ...getBaseCapiPayload(),
+          customer: {
+            ...getBaseCapiPayload().customer,
+            ...(params?.customer || {}),
+          },
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── Purchase ───────────────────────────────────────────────────────────────
+  // ── Purchase ────────────────────────────────────────────────────────────────
   const trackPurchase = useCallback(
     (params: {
       contentName?: string;
@@ -159,71 +223,94 @@ export function useMetaPixel() {
         fbc?: string;
       };
     }) => {
-      fireEvent({
-        eventName: 'Purchase',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        contentName: params.contentName,
-        contentIds: params.contentIds,
-        contents: params.contents,
-        value: params.value,
-        currency: params.currency ?? 'INR',
-        contentType: params.contentType ?? 'product',
-        orderId: params.orderId,
-        customer: {
-          ...getBasePayload().customer,
-          ...(params.customer || {}),
+      fireEvent(
+        'Purchase',
+        {
+          content_name: params.contentName,
+          content_ids: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          content_type: params.contentType ?? 'product',
+          order_id: params.orderId,
         },
-      });
+        {
+          ...getBaseCapiPayload(),
+          contentName: params.contentName,
+          contentIds: params.contentIds,
+          contents: params.contents,
+          value: params.value,
+          currency: params.currency ?? 'INR',
+          contentType: params.contentType ?? 'product',
+          orderId: params.orderId,
+          customer: {
+            ...getBaseCapiPayload().customer,
+            ...(params.customer || {}),
+          },
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── CompleteRegistration ───────────────────────────────────────────────────
+  // ── CompleteRegistration ────────────────────────────────────────────────────
   const trackCompleteRegistration = useCallback(
-    (params?: { status?: string; contentName?: string; customer?: Record<string, unknown> }) => {
-      fireEvent({
-        eventName: 'CompleteRegistration',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        contentName: params?.contentName ?? 'Account Registration',
-        status: params?.status ?? 'completed',
-        customer: {
-          ...getBasePayload().customer,
-          ...(params?.customer || {}),
+    (params?: {
+      status?: string;
+      contentName?: string;
+      customer?: Record<string, unknown>;
+    }) => {
+      fireEvent(
+        'CompleteRegistration',
+        {
+          content_name: params?.contentName ?? 'Account Registration',
+          status: params?.status ?? 'completed',
         },
-      });
+        {
+          ...getBaseCapiPayload(),
+          contentName: params?.contentName ?? 'Account Registration',
+          status: params?.status ?? 'completed',
+          customer: {
+            ...getBaseCapiPayload().customer,
+            ...(params?.customer || {}),
+          },
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── Search ─────────────────────────────────────────────────────────────────
+  // ── Search ──────────────────────────────────────────────────────────────────
   const trackSearch = useCallback(
     (params?: { searchString?: string }) => {
-      fireEvent({
-        eventName: 'Search',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        searchString: params?.searchString,
-      });
+      fireEvent(
+        'Search',
+        { search_string: params?.searchString },
+        {
+          ...getBaseCapiPayload(),
+          searchString: params?.searchString,
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
-  // ── Contact ────────────────────────────────────────────────────────────────
+  // ── Contact ─────────────────────────────────────────────────────────────────
   const trackContact = useCallback(
     (params?: { customer?: Record<string, unknown> }) => {
-      fireEvent({
-        eventName: 'Contact',
-        eventId: crypto.randomUUID(),
-        ...getBasePayload(),
-        customer: {
-          ...getBasePayload().customer,
-          ...(params?.customer || {}),
-        },
-      });
+      fireEvent(
+        'Contact',
+        {},
+        {
+          ...getBaseCapiPayload(),
+          customer: {
+            ...getBaseCapiPayload().customer,
+            ...(params?.customer || {}),
+          },
+        }
+      );
     },
-    [getBasePayload]
+    [getBaseCapiPayload]
   );
 
   return {

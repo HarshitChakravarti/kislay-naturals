@@ -13,6 +13,7 @@ import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
 
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import MetaPixel from '@/components/MetaPixel';
 import { Analytics } from "@vercel/analytics/next";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -97,6 +98,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${poppins.variable} ${openSans.variable} font-sans`}>
           <Suspense fallback={null}>
             <GoogleAnalytics />
+          </Suspense>
+          <Suspense fallback={null}>
+            <MetaPixel />
           </Suspense>
           <Analytics />
           <AuthProvider>
