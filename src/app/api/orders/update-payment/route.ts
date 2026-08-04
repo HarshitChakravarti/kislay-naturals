@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { verifyPaymentSignature } from '@/lib/razorpay';
 import { processOrderNotifications } from '@/lib/orderNotifications';
+import { sendMetaEvent, extractFbCookies } from '@/lib/meta-conversions';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +85,52 @@ export async function PUT(request: NextRequest) {
     }
 
     console.log('✅ Order updated successfully:', data);
+
+    // ── Meta Conversions API — Purchase event (server-side, most authoritative) ──
+    try {
+      const cookieHeader = request.headers.get('cookie');
+      const { fbp, fbc } = extractFbCookies(cookieHeader);
+      const clientIp =
+        request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+        request.headers.get('x-real-ip') ||
+        undefined;
+      const userAgent = request.headers.get('user-agent') || undefined;
+
+      await sendMetaEvent({
+        eventName: 'Purchase',
+        eventSourceUrl: request.headers.get('referer') || `https://kislaynaturals.com/order-success?orderId=${data.id}`,
+        actionSource: 'website',
+        orderId: data.id,
+        value: data.total_amount as number,
+        currency: 'INR',
+        contentName: data.product_name || undefined,
+        contentIds: data.product_name ? [data.product_name] : undefined,
+        contentType: 'product',
+        contents: data.product_name ? [{
+          id: data.product_name,
+          quantity: (data.quantity as number) || 1,
+          item_price: (data.unit_price as number) || (data.total_amount as number),
+        }] : undefined,
+        customer: {
+          email: data.user_email || undefined,
+          phone: data.user_mobile || undefined,
+          firstName: data.user_name?.split(' ')[0] || undefined,
+          lastName: data.user_name?.split(' ').slice(1).join(' ') || undefined,
+          city: data.shipping_city || undefined,
+          state: data.shipping_state || undefined,
+          zip: data.shipping_zip || undefined,
+          externalId: data.id,
+          clientIpAddress: clientIp,
+          clientUserAgent: userAgent,
+          fbp,
+          fbc,
+        },
+      });
+    } catch (metaErr) {
+      // Non-fatal — log but don't block the response
+      console.error('⚠️ Meta CAPI Purchase event failed (non-fatal):', metaErr);
+    }
+    // ────────────────────────────────────────────────────────────────────────
 
     // Trigger notifications directly without an HTTP self-call
     console.log('📧 Triggering notifications for order:', data.id);

@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import ClientOnly from '@/components/ClientOnly';
 import { createClient } from '@/utils/supabase/client';
+import { useMetaPixel } from '@/hooks/useMetaPixel';
 
 interface SignupFormData {
   username: string;
@@ -29,6 +30,7 @@ interface ValidationErrors {
 function SignupForm() {
   
   const router = useRouter();
+  const { trackCompleteRegistration } = useMetaPixel();
   const [formData, setFormData] = useState<SignupFormData>({
     username: '',
     email: '',
@@ -99,6 +101,13 @@ function SignupForm() {
       });
 
       if (signUpError) throw signUpError;
+
+      // — Meta Conversions API: CompleteRegistration
+      trackCompleteRegistration({
+        status: 'completed',
+        contentName: 'Account Registration',
+        customer: { email: formData.email },
+      });
 
       toast.success('Account created successfully!');
       router.push('/login?registered=true');

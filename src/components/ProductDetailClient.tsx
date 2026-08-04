@@ -12,6 +12,7 @@ import { MessageSquare, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-r
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/store/slices/cartSlice';
 import { toast } from 'react-toastify';
+import { useMetaPixel } from '@/hooks/useMetaPixel';
 
 type Variant = {
   id: string;
@@ -226,6 +227,7 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
   const [selectedVariant, setSelectedVariant] = useState<Variant>(defaultSelected);
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
+  const { trackAddToCart, trackViewContent } = useMetaPixel();
 
   const handleAddToCart = () => {
     dispatch(addToCart({
@@ -236,6 +238,17 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
       variantSize: selectedVariant.id,
       quantity,
     }));
+
+    // — Meta Conversions API: AddToCart
+    trackAddToCart({
+      contentName: product.name,
+      contentIds: [String(product.id)],
+      contents: [{ id: String(product.id), quantity, item_price: selectedVariant.price }],
+      value: selectedVariant.price * quantity,
+      currency: 'INR',
+      contentType: 'product',
+    });
+
     toast.success(`${product.name} added to cart!`);
   };
 
@@ -243,6 +256,17 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
   useEffect(() => {
     setSelectedImage(0);
   }, [selectedVariant]);
+
+  // — Meta Conversions API: ViewContent (fires once on mount)
+  useEffect(() => {
+    trackViewContent({
+      contentName: product.name,
+      contentIds: [String(product.id)],
+      value: selectedVariant?.price,
+      currency: 'INR',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
 
   // Compute carousel list: Move variant's cover image to the front, and filter out irrelevant covers based on variant size selection
   const baseImages = product.images && product.images.length > 0 

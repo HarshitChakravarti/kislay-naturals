@@ -15,6 +15,7 @@ import { selectCartItems, selectCartSubtotal, clearCart } from '@/store/slices/c
 import ShippingForm from '@/components/checkout/ShippingForm';
 import OrderSummary from '@/components/checkout/OrderSummary';
 import CouponBox from '@/components/checkout/CouponBox';
+import { useMetaPixel } from '@/hooks/useMetaPixel';
 
 interface CheckoutFormData {
   name: string;
@@ -118,6 +119,7 @@ export default function CheckoutPage() {
   const cartItems = useSelector(selectCartItems);
   const cartSubtotal = useSelector(selectCartSubtotal);
   const isCartCheckout = searchParams.get('fromCart') === 'true';
+  const { trackInitiateCheckout, trackAddPaymentInfo } = useMetaPixel();
 
   // Get product data from URL params and fetch real price from server
   useEffect(() => {
@@ -361,6 +363,34 @@ export default function CheckoutPage() {
     }
 
     setIsProcessingPayment(true);
+
+    // — Meta Conversions API: InitiateCheckout
+    const checkoutCustomer = {
+      email: formData.email || undefined,
+      phone: formData.mobile || undefined,
+      firstName: formData.name.split(' ')[0] || undefined,
+      lastName: formData.name.split(' ').slice(1).join(' ') || undefined,
+      city: formData.address.city || undefined,
+      state: formData.address.state || undefined,
+      zip: formData.address.zip || undefined,
+    };
+    trackInitiateCheckout({
+      contentName: isCartCheckout ? 'Cart Checkout' : product?.name,
+      contentIds: isCartCheckout
+        ? cartItems.map((i: any) => i.product)
+        : product ? [product.id] : undefined,
+      contents: isCartCheckout
+        ? cartItems.map((i: any) => ({ id: i.product, quantity: i.quantity, item_price: i.price }))
+        : product ? [{ id: product.id, quantity, item_price: product.price }] : undefined,
+      value: finalTotal,
+      currency: 'INR',
+      contentType: 'product',
+      customer: checkoutCustomer,
+    } as any);
+
+    // — Meta Conversions API: AddPaymentInfo (user has filled in shipping and will pay)
+    trackAddPaymentInfo({ customer: checkoutCustomer });
+    // ─────────────────────────────────────────────────────────────────────
     
     try {
       let orderId = currentOrderId;

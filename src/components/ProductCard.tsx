@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/store/slices/cartSlice';
 import { toast } from 'react-toastify';
+import { useMetaPixel } from '@/hooks/useMetaPixel';
 
 interface Review {
   id: string;
@@ -27,6 +28,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, layout = 'horizontal' }: ProductCardProps) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { trackAddToCart } = useMetaPixel();
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
     totalReviews: 0,
@@ -76,6 +78,16 @@ export default function ProductCard({ product, layout = 'horizontal' }: ProductC
       variantSize,
       quantity: 1,
     }));
+
+    // — Meta Conversions API: AddToCart
+    trackAddToCart({
+      contentName: product.name,
+      contentIds: [String(product.id)],
+      contents: [{ id: String(product.id), quantity: 1, item_price: product.price }],
+      value: product.price,
+      currency: 'INR',
+      contentType: 'product',
+    });
     
     toast.success(`${product.name} added to cart!`);
   };
