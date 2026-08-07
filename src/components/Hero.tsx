@@ -127,7 +127,7 @@ const Hero = () => {
           {banners[currentBanner].proof}
         </p>
         <Link 
-          href="/products/kislay-monk-fruit-sweetener-drop" 
+          href="/products" 
           className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-10 py-4 sm:px-12 sm:py-5 text-xl hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
         >
           Shop Now
