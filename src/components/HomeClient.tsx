@@ -18,28 +18,28 @@ interface HomeClientProps {
 export default function HomeClient({ products, blogPosts = [] }: HomeClientProps) {
   const features: Feature[] = [
     {
-      title: "100% NATURAL",
-      description: "Plant Based",
+      title: "NATURAL",
+      description: "",
       icon: 'Leaf',
     },
     {
       title: "ZERO CALORIES",
-      description: "100% Healthy",
+      description: "",
       icon: 'Zap',
     },
     {
-      title: "TASTY",
-      description: "Tastes Like Sugar",
+      title: "NO AFTERTASTE",
+      description: "",
       icon: 'Smile',
     },
     {
       title: "NO SIDE EFFECTS",
-      description: "Scientifically Backed",
+      description: "",
       icon: 'CheckCircle',
     },
     {
       title: "FOR ALL AGE GROUPS",
-      description: "Universal Age Appeal",
+      description: "",
       icon: 'Users',
     },
   ];
