@@ -27,10 +27,10 @@ type Variant = {
 const BRAND_TAGLINE = 'Naturally Trusted | Deeply Connected | Truly Healthy';
 
 const trustItems = [
-  { icon: '🧪', text: 'Clinically Tested' },
-  { icon: '🌿', text: '100% Natural Monk Fruit' },
+  { icon: '🧪', text: 'Lab Tested' },
+  { icon: '🌿', text: 'Made From Natural Ingredients' },
   { icon: '✓', text: 'FSSAI Approved' },
-  { icon: '0️⃣', text: 'Zero Calories · Zero Carbs' },
+  { icon: '0️⃣', text: 'Minimal Calories · Minimal Carbs' },
 ];
 
 // ingredients array is now computed inside ProductDetailClient based on the product
@@ -46,8 +46,8 @@ const audienceChecklist = [
 
 const certificationBadges = [
   { icon: '✓', title: 'FSSAI Approved' },
-  { icon: '🌿', title: '100% Natural Ingredients' },
-  { icon: '🧪', title: 'Third-Party Lab Tested' },
+  { icon: '🌿', title: 'Made from natural ingredients' },
+  { icon: '🧪', title: 'Lab Tested' },
 ];
 
 function formatPrice(price: number) {
@@ -151,7 +151,7 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
 
   // 1. Dynamic product details mapping
   const PRODUCT_NAME = product.name;
-  const PRODUCT_TAGLINE = product.tagline || 'Pure Monk Fruit Sweetener — Zero Calories, Zero Guilt';
+  const PRODUCT_TAGLINE = product.tagline || 'Pure Monk Fruit Sweetener — Minimal Calories, Minimal Guilt';
   const PRODUCT_ID = product.id;
 
   const averageRating = reviewStats?.averageRating || 0;
@@ -759,10 +759,10 @@ export default function ProductDetailClient({ product, reviewStats }: { product:
         <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[minmax(0,1fr)_360px] md:px-6 md:py-12">
           <div>
             <h2 className="text-2xl font-semibold text-[#1a1a1a] md:text-3xl">
-              🧪 Clinically Tested & Lab Verified
+              🧪 Lab Tested & Verified
             </h2>
             <p className="mt-3 max-w-2xl text-left text-sm font-normal leading-6 text-[#6b7280] md:text-base">
-              Independent lab tests confirm: Kislay Monk Fruit drops have zero effect on blood
+              Independent lab tests confirm: Kislay Monk Fruit drops have minimal effect on blood
               glucose levels.
             </p>
 

@@ -7,12 +7,6 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   const supabase = supabaseAdmin;
   try {
-    console.log('🪝 RAZORPAY WEBHOOK HIT /api/razorpay/webhook', {
-      method: request.method,
-      url: request.nextUrl?.toString(),
-      timestamp: new Date().toISOString(),
-    })
-
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || ''
     if (!webhookSecret) {
       console.error('❌ RAZORPAY_WEBHOOK_SECRET not configured')
