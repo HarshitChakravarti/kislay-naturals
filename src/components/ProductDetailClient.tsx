@@ -46,7 +46,7 @@ const audienceChecklist = [
 
 const certificationBadges = [
   { icon: '✓', title: 'FSSAI Approved' },
-  { icon: '🌿', title: 'Made from natural ingredients' },
+  { icon: '🌿', title: 'Made from Natural Ingredients' },
   { icon: '🧪', title: 'Lab Tested' },
 ];
 
