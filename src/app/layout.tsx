@@ -7,7 +7,7 @@ import { Open_Sans, Poppins } from "next/font/google";
 import ReduxProvider from "@/store/ReduxProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-// import DiwaliBanner from "@/components/DiwaliBanner";
+import PrebookBanner from "@/components/PrebookBanner";
 import { AuthProvider } from '@/contexts/AuthContext';
 import AdminAccessDeniedWrapper from '@/components/AdminAccessDeniedWrapper';
 import AuthErrorBoundary from '@/components/AuthErrorBoundary';
@@ -106,7 +106,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AuthProvider>
             <AuthErrorBoundary>
               <ReduxProvider>
-                {/* <DiwaliBanner /> */}
+                {/* PRE-LAUNCH TEMPORARY: Remove when product launches standalone */}
+                <PrebookBanner />
                 <Navbar />
                 <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} />
                 {children}

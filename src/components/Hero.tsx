@@ -128,9 +128,12 @@ const Hero = () => {
         </p>
         <Link 
           href="/products" 
-          className="inline-block bg-gradient-to-r from-green-600 to-green-400 text-white font-semibold rounded-lg shadow-xl px-10 py-4 sm:px-12 sm:py-5 text-xl hover:from-green-700 hover:to-green-500 hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-green-400/50 transform hover:shadow-2xl"
+          className="group inline-flex items-center gap-2 rounded-full bg-[#16a34a] px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:bg-[#15803d] hover:scale-105 hover:shadow-[0_8px_25px_rgba(22,163,74,0.4)] focus:outline-none focus:ring-4 focus:ring-green-500/30"
         >
           Shop Now
+          <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
         </Link>
       </div>
     </section>
