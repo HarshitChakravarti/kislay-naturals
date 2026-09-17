@@ -3,7 +3,57 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShieldCheck, Truck, Leaf, Star, Gift, CheckCircle2 } from "lucide-react";
+import {
+  ShieldCheck,
+  Leaf,
+  Gift,
+  Zap,
+  Heart,
+  Clock,
+  Sparkles,
+  Droplets,
+  Activity,
+} from "lucide-react";
+
+// ─── Seabuckthorn Benefits ───────────────────────────────────────────────────
+const seabuckthornBenefits = [
+  {
+    Icon: Sparkles,
+    title: "Rich in Vitamin C",
+    description:
+      "Packed with natural Vitamin C to boost your immunity and promote radiant skin.",
+  },
+  {
+    Icon: Droplets,
+    title: "Omega-7 Fatty Acids",
+    description:
+      "A rare plant source of Omega-7, essential for healthy skin, hair, and nails.",
+  },
+  {
+    Icon: ShieldCheck,
+    title: "Powerful Antioxidants",
+    description:
+      "Protects your cells from oxidative stress and environmental damage.",
+  },
+  {
+    Icon: Activity,
+    title: "Digestive Support",
+    description:
+      "Supports a healthy gut lining and promotes smooth digestion naturally.",
+  },
+  {
+    Icon: Heart,
+    title: "Heart Health",
+    description:
+      "Helps maintain healthy cholesterol and supports overall cardiovascular wellness.",
+  },
+  {
+    Icon: Leaf,
+    title: "100% Pure & Cold Processed",
+    description:
+      "Retains maximum nutrients without heat damage. No artificial additives.",
+  },
+];
 
 // ─── Pre-order product constants ─────────────────────────────────────────────
 const PREORDER_PRODUCT_ID = "46e01087-7c08-418e-8b53-9b7c071ad388";
@@ -16,6 +66,9 @@ const PREORDER_GIFT_VALUE = 399;
 const PREORDER_TOTAL_VALUE = PREORDER_MRP + PREORDER_GIFT_VALUE; // 1598
 const PREORDER_PRICE = 649;
 const PREORDER_SAVINGS = PREORDER_TOTAL_VALUE - PREORDER_PRICE; // 949
+const PREORDER_DISCOUNT_PCT = Math.round(
+  (PREORDER_SAVINGS / PREORDER_TOTAL_VALUE) * 100
+); // 59
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** URL to the shared /checkout page, pre-filled with this pre-order product. */
@@ -30,249 +83,229 @@ const checkoutUrl =
   encodeURIComponent(PREORDER_PRODUCT_DESCRIPTION) +
   "&quantity=1";
 
-export default function PreBookPage() {
-  return (
-    <main className="min-h-screen bg-[#1a1208]">
-      {/* ── Hero Section ─────────────────────────────────────────────────────── */}
-      <section className="relative w-full overflow-hidden">
-        {/* Full-bleed promo image */}
-        <div className="relative w-full aspect-square sm:aspect-[4/3] md:aspect-[16/9] max-h-[90vh]">
-          <Image
-            src={PREORDER_IMAGE}
-            alt="Kislay Seabuckthorn Pulp Pre-order Bundle — Prebook now and save Rs.949"
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-          {/* Subtle dark gradient overlay at the bottom for text legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#1a1208]/80" />
-        </div>
+// ─── Marquee ticker items ────────────────────────────────────────────────────
+const tickerItems = [
+  { text: "Wild Himalayan Seabuckthorn", icon: Leaf },
+  { text: "Cold Processed", icon: Zap },
+  { text: "Rich in Vitamin C & Omega-7", icon: Heart },
+  { text: "Free Monk Fruit Drops Included", icon: Gift },
+  { text: "Limited Pre-launch Batch", icon: Clock },
+  { text: "100% Natural", icon: Sparkles },
+];
 
-        {/* Floating headline — visible on medium+ screens */}
-        <div className="hidden md:flex absolute inset-0 items-end justify-center pb-10 px-6">
+export default function PreBookPage() {
+  const marqueeItems = [
+    ...tickerItems,
+    ...tickerItems,
+    ...tickerItems,
+    ...tickerItems,
+  ];
+
+  return (
+    <main className="min-h-screen bg-[#F9F9F9]">
+      {/* ── Section 1: Exclusive Pre-Launch Offer Banner ───────────────────── */}
+      <section className="relative bg-green-700 text-white py-8 md:py-12 w-full overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-black/10 to-transparent z-0" />
+        <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="text-center"
+            transition={{ duration: 0.5 }}
           >
-            <p className="text-amber-300 font-heading text-lg font-semibold tracking-widest uppercase mb-1">
-              Limited Pre-launch Offer
-            </p>
-            <h1 className="text-white font-heading text-4xl lg:text-5xl font-bold leading-tight drop-shadow-lg">
-              Prebook Now.{" "}
-              <span className="text-amber-400">Save Rs.{PREORDER_SAVINGS}.</span>
+            <h1 className="text-3xl md:text-5xl font-semibold mb-3 font-heading uppercase !text-center text-center">
+              <span className="bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-500 text-transparent bg-clip-text">
+                Exclusive Pre-Launch Offer
+              </span>
+              {" 🍊"}
             </h1>
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-white/90 max-w-2xl mx-auto !text-center text-center">
+              Get ₹{PREORDER_TOTAL_VALUE.toLocaleString("en-IN")} worth of
+              products for just{" "}
+              <span className="font-bold text-yellow-300">
+                ₹{PREORDER_PRICE}
+              </span>
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ── Mobile headline (below image) ────────────────────────────────────── */}
-      <div className="md:hidden text-center px-6 pt-6 pb-2">
-        <p className="text-amber-400 font-heading text-sm font-semibold tracking-widest uppercase mb-1">
-          Limited Pre-launch Offer
-        </p>
-        <h1 className="text-white font-heading text-3xl font-bold leading-tight">
-          Prebook Now.{" "}
-          <span className="text-amber-400">Save Rs.{PREORDER_SAVINGS}.</span>
-        </h1>
+      {/* ── Section 2: Yellow Marquee Banner (Shifted below offer header) ──── */}
+      <div className="relative w-full overflow-hidden bg-yellow-400 py-2.5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] border-y border-yellow-500">
+        <div className="flex w-max animate-marquee items-center gap-8 px-4 sm:gap-12">
+          {marqueeItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={index}
+                className="flex items-center gap-2.5 text-green-950 font-bold text-xs sm:text-sm uppercase tracking-widest whitespace-nowrap"
+              >
+                <Icon className="h-4 w-4 text-green-800 shrink-0" />
+                <span>{item.text}</span>
+                <span className="ml-8 text-green-900/30 sm:ml-12 text-lg">
+                  •
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* ── Value Proposition Strip ───────────────────────────────────────────── */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mx-auto max-w-3xl px-4 py-8"
-      >
-        {/* Price breakdown card */}
-        <div className="bg-[#2a1e0a] border border-amber-900/50 rounded-2xl p-6 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-center">
+      {/* ── Section 3: Hero Image + Floating Offer Card ────────────────────── */}
+      <section className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+        <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-10 items-start">
+          {/* Left: Hero promo image */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative rounded-2xl overflow-hidden shadow-xl border border-amber-100"
+          >
+            <Image
+              src={PREORDER_IMAGE}
+              alt="Kislay Seabuckthorn Pulp Pre-order Bundle — Prebook now and save ₹949"
+              width={800}
+              height={800}
+              priority
+              className="w-full h-auto object-cover"
+            />
+          </motion.div>
 
-            {/* MRP */}
-            <div>
-              <p className="text-amber-200/70 text-xs uppercase tracking-widest mb-1">MRP</p>
-              <p className="text-amber-200/60 text-2xl font-heading font-bold line-through decoration-red-400">
-                Rs.{PREORDER_MRP.toLocaleString("en-IN")}
-              </p>
-            </div>
+          {/* Right: Offer card */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8 md:sticky md:top-24"
+          >
+            {/* Product title */}
+            <h2 className="font-heading font-semibold text-xl md:text-2xl text-gray-900 leading-tight mb-4">
+              Kislay Seabuckthorn Pulp
+              <span className="block text-sm font-normal text-[#9d7f3c] mt-1">
+                Pre-Launch Bundle Pack
+              </span>
+            </h2>
 
-            <span className="text-amber-600 text-2xl font-bold hidden sm:block">+</span>
-
-            {/* Free gift */}
-            <div className="flex items-center gap-2">
-              <Gift className="w-5 h-5 text-amber-400 shrink-0" />
-              <div className="text-left">
-                <p className="text-amber-200/70 text-xs uppercase tracking-widest mb-0.5">Free Gift</p>
-                <p className="text-amber-100 text-sm font-semibold leading-tight">
-                  Kislay Monk Fruit Drops
-                  <span className="block text-amber-400 text-xs">
-                    (10ml, worth Rs.{PREORDER_GIFT_VALUE})
-                  </span>
-                </p>
+            {/* Price breakdown */}
+            <div className="space-y-2.5 mb-5">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500">Seabuckthorn Pulp</span>
+                <span className="text-gray-400 line-through">
+                  ₹{PREORDER_MRP.toLocaleString("en-IN")}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-500 flex items-center gap-1.5">
+                  <Gift className="w-3.5 h-3.5 text-green-600" />
+                  Monk Fruit Drops (10ml)
+                </span>
+                <span className="text-green-600 text-xs font-semibold">
+                  FREE — worth ₹{PREORDER_GIFT_VALUE}
+                </span>
+              </div>
+              <div className="border-t border-dashed border-gray-200 pt-2.5 flex items-center justify-between text-sm">
+                <span className="text-gray-500">Total Value</span>
+                <span className="text-gray-400 line-through">
+                  ₹{PREORDER_TOTAL_VALUE.toLocaleString("en-IN")}
+                </span>
               </div>
             </div>
 
-            <span className="text-amber-600 text-2xl font-bold hidden sm:block">=</span>
-
-            {/* Total value */}
-            <div>
-              <p className="text-amber-200/70 text-xs uppercase tracking-widest mb-1">Total Value</p>
-              <p className="text-amber-200/60 text-xl font-heading font-bold line-through decoration-red-400">
-                Rs.{PREORDER_TOTAL_VALUE.toLocaleString("en-IN")}
-              </p>
+            {/* Big price + savings */}
+            <div className="bg-green-50 border border-green-100 rounded-xl p-4 mb-5">
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">
+                    Pre-book Price
+                  </p>
+                  <p className="text-[38px] md:text-[44px] font-heading font-bold text-[#16a34a] leading-none">
+                    ₹{PREORDER_PRICE}
+                  </p>
+                </div>
+                <span className="inline-flex items-center rounded-lg bg-[#fff7e6] px-3 py-1.5 text-xs font-bold uppercase text-[#c9962a] border border-[#c9962a]/20">
+                  Save ₹{PREORDER_SAVINGS} — {PREORDER_DISCOUNT_PCT}% OFF
+                </span>
+              </div>
             </div>
 
-            <div className="hidden sm:flex items-center text-amber-400 font-bold text-xl">
-              {"\u2192"}
-            </div>
+            {/* CTA */}
+            <Link
+              href={checkoutUrl}
+              className="flex w-full h-[54px] items-center justify-center rounded-[50px] bg-[#16a34a] hover:bg-[#15803d] text-white font-semibold text-lg shadow-lg shadow-green-600/20 transition-all duration-200 hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
+            >
+              Prebook Now — ₹{PREORDER_PRICE}
+            </Link>
 
-            {/* Prebook price */}
-            <div className="bg-amber-500 rounded-xl px-5 py-3 shadow-lg">
-              <p className="text-amber-900 text-xs font-bold uppercase tracking-widest mb-0.5">
-                Prebook Price
-              </p>
-              <p className="text-amber-900 text-4xl font-heading font-bold">
-                Rs.{PREORDER_PRICE.toLocaleString("en-IN")}
-              </p>
-              <p className="text-amber-800 text-xs mt-0.5">You save Rs.{PREORDER_SAVINGS}</p>
-            </div>
-          </div>
+            <p className="text-gray-400 text-xs flex items-center justify-center gap-1.5 mt-3">
+              <ShieldCheck className="w-3.5 h-3.5" /> Secure payment via
+              Razorpay
+            </p>
+          </motion.div>
         </div>
+      </section>
 
-        {/* CTA Button */}
-        <div className="mt-6 flex flex-col items-center gap-3">
+      {/* ── Section 4: Benefits of Seabuckthorn Pulp ───────────────────────── */}
+      <section className="bg-white py-12 md:py-16">
+        <div className="max-w-5xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-2xl md:text-4xl font-semibold text-[#2E7D32] mb-2 font-heading text-center">
+              Benefits of Seabuckthorn Pulp
+            </h2>
+            <div className="w-16 h-1 bg-green-400 mx-auto rounded-full mb-10" />
+
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+              {seabuckthornBenefits.map(({ Icon, title, description }) => (
+                <div
+                  key={title}
+                  className="bg-[#F9F9F9] rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#9d7f3c]" />
+                  </div>
+                  <h3 className="font-heading font-semibold text-sm sm:text-base text-gray-900 mb-1.5">
+                    {title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Section 5: Sticky Mobile Bottom Bar ────────────────────────────── */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 backdrop-blur-md shadow-[0_-8px_16px_rgba(0,0,0,0.08)] px-4 py-3 md:hidden">
+        <div className="flex items-center justify-between gap-3 max-w-lg mx-auto">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold text-[#16a34a]">
+                ₹{PREORDER_PRICE}
+              </span>
+              <span className="text-sm text-gray-400 line-through">
+                ₹{PREORDER_TOTAL_VALUE.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <span className="text-xs text-[#c9962a] font-semibold">
+              Save ₹{PREORDER_SAVINGS} ({PREORDER_DISCOUNT_PCT}% OFF)
+            </span>
+          </div>
           <Link
             href={checkoutUrl}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-amber-950 font-heading font-bold text-xl px-10 py-4 rounded-2xl shadow-lg shadow-amber-900/40 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            className="flex h-[46px] items-center justify-center rounded-[50px] bg-[#16a34a] hover:bg-[#15803d] text-white font-semibold text-sm px-6 shadow-md transition-colors"
           >
-            Prebook Now &mdash; Rs.{PREORDER_PRICE}
+            Prebook Now
           </Link>
-          <p className="text-amber-200/50 text-xs flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5" /> Secure payment via Razorpay
-          </p>
         </div>
-      </motion.section>
+      </div>
 
-      {/* ── What is in the Bundle ─────────────────────────────────────────────── */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.35 }}
-        className="mx-auto max-w-3xl px-4 pb-8"
-      >
-        <h2 className="text-amber-300 font-heading text-xl font-bold text-center mb-4">
-          What is in Your Bundle?
-        </h2>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {/* Product 1 — Seabuckthorn Pulp */}
-          <div className="bg-[#2a1e0a] border border-amber-900/40 rounded-xl p-5">
-            <div className="flex items-start gap-3">
-              <Leaf className="w-5 h-5 text-green-400 mt-0.5 shrink-0" />
-              <div>
-                <h3 className="text-amber-100 font-semibold text-base leading-tight">
-                  Kislay Seabuckthorn Pulp
-                </h3>
-                <p className="text-amber-200/60 text-xs mt-1">
-                  MRP Rs.{PREORDER_MRP.toLocaleString("en-IN")}
-                </p>
-                <p className="text-amber-200/70 text-sm mt-2 leading-relaxed">
-                  Pure, cold-processed seabuckthorn pulp packed with Vitamin C, Omega-7,
-                  antioxidants, and natural goodness.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Product 2 — Free Gift */}
-          <div className="bg-[#2a1e0a] border border-amber-900/40 rounded-xl p-5 relative overflow-hidden">
-            <span className="absolute top-3 right-3 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-              FREE
-            </span>
-            <div className="flex items-start gap-3">
-              <Gift className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
-              <div>
-                <h3 className="text-amber-100 font-semibold text-base leading-tight">
-                  Kislay Monk Fruit Sweetener Drops
-                </h3>
-                <p className="text-amber-200/60 text-xs mt-1">
-                  Worth Rs.{PREORDER_GIFT_VALUE} &mdash; included free
-                </p>
-                <p className="text-amber-200/70 text-sm mt-2 leading-relaxed">
-                  Zero-calorie, 100% natural monk fruit drops. One drop replaces one teaspoon
-                  of sugar.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* ── Why Pre-book ─────────────────────────────────────────────────────── */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.45 }}
-        className="mx-auto max-w-3xl px-4 pb-8"
-      >
-        <h2 className="text-amber-300 font-heading text-xl font-bold text-center mb-4">
-          Why Prebook?
-        </h2>
-        <div className="space-y-3">
-          {[
-            {
-              Icon: Star,
-              text: "Be among the first customers to receive Kislay Seabuckthorn Pulp.",
-            },
-            {
-              Icon: Gift,
-              text: "Free Monk Fruit Sweetener Drops (Rs.399 value) — exclusively for prebookers.",
-            },
-            {
-              Icon: CheckCircle2,
-              text: "Lock in the lowest price of Rs." + PREORDER_PRICE + " before it goes up.",
-            },
-            {
-              Icon: Truck,
-              text: "Ships in 4-6 weeks after launch. We will notify you by email and WhatsApp.",
-            },
-            {
-              Icon: ShieldCheck,
-              text: "100% secure payment via Razorpay — your money is protected.",
-            },
-          ].map(({ Icon, text }) => (
-            <div
-              key={text}
-              className="flex items-start gap-3 bg-[#2a1e0a]/60 border border-amber-900/30 rounded-xl px-4 py-3"
-            >
-              <Icon className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
-              <p className="text-amber-100/80 text-sm">{text}</p>
-            </div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* ── Bottom CTA ───────────────────────────────────────────────────────── */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.55 }}
-        className="mx-auto max-w-3xl px-4 pb-16 text-center"
-      >
-        <p className="text-amber-200/70 text-sm mb-4">
-          Limited prebooking slots. Secure yours before they run out.
-        </p>
-        <Link
-          href={checkoutUrl}
-          className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-amber-950 font-heading font-bold text-xl px-10 py-4 rounded-2xl shadow-lg shadow-amber-900/40 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Prebook Now &mdash; Rs.{PREORDER_PRICE}
-        </Link>
-        <p className="text-amber-200/40 text-xs mt-3">
-          Natural Goodness. A Sweeter You. &middot; kislaynaturals.com
-        </p>
-      </motion.section>
+      {/* Bottom padding spacer for sticky bar on mobile */}
+      <div className="h-20 md:hidden" />
     </main>
   );
 }
