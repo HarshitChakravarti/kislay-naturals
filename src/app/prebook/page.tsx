@@ -18,37 +18,37 @@ import {
 // ─── Seabuckthorn Benefits ───────────────────────────────────────────────────
 const seabuckthornBenefits = [
   {
-    Icon: Sparkles,
+    image: "/images/benefits/vitamin-c.jpg",
     title: "Rich in Vitamin C",
     description:
       "Packed with natural Vitamin C to boost your immunity and promote radiant skin.",
   },
   {
-    Icon: Droplets,
+    image: "/images/benefits/omega-7.jpg",
     title: "Omega-7 Fatty Acids",
     description:
       "A rare plant source of Omega-7, essential for healthy skin, hair, and nails.",
   },
   {
-    Icon: ShieldCheck,
+    image: "/images/benefits/antioxidants.jpg",
     title: "Powerful Antioxidants",
     description:
       "Protects your cells from oxidative stress and environmental damage.",
   },
   {
-    Icon: Activity,
+    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80",
     title: "Digestive Support",
     description:
       "Supports a healthy gut lining and promotes smooth digestion naturally.",
   },
   {
-    Icon: Heart,
+    image: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=800&q=80",
     title: "Heart Health",
     description:
       "Helps maintain healthy cholesterol and supports overall cardiovascular wellness.",
   },
   {
-    Icon: Leaf,
+    image: "https://images.unsplash.com/photo-1556881286-fc6915169721?w=800&q=80",
     title: "100% Pure & Cold Processed",
     description:
       "Retains maximum nutrients without heat damage. No artificial additives.",
@@ -244,8 +244,8 @@ export default function PreBookPage() {
       </section>
 
       {/* ── Section 4: Benefits of Seabuckthorn Pulp ───────────────────────── */}
-      <section className="bg-white py-12 md:py-16">
-        <div className="max-w-5xl mx-auto px-4">
+      <section className="bg-gray-50 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -257,21 +257,29 @@ export default function PreBookPage() {
             </h2>
             <div className="w-16 h-1 bg-green-400 mx-auto rounded-full mb-10" />
 
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
-              {seabuckthornBenefits.map(({ Icon, title, description }) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+              {seabuckthornBenefits.map(({ image, title, description }) => (
                 <div
                   key={title}
-                  className="bg-[#F9F9F9] rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                  className="flex flex-row overflow-hidden rounded-[12px] bg-white border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group shadow-sm"
                 >
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#9d7f3c]" />
+                  <div className="flex w-1/2 flex-col justify-center p-5 pr-4">
+                    <h3 className="font-heading text-lg sm:text-xl font-semibold text-[#1a1a1a]">
+                      {title}
+                    </h3>
+                    <p className="mt-2 text-left text-sm font-normal text-[#6b7280]">
+                      {description}
+                    </p>
                   </div>
-                  <h3 className="font-heading font-semibold text-sm sm:text-base text-gray-900 mb-1.5">
-                    {title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
-                    {description}
-                  </p>
+                  <div className="relative flex w-1/2 min-h-[180px] items-center justify-center bg-gray-100 overflow-hidden">
+                    <Image 
+                      src={image} 
+                      alt={title} 
+                      fill 
+                      className="object-cover group-hover:scale-105 transition-transform duration-500" 
+                      sizes="(max-width: 768px) 50vw, 33vw" 
+                    />
+                  </div>
                 </div>
               ))}
             </div>
