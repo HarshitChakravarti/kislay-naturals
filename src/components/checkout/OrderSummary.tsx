@@ -158,13 +158,35 @@ export default function OrderSummary({
         </div>
       )}
 
+
+
       {/* Coupon Code Section */}
       {couponSection}
 
       {/* Price Breakdown */}
       <div className="space-y-3 mb-6">
+        {/*
+          PRE-LAUNCH TEMPORARY: Individual item value breakdown for the Seabuckthorn Pulp bundle.
+          TODO: Remove this block when Kislay Seabuckthorn Pulp is officially launched
+          as a standalone product.
+          Product ID to match: 46e01087-7c08-418e-8b53-9b7c071ad388
+        */}
+        {!isCartCheckout && product?.id === '46e01087-7c08-418e-8b53-9b7c071ad388' && (
+          <>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Kislay Seabuckthorn Pulp</span>
+              <span className="text-gray-900">₹1199.00</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Kislay Monk Fruit Sweetener Drops</span>
+              <span className="text-gray-900">₹399.00</span>
+            </div>
+          </>
+        )}
+        {/* END PRE-LAUNCH TEMPORARY */}
+
         {/* Original MRP */}
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-sm border-t border-gray-100 pt-3">
           <span className="text-gray-600">MRP</span>
           <span className="text-gray-900 font-medium">₹{originalPrice.toFixed(2)}</span>
         </div>

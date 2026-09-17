@@ -12,6 +12,8 @@ export async function GET(
   const supabase = await createClient();
   const { id } = params;
 
+
+
   try {
     const { data, error } = await supabase
       .from('products')

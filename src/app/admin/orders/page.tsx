@@ -12,6 +12,7 @@ interface Order {
   total_amount: number;
   order_status: string;
   created_at: string;
+  product_id?: string;
   offer_availed?: boolean;
   coupon_code?: string | null;
   coupon_discount?: number;
@@ -215,6 +216,7 @@ export default function AdminOrdersPage() {
                 <option value="shipped">Shipped</option>
                 <option value="delivered">Delivered</option>
                 <option value="cancelled">Cancelled</option>
+                <option value="preorder">Pre-orders Only</option>
               </select>
             </div>
 
@@ -339,7 +341,14 @@ export default function AdminOrdersPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {orders.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.order_number || formatShortOrderId(order.id)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {order.order_number || formatShortOrderId(order.id)}
+                        {order.product_id === 'preorder-seabuckthorn-pulp' && (
+                          <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                            PRE-ORDER
+                          </span>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{order.user_name || order.user_profiles?.full_name || 'N/A'}</div>
                         <div className="text-sm text-gray-500">{order.user_email}</div>
@@ -371,7 +380,14 @@ export default function AdminOrdersPage() {
                 <div key={order.id} className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm font-semibold text-gray-900">{order.order_number || formatShortOrderId(order.id)}</div>
+                      <div className="text-sm font-semibold text-gray-900">
+                        {order.order_number || formatShortOrderId(order.id)}
+                        {order.product_id === 'preorder-seabuckthorn-pulp' && (
+                          <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                            PRE-ORDER
+                          </span>
+                        )}
+                      </div>
                       <div className="mt-1 text-sm text-gray-700">{order.user_name || order.user_profiles?.full_name || 'N/A'}</div>
                       <div className="text-xs text-gray-500 break-words">{order.user_email}</div>
                     </div>
