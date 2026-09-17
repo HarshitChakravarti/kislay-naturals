@@ -174,13 +174,26 @@ export default function CheckoutPage() {
     if (initialCoupon) setCouponCode(initialCoupon);
   }, [searchParams, router]);
 
-  // Compute server base total for cart checkout whenever cartItems changes
+  // Compute server base total whenever cart items or product quantity changes
   useEffect(() => {
     if (isCartCheckout && cartItems.length > 0) {
       setServerBaseTotal(cartSubtotal);
-      setServerFinalTotal(cartSubtotal);
+      if (couponApplied && couponCode) {
+        handleApplyCoupon(couponCode);
+      } else {
+        setServerFinalTotal(cartSubtotal);
+      }
+    } else if (!isCartCheckout && product) {
+      const newBaseTotal = product.price * quantity;
+      setServerBaseTotal(newBaseTotal);
+      if (couponApplied && couponCode) {
+        handleApplyCoupon(couponCode);
+      } else {
+        setServerFinalTotal(newBaseTotal);
+      }
     }
-  }, [isCartCheckout, cartItems, cartSubtotal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCartCheckout, cartItems, cartSubtotal, quantity, product?.price]);
 
   // Auto-apply coupon from URL if present and product/cart is ready
   useEffect(() => {

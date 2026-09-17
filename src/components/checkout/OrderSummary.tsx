@@ -142,7 +142,7 @@ export default function OrderSummary({
                     {quantity}
                   </motion.span>
                   <button
-                    onClick={() => handleQuantityChange(Math.max(100, quantity + 1))}
+                    onClick={() => handleQuantityChange(Math.min(100, quantity + 1))}
                     className="p-2 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={quantity >= 100}
                   >
@@ -175,11 +175,11 @@ export default function OrderSummary({
           <>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Kislay Seabuckthorn Pulp</span>
-              <span className="text-gray-900">₹1199.00</span>
+              <span className="text-gray-900">₹{(1199 * quantity).toFixed(2)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Kislay Monk Fruit Sweetener Drops</span>
-              <span className="text-gray-900">₹399.00</span>
+              <span className="text-gray-900">₹{(399 * quantity).toFixed(2)}</span>
             </div>
           </>
         )}
