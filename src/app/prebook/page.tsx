@@ -151,14 +151,14 @@ export default function PreBookPage() {
       </div>
 
       {/* ── Section 3: Hero Image + Floating Offer Card ────────────────────── */}
-      <section className="max-w-5xl mx-auto px-4 py-8 md:py-12">
-        <div className="grid md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-10 items-start">
+      <section className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-stretch">
           {/* Left: Hero promo image */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="relative rounded-2xl overflow-hidden shadow-xl border border-amber-100"
+            className="relative rounded-2xl overflow-hidden shadow-xl border border-amber-100 flex"
           >
             <Image
               src={PREORDER_IMAGE}
@@ -166,7 +166,7 @@ export default function PreBookPage() {
               width={800}
               height={800}
               priority
-              className="w-full h-auto object-cover"
+              className="w-full h-full object-cover"
             />
           </motion.div>
 
@@ -175,43 +175,43 @@ export default function PreBookPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 md:p-8 md:sticky md:top-24"
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-10 flex flex-col justify-center"
           >
             {/* Product title */}
-            <h2 className="font-heading font-semibold text-xl md:text-2xl text-gray-900 leading-tight mb-4">
+            <h2 className="font-heading font-semibold text-2xl md:text-3xl text-gray-900 leading-tight mb-6">
               Kislay Seabuckthorn Pulp
-              <span className="block text-sm font-normal text-[#9d7f3c] mt-1">
+              <span className="block text-base font-medium text-[#9d7f3c] mt-2">
                 Pre-Launch Bundle Pack
               </span>
             </h2>
 
             {/* Price breakdown */}
-            <div className="space-y-2.5 mb-5">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-500">Seabuckthorn Pulp</span>
-                <span className="text-gray-400 line-through">
+            <div className="space-y-4 mb-8 flex-grow">
+              <div className="flex items-center justify-between text-base md:text-lg">
+                <span className="text-gray-600">Seabuckthorn Pulp</span>
+                <span className="text-gray-900 font-medium">
                   ₹{PREORDER_MRP.toLocaleString("en-IN")}
                 </span>
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-500 flex items-center gap-1.5">
-                  <Gift className="w-3.5 h-3.5 text-green-600" />
+              <div className="flex items-center justify-between text-base md:text-lg text-green-600 font-medium bg-green-50 p-2 -mx-2 rounded-lg">
+                <span className="flex items-center gap-2">
+                  <Gift className="w-5 h-5 text-green-600" />
                   Monk Fruit Drops (10ml)
                 </span>
-                <span className="text-green-600 text-xs font-semibold">
-                  FREE — worth ₹{PREORDER_GIFT_VALUE}
+                <span className="font-semibold">
+                  ₹{PREORDER_GIFT_VALUE}
                 </span>
               </div>
-              <div className="border-t border-dashed border-gray-200 pt-2.5 flex items-center justify-between text-sm">
-                <span className="text-gray-500">Total Value</span>
-                <span className="text-gray-400 line-through">
+              <div className="border-t border-dashed border-gray-200 pt-4 flex items-center justify-between text-base md:text-lg font-semibold">
+                <span className="text-gray-700">Total Value</span>
+                <span className="text-gray-500">
                   ₹{PREORDER_TOTAL_VALUE.toLocaleString("en-IN")}
                 </span>
               </div>
             </div>
 
             {/* Big price + savings */}
-            <div className="bg-green-50 border border-green-100 rounded-xl p-4 mb-5">
+            <div className="bg-green-50 border border-green-100 rounded-xl p-5 mb-6">
               <div className="flex items-end justify-between">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">
