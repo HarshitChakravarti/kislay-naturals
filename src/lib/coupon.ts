@@ -178,8 +178,8 @@ export async function validateCouponData(
   }
 
   // --- Single product checkout ---
-  if (!productId || !variantSize) {
-    return { valid: false, message: 'productId and variantSize are required' };
+  if (!productId) {
+    return { valid: false, message: 'productId is required' };
   }
 
   const qty = typeof quantity === 'string' ? parseInt(quantity, 10) : (quantity || 1);
@@ -195,8 +195,8 @@ export async function validateCouponData(
   }
 
   const variants: any[] = product.variants || [];
-  const variant = variants.find((v: any) => v.size?.trim().toLowerCase() === variantSize.trim().toLowerCase())
-    || { size: variantSize, price: product.price };
+  const variant = variants.find((v: any) => v.size?.trim().toLowerCase() === (variantSize || '').trim().toLowerCase())
+    || { size: variantSize || '', price: product.price };
 
   const couponPrice = getCouponPriceForVariant(variant, couponType, product.name);
 
