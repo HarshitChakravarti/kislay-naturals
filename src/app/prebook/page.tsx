@@ -7,12 +7,9 @@ import {
   ShieldCheck,
   Leaf,
   Gift,
-  Zap,
   Heart,
   Clock,
   Sparkles,
-  Droplets,
-  Activity,
 } from "lucide-react";
 
 // ─── Seabuckthorn Benefits ───────────────────────────────────────────────────
@@ -25,9 +22,9 @@ const seabuckthornBenefits = [
   },
   {
     image: "/images/benefits/omega-7.jpg",
-    title: "Omega-7 Fatty Acids",
+    title: "Omega 3, 6, 7 & 9 Fatty Acids",
     description:
-      "A rare plant source of Omega-7, essential for healthy skin, hair, and nails.",
+      "A rare plant source containing Omega 3, 6, 7, and 9, essential for healthy skin, hair, and nails.",
   },
   {
     image: "/images/benefits/antioxidants.jpg",
@@ -49,9 +46,9 @@ const seabuckthornBenefits = [
   },
   {
     image: "https://images.unsplash.com/photo-1556881286-fc6915169721?w=800&q=80",
-    title: "100% Pure & Cold Processed",
+    title: "99.9% Pure Seabuckthorn Pulp",
     description:
-      "Retains maximum nutrients without heat damage. No artificial additives.",
+      "Retains maximum nutrients with minimal artificial additives or preservatives.",
   },
 ];
 
@@ -86,7 +83,6 @@ const checkoutUrl =
 // ─── Marquee ticker items ────────────────────────────────────────────────────
 const tickerItems = [
   { text: "Wild Himalayan Seabuckthorn", icon: Leaf },
-  { text: "Cold Processed", icon: Zap },
   { text: "Rich in Vitamin C & Omega-7", icon: Heart },
   { text: "Free Monk Fruit Drops Included", icon: Gift },
   { text: "Limited Pre-launch Batch", icon: Clock },
@@ -225,6 +221,15 @@ export default function PreBookPage() {
                   Save ₹{PREORDER_SAVINGS} — {PREORDER_DISCOUNT_PCT}% OFF
                 </span>
               </div>
+            </div>
+
+            {/* Validity Notice */}
+            <div className="flex items-center justify-center gap-2 text-sm sm:text-base text-amber-900 bg-amber-50 border border-amber-200/90 rounded-xl py-2.5 px-4 mb-5 text-center font-medium">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 shrink-0" />
+              <span>
+                Booking of exclusive prelaunch offer is valid till{" "}
+                <strong className="font-bold text-amber-950">30th September 2026</strong> only
+              </span>
             </div>
 
             {/* CTA */}
